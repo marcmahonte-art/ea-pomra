@@ -1,0 +1,52 @@
+Description simple
+
+EA-POMRA (Étudier en Afrique — Plateforme d'Orientation, de Mobilité et de Réussite Académique) 
+est une association panafricaine qui accompagne les étudiants dans leur parcours de mobilité académique 
+à l'étranger : orientation vers la bonne filière, sécurisation des transferts de scolarité, suivi psychosocial et
+ lien de confiance entre l'étudiant, sa famille et l'institution d'accueil — le tout via une plateforme numérique reliant
+ 8 pays d'Afrique de l'Ouest et du Centre.
+
+Accroches possibles
+
+Orientées mission
+
+« Étudier loin de chez soi, sans jamais se sentir seul. »
+« L'Afrique accompagne ses talents, où qu'ils étudient. »
+« Chaque étudiant compte. Chaque parcours est suivi. »
+
+Orientées confiance / sécurité
+
+« Vos fonds, leur scolarité — en toute transparence. »
+« De l'inscription au diplôme, un seul fil conducteur : la confiance. »
+« Un code, une identité protégée, un accompagnement réel. »
+
+Orientées famille
+
+« Votre enfant étudie loin. Vous, restez proche. »
+« Suivez son parcours, pas seulement ses résultats. »
+
+Orientées réseau panafricain
+
+« 8 pays, une seule communauté d'étudiants. »
+« Étudier en Afrique, grandir ensemble. »
+
+Pour le site web, l'accroche doit tenir en une phrase forte + une sous-phrase qui explique. Voici 3 options complètes (titre + sous-titre), prêtes à mettre en page d'accueil :
+
+Option 1 — Mission
+
+Titre : Étudier loin de chez soi, sans jamais être seul.
+Sous-titre : EA-POMRA accompagne les étudiants africains de l'orientation au diplôme, dans 8 pays d'Afrique de l'Ouest et du Centre.
+
+Option 2 — Confiance / transparence
+
+Titre : De l'inscription au diplôme, un seul fil : la confiance.
+Sous-titre : Orientation, transfert sécurisé de scolarité, suivi psychosocial — tout au même endroit, pour l'étudiant et sa famille.
+
+Option 3 — Famille
+
+Titre : Votre enfant étudie loin. Vous, restez proche.
+Sous-titre : Suivez en temps réel son parcours académique et son bien-être, où qu'il étudie en Afrique.
+
+Pour un site, je recommanderais l'Option 2 en hero principal (elle couvre à la fois étudiant, parent et le sérieux du dispositif STSS), avec l'Option 3 réutilisée plus bas dans une section dédiée "Espace Parent".
+
+Veux-tu que je te prépare directement une structure de page d'accueil (sections, CTA par profil : Étudiant / Parent / Partenaire) ?

@@ -1,0 +1,27 @@
+# Ce que Vercel ne doit pas téléverser.
+#
+# Nécessaire parce que le .gitignore du dépôt est à la racine, un niveau
+# au-dessus de cette application : lancé depuis web/, le CLI Vercel ne le voit
+# pas et n'appliquerait que sa liste d'exclusion par défaut.
+#
+# Le build est fait par Vercel à partir des sources : rien de ce qui est
+# généré localement ne doit partir.
+
+node_modules/
+.next/
+out/
+build/
+.vercel/
+
+# Fichiers d'environnement — ne jamais téléverser un secret
+.env
+.env*.local
+
+# Divers local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+*.tmp

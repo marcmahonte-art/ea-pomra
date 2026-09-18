@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { MessageSquare, Send, User, CheckCheck, Paperclip } from "lucide-react";
+import { MOCK_ACTIVE_STUDENT } from "@/lib/data";
+
+const PRENOM = MOCK_ACTIVE_STUDENT.firstName;
 
 export default function MessagesPage() {
   const [activeConv, setActiveConv] = useState(1);
@@ -16,7 +19,7 @@ export default function MessagesPage() {
       avatar: "KB",
       unread: 1,
       messages: [
-        { sender: "them", text: "Bonjour Koffi, nous avons bien réceptionné vos pièces complémentaires pour l'INP-HB.", time: "Hier à 16:45" },
+        { sender: "them", text: `Bonjour ${PRENOM}, nous avons bien réceptionné vos pièces complémentaires pour l'INP-HB.`, time: "Hier à 16:45" },
         { sender: "them", text: "Votre attestation de pré-inscription est en cours de validation finale auprès de la scolarité.", time: "Hier à 16:46" },
         { sender: "me", text: "Merci beaucoup Dr. Brou. Pour les frais de scolarité STSS, mon père a déjà déposé la preuve auprès de l'antenne.", time: "Hier à 17:10" },
         { sender: "them", text: "Parfait ! La quittance officielle STSS est déjà validée dans votre espace finances.", time: "Ce matin à 09:30" },
@@ -29,7 +32,7 @@ export default function MessagesPage() {
       avatar: "EN",
       unread: 2,
       messages: [
-        { sender: "them", text: "Bonjour Koffi ! Avez-vous pu réserver votre vol d'arrivée pour Abidjan ?", time: "Il y a 2 jours" },
+        { sender: "them", text: `Bonjour ${PRENOM} ! Avez-vous pu réserver votre vol d'arrivée pour Abidjan ?`, time: "Il y a 2 jours" },
         { sender: "them", text: "Dès que vous avez la confirmation, transmettez-moi les horaires pour que l'équipe vous attende à l'aéroport.", time: "Il y a 2 jours" },
       ],
     },
@@ -40,7 +43,7 @@ export default function MessagesPage() {
       avatar: "BS",
       unread: 0,
       messages: [
-        { sender: "them", text: "Salut Koffi ! Je serai ton parrain sur le campus cette année. Hâte de te faire visiter !", time: "Il y a 3 jours" },
+        { sender: "them", text: `Salut ${PRENOM} ! Je serai ton parrain sur le campus cette année. Hâte de te faire visiter !`, time: "Il y a 3 jours" },
       ],
     },
   ]);
@@ -93,7 +96,7 @@ export default function MessagesPage() {
               key={c.id}
               onClick={() => setActiveConv(c.id)}
               className={`w-full text-left p-3 rounded-2xl flex items-center gap-3 transition-colors cursor-pointer ${
-                activeConv === c.id ? "bg-[#EFF6FF] border border-[#BFDBFE]" : "hover:bg-[#F7F9FB]"
+                activeConv === c.id ? "bg-[#EBF3FA] border border-[#D5E5F5]" : "hover:bg-[#F7F9FB]"
               }`}
             >
               <div className="w-10 h-10 rounded-full bg-[#0D2B4D] text-[#F7D070] font-black flex items-center justify-center shrink-0">
@@ -154,11 +157,13 @@ export default function MessagesPage() {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
+              aria-label="Écrire un message"
               placeholder="Écrivez votre message..."
               className="flex-1 px-4 py-2.5 rounded-xl border border-[#E6E9EF] text-xs bg-[#F7F9FB] focus:outline-none focus:border-[#174A7C]"
             />
             <button
               type="submit"
+              aria-label="Envoyer le message"
               className="p-2.5 rounded-xl bg-[#174A7C] hover:bg-[#123B63] text-white transition-colors cursor-pointer"
             >
               <Send className="w-4 h-4" />

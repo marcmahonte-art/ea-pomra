@@ -9,8 +9,8 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      title: "Étude OCO en cours",
-      desc: "Votre dossier a été transmis à l'expert OCO spécialisé en sciences du numérique pour la Côte d'Ivoire.",
+      title: "Avis d'orientation favorable",
+      desc: "Le comité OCO a rendu un avis favorable sur votre projet académique pour l'INP-HB.",
       time: "Il y a 2 heures",
       read: false,
       type: "info",
@@ -18,7 +18,7 @@ export default function NotificationsPage() {
     {
       id: 2,
       title: "Document approuvé",
-      desc: "Votre relevé de notes officiel du Baccalauréat a été validé et certifié conforme par l'antenne.",
+      desc: "Vos relevés de notes de Licence ont été validés et certifiés conformes par l'antenne de Dakar.",
       time: "Il y a 1 jour",
       read: false,
       type: "success",
@@ -108,8 +108,8 @@ export default function NotificationsPage() {
               <div
                 className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
                   n.type === "success"
-                    ? "bg-[#EBF7F0] text-[#1EA362]"
-                    : "bg-[#EFF6FF] text-[#2563EB]"
+                    ? "bg-[#E8F6EF] text-[#1EA362]"
+                    : "bg-[#EBF3FA] text-[#3B82F6]"
                 }`}
               >
                 {n.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
@@ -118,7 +118,7 @@ export default function NotificationsPage() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-xs sm:text-sm font-bold text-[#0D2B4D]">{n.title}</h3>
                   {!n.read && (
-                    <span className="w-2 h-2 rounded-full bg-[#2563EB]"></span>
+                    <span className="w-2 h-2 rounded-full bg-[#3B82F6]"></span>
                   )}
                 </div>
                 <p className="text-xs text-[#5B6776] mt-0.5 leading-relaxed">{n.desc}</p>

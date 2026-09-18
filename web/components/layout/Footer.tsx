@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="bg-[#0D2B4D] text-white pt-16 pb-8">
+    <footer id="contact" className="bg-[#0D2B4D] text-white pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Grille principale 5 colonnes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
@@ -87,11 +87,11 @@ export function Footer() {
               Plateforme
             </h4>
             <ul className="space-y-2 text-[13px] text-slate-300">
-              <li><Link href="#apropos" className="hover:text-white transition-colors">À propos</Link></li>
-              <li><Link href="#programmes" className="hover:text-white transition-colors">Programmes</Link></li>
-              <li><Link href="#antennes" className="hover:text-white transition-colors">Antennes</Link></li>
-              <li><Link href="#actualites" className="hover:text-white transition-colors">Actualités</Link></li>
-              <li><Link href="#contact" className="hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
+              <li><Link href="/programmes" className="hover:text-white transition-colors">Programmes</Link></li>
+              <li><Link href="/antennes" className="hover:text-white transition-colors">Antennes</Link></li>
+              <li><Link href="/actualites" className="hover:text-white transition-colors">Actualités</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -101,11 +101,11 @@ export function Footer() {
               Ressources
             </h4>
             <ul className="space-y-2 text-[13px] text-slate-300">
-              <li><Link href="#guide" className="hover:text-white transition-colors">Guide étudiant</Link></li>
-              <li><Link href="#faq" className="hover:text-white transition-colors">FAQ</Link></li>
-              <li><Link href="#documents" className="hover:text-white transition-colors">Documents utiles</Link></li>
-              <li><Link href="#blog" className="hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="#support" className="hover:text-white transition-colors">Support</Link></li>
+              <li><Link href="/programmes" className="hover:text-white transition-colors">Guide étudiant</Link></li>
+              <li><Link href="/ressources#faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link href="/etudiant/documents" className="hover:text-white transition-colors">Documents utiles</Link></li>
+              <li><Link href="/actualites" className="hover:text-white transition-colors">Actualités du réseau</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Support</Link></li>
             </ul>
           </div>
 
@@ -116,9 +116,9 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-[13px] text-slate-300">
               <li><Link href="/etudiant/dashboard" className="hover:text-white transition-colors">Étudiant</Link></li>
-              <li><Link href="/etudiant/dashboard" className="hover:text-white transition-colors">Parent</Link></li>
-              <li><Link href="#professionnel" className="hover:text-white transition-colors">Professionnel</Link></li>
-              <li><Link href="#bec" className="hover:text-white transition-colors">BEC / Administration</Link></li>
+              <li><Link href="/a-propos" className="hover:text-white transition-colors">Parent</Link></li>
+              <li><Link href="/programmes" className="hover:text-white transition-colors">Professionnel</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">BEC / Administration</Link></li>
             </ul>
           </div>
 
@@ -135,6 +135,7 @@ export function Footer() {
               <input
                 type="email"
                 required
+                aria-label="Votre adresse email"
                 placeholder="Votre adresse email"
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white text-[#0D2B4D] placeholder-slate-400 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#1EA362]"
               />
@@ -150,18 +151,10 @@ export function Footer() {
 
         {/* Ligne basse Copyright */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-slate-400">
-          <p>© 2024 EA-POMRA. Tous droits réservés.</p>
-          <div className="flex items-center gap-6">
-            <Link href="#mentions" className="hover:text-white transition-colors">
-              Mentions légales
-            </Link>
-            <Link href="#confidentialite" className="hover:text-white transition-colors">
-              Politique de confidentialité
-            </Link>
-            <Link href="#cgu" className="hover:text-white transition-colors">
-              Conditions d&apos;utilisation
-            </Link>
-          </div>
+          <p>© 2024 – 2026 EA-POMRA. Tous droits réservés.</p>
+          <Link href="/contact" className="hover:text-white transition-colors">
+            Une question ? Contactez-nous
+          </Link>
         </div>
       </div>
     </footer>

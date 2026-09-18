@@ -26,14 +26,14 @@ export function MetricsBar() {
     },
     {
       icon: CheckCircle2,
-      color: "#10B981",
+      color: "#1EA362",
       bgColor: "rgba(16, 185, 129, 0.2)",
       value: "98%",
       label: "Taux de satisfaction",
     },
     {
       icon: Users2,
-      color: "#60A5FA",
+      color: "#3B82F6",
       bgColor: "rgba(96, 165, 250, 0.2)",
       value: "120+",
       label: "Partenaires académiques",

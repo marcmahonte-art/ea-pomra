@@ -28,6 +28,45 @@
     --eap-status-success-bg: #E8F6EF;
     --eap-status-error: #D9383A;
     --eap-status-error-bg: #FDECEC;
+
+    /* --- Teintes étendues ---------------------------------------------------
+       Nuances récurrentes de l'interface (bordures et fonds teintés) absentes
+       de la palette d'origine mais nécessaires aux composants. Elles sont
+       centralisées ici afin qu'aucune couleur ne reste orpheline dans le code.
+       Règle : une seule valeur par famille (bleu, vert, or, ambre). */
+    --eap-blue-border: #D5E5F5;
+    --eap-green-border: #C5EBDA;
+    --eap-gold-border: #F4E4BC;
+    --eap-gold-accent: #F7D070;
+    --eap-gold-soft: #F7EDD2;
+    --eap-gold-deep: #B86E00;
+    --eap-amber-soft: #FDE5C5;
+    --eap-surface-alt: #F0F5FA;
+    --eap-surface-muted: #F0F3F7;
+
+    /* Couleurs sémantiques de la spec §3.3 — ne doivent servir qu'à un état
+       fonctionnel, jamais de couleur de marque. */
+    --eap-info: #3B82F6;
+    --eap-info-bg: #EBF3FA;
+    --eap-warning: #F59E0B;
+
+    /* --- Portail Parent : échelle de plans et dimensions -------------------
+       Spécification §53 (z-index) et §13 (gabarit). Centraliser ces valeurs
+       évite que chaque composant choisisse son propre empilement : c'est la
+       première cause d'un menu qui passe sous une modale. */
+    --eap-z-base: 0;
+    --eap-z-raised: 10;
+    --eap-z-dropdown: 20;
+    --eap-z-sticky: 30;
+    --eap-z-overlay: 40;
+    --eap-z-modal: 50;
+    --eap-z-toast: 60;
+
+    --eap-parent-sidebar: 248px;
+    --eap-parent-header: 76px;
+    --eap-parent-padding: 32px;
+    --eap-parent-container: 1184px;
+    --eap-parent-bottomnav: 64px;
   }
 }
 

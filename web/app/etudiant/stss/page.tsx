@@ -44,7 +44,7 @@ export default function TransfertsStssPage() {
               <p className="text-xs text-[#5B6776]">Opération certifiée par les trésoriers des antennes nationales</p>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full bg-[#EBF7F0] text-[#1EA362] text-xs font-bold border border-[#C5EBDA]">
+          <span className="px-3 py-1 rounded-full bg-[#E8F6EF] text-[#1EA362] text-xs font-bold border border-[#C5EBDA]">
             Garantie Anti-Fraude Active
           </span>
         </div>

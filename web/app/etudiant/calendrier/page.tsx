@@ -7,43 +7,43 @@ import { Calendar, Clock, MapPin, CheckCircle2, ChevronRight } from "lucide-reac
 export default function CalendrierPage() {
   const events = [
     {
-      date: "12 Mars 2024",
+      date: "2 Juillet 2026",
       title: "Dépôt initial de candidature",
       category: "Dossier",
       status: "passé",
-      desc: "Soumission des pièces académiques en ligne auprès de l'antenne locale.",
+      desc: "Soumission des pièces académiques auprès de l'antenne de Dakar et attribution du code ID-POMRA.",
     },
     {
-      date: "18 Mars 2024",
-      title: "Délibération de la Commission OCO",
+      date: "18 Juillet 2026",
+      title: "Avis d'orientation du comité OCO",
       category: "Académique",
-      status: "en cours",
-      desc: "Analyse du profil et recommandation d'orientation pour la filière visée.",
+      status: "passé",
+      desc: "Avis favorable rendu par la commission d'experts et validation du projet académique.",
     },
     {
-      date: "15 Avril 2024",
-      title: "Échéance de validation du transfert STSS",
+      date: "14 Août 2026",
+      title: "Transfert de scolarité STSS certifié",
       category: "Finances",
-      status: "à venir",
-      desc: "Dépôt final de la scolarité auprès du trésorier d'antenne pour émission de la quittance légale.",
+      status: "passé",
+      desc: "Versement de 1 850 000 FCFA certifié auprès du compte de l'établissement d'accueil, quittance émise.",
     },
     {
-      date: "10 Septembre 2024",
-      title: "Session d'Accueil & Arrivée à Abidjan",
+      date: "10 Septembre 2026",
+      title: "Accueil et arrivée à Abidjan",
       category: "Pôle PAP",
-      status: "à venir",
+      status: "en cours",
       desc: "Prise en charge à l'aéroport Félix Houphouët-Boigny et installation en résidence.",
     },
     {
-      date: "18 Septembre 2024",
-      title: "Rentrée Solennelle et Début des Cours",
+      date: "18 Septembre 2026",
+      title: "Rentrée et début des cours",
       category: "Université",
       status: "à venir",
-      desc: "Accueil pédagogique à l'Institut National Polytechnique Félix Houphouët-Boigny.",
+      desc: "Accueil pédagogique à l'Institut National Polytechnique Félix Houphouët-Boigny (INP-HB).",
     },
     {
-      date: "15 Décembre 2024",
-      title: "Bilan Trimestriel Partagé avec la Famille",
+      date: "15 Décembre 2026",
+      title: "Bilan trimestriel partagé avec la famille",
       category: "Lien Famille",
       status: "à venir",
       desc: "Transmission du premier rapport d'assiduité et de bien-être sur l'Espace Parent.",
@@ -67,7 +67,7 @@ export default function CalendrierPage() {
 
       {/* Grille des événements */}
       <div className="bg-white rounded-3xl border border-[#E6E9EF] p-6 sm:p-8 shadow-eap-soft space-y-6">
-        <h2 className="text-base font-bold text-[#0D2B4D]">Calendrier officiel de l&apos;année 2024 - 2025</h2>
+        <h2 className="text-base font-bold text-[#0D2B4D]">Calendrier officiel de l&apos;année 2026 - 2027</h2>
 
         <div className="divide-y divide-[#EDF1F6]">
           {events.map((evt, idx) => (
@@ -97,10 +97,10 @@ export default function CalendrierPage() {
                 <span
                   className={`text-xs font-bold px-3 py-1 rounded-full ${
                     evt.status === "passé"
-                      ? "bg-[#EBF7F0] text-[#1EA362]"
+                      ? "bg-[#E8F6EF] text-[#1EA362]"
                       : evt.status === "en cours"
-                      ? "bg-[#EFF6FF] text-[#2563EB]"
-                      : "bg-[#FEF3C7] text-[#D97706]"
+                      ? "bg-[#EBF3FA] text-[#3B82F6]"
+                      : "bg-[#FEF7EC] text-[#F59E0B]"
                   }`}
                 >
                   {evt.status === "passé" ? "Achevé" : evt.status === "en cours" ? "En cours" : "Planifié"}

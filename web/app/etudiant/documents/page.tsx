@@ -6,13 +6,13 @@ import { FileText, Upload, CheckCircle2, Clock, Download, Plus, Trash2 } from "l
 
 export default function MesDocumentsPage() {
   const [docs, setDocs] = useState([
-    { id: 1, name: "Passeport biométrique (validité > 6 mois)", type: "Identité", status: "Validé", date: "12/03/2024", size: "2.4 Mo" },
-    { id: 2, name: "Diplôme du Baccalauréat & Relevé officiel", type: "Diplôme", status: "Validé", date: "12/03/2024", size: "3.1 Mo" },
-    { id: 3, name: "Bulletins de notes de Seconde, Première et Terminale", type: "Académique", status: "Validé", date: "12/03/2024", size: "5.8 Mo" },
-    { id: 4, name: "Quittance officielle de scolarité STSS", type: "Financier", status: "Validé", date: "14/03/2024", size: "1.2 Mo" },
-    { id: 5, name: "Certificat médical d'aptitude physique", type: "Santé", status: "Validé", date: "13/03/2024", size: "850 Ko" },
-    { id: 6, name: "Fiche d'engagement parental légalisée", type: "Famille", status: "Validé", date: "12/03/2024", size: "1.5 Mo" },
-    { id: 7, name: "Attestation de pré-inscription universitaire", type: "Admission", status: "En cours", date: "15/03/2024", size: "1.1 Mo" },
+    { id: 1, name: "Passeport biométrique (validité > 6 mois)", type: "Identité", status: "Validé", date: "02/07/2026", size: "2.4 Mo" },
+    { id: 2, name: "Diplôme de Licence & Relevé officiel", type: "Diplôme", status: "Validé", date: "02/07/2026", size: "3.1 Mo" },
+    { id: 3, name: "Relevés de notes de Licence 1 à 3", type: "Académique", status: "Validé", date: "02/07/2026", size: "5.8 Mo" },
+    { id: 4, name: "Quittance officielle de scolarité STSS", type: "Financier", status: "Validé", date: "14/08/2026", size: "1.2 Mo" },
+    { id: 5, name: "Certificat médical d'aptitude physique", type: "Santé", status: "Validé", date: "05/07/2026", size: "850 Ko" },
+    { id: 6, name: "Fiche d'engagement parental légalisée", type: "Famille", status: "Validé", date: "02/07/2026", size: "1.5 Mo" },
+    { id: 7, name: "Attestation de pré-inscription INP-HB", type: "Admission", status: "En cours", date: "12/08/2026", size: "1.1 Mo" },
   ]);
 
   const [uploadSuccess, setUploadSuccess] = useState(false);
@@ -60,13 +60,13 @@ export default function MesDocumentsPage() {
       </div>
 
       {uploadSuccess && (
-        <div className="p-4 bg-[#EBF7F0] border border-[#C5EBDA] text-[#1EA362] rounded-2xl text-xs font-bold flex items-center justify-between">
+        <div className="p-4 bg-[#E8F6EF] border border-[#C5EBDA] text-[#1EA362] rounded-2xl text-xs font-bold flex items-center justify-between">
           <span>✅ Document téléversé avec succès ! Il a été transmis à votre antenne pour vérification.</span>
         </div>
       )}
 
       {/* Zone de glisser-déposer */}
-      <div className="border-2 border-dashed border-[#CBD5E1] rounded-3xl p-6 text-center bg-white hover:border-[#174A7C] transition-colors">
+      <div className="border-2 border-dashed border-[#A2AAB3] rounded-3xl p-6 text-center bg-white hover:border-[#174A7C] transition-colors">
         <Upload className="w-8 h-8 text-[#174A7C] mx-auto mb-2" />
         <p className="text-sm font-bold text-[#0D2B4D]">Glissez-déposez vos nouveaux justificatifs ici</p>
         <p className="text-xs text-[#8E9BAA] mt-1">Formats acceptés : PDF, JPG, PNG (Max 10 Mo par fichier)</p>
@@ -80,7 +80,7 @@ export default function MesDocumentsPage() {
           {docs.map((doc) => (
             <div key={doc.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-9 h-9 rounded-xl bg-[#EBF3FA] text-[#3B82F6] flex items-center justify-center shrink-0 mt-0.5">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
@@ -99,8 +99,8 @@ export default function MesDocumentsPage() {
                 <span
                   className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
                     doc.status === "Validé"
-                      ? "bg-[#EBF7F0] text-[#1EA362]"
-                      : "bg-[#EFF6FF] text-[#2563EB]"
+                      ? "bg-[#E8F6EF] text-[#1EA362]"
+                      : "bg-[#EBF3FA] text-[#3B82F6]"
                   }`}
                 >
                   {doc.status}

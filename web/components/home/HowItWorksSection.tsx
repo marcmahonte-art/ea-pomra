@@ -14,28 +14,28 @@ export function HowItWorksSection() {
     },
     {
       num: 2,
-      numColor: "#2563EB",
-      iconBg: "#EFF6FF",
+      numColor: "#3B82F6",
+      iconBg: "#EBF3FA",
       icon: User,
-      iconColor: "#2563EB",
+      iconColor: "#3B82F6",
       title: "Analyse OCO",
       desc: "Nos experts évaluent votre dossier et vous proposent une orientation.",
     },
     {
       num: 3,
-      numColor: "#D97706",
-      iconBg: "#FEF3C7",
+      numColor: "#F59E0B",
+      iconBg: "#FEF7EC",
       icon: MapPin,
-      iconColor: "#D97706",
+      iconColor: "#F59E0B",
       title: "Suivi & Accompagnement",
       desc: "Bénéficiez d'un suivi personnalisé jusqu'à votre intégration et votre réussite.",
     },
     {
       num: 4,
-      numColor: "#7C3AED",
-      iconBg: "#F3E8FF",
+      numColor: "#C89C2E",
+      iconBg: "#FBF6EA",
       icon: GraduationCap,
-      iconColor: "#7C3AED",
+      iconColor: "#C89C2E",
       title: "Réussite",
       desc: "Atteignez vos objectifs académiques et construisez votre avenir.",
     },
@@ -75,7 +75,7 @@ export function HowItWorksSection() {
                   </div>
 
                   {idx < steps.length - 1 && (
-                    <div className="hidden lg:flex absolute -right-4 top-6 text-[#CBD5E1]">
+                    <div className="hidden lg:flex absolute -right-4 top-6 text-[#A2AAB3]">
                       <ChevronRight className="w-5 h-5" />
                     </div>
                   )}

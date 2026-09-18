@@ -20,7 +20,7 @@ export function Badge({
     error: "bg-[#FDECEC] text-[#D9383A] border border-[#FAC6C6]",
     gold: "bg-[#FBF6EA] text-[#9A741A] border border-[#F4E4BC]",
     outline: "bg-white text-[#5B6776] border border-[#E6E9EF]",
-    neutral: "bg-[#F0F3F7] text-[#2D3748] border border-[#E2E8F0]",
+    neutral: "bg-[#F0F3F7] text-[#0D2B4D] border border-[#E6E9EF]",
   };
 
   const sizeStyles = {

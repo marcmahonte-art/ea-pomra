@@ -3,10 +3,25 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { User, Menu, X } from "lucide-react";
+
+const NAV_ITEMS = [
+  { label: "Accueil", href: "/" },
+  { label: "À propos", href: "/a-propos" },
+  { label: "Programmes", href: "/programmes" },
+  { label: "Antennes", href: "/antennes" },
+  { label: "Ressources", href: "/ressources" },
+  { label: "Actualités", href: "/actualites" },
+  { label: "Contact", href: "/contact" },
+];
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#E6E9EF]/80 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
@@ -34,29 +49,27 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-7 text-[14px] font-medium text-[#2D3748]">
-          <Link href="/" className="relative text-[#0D2B4D] font-semibold py-2">
-            Accueil
-            <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1EA362] rounded-full"></span>
-          </Link>
-          <Link href="#apropos" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            À propos
-          </Link>
-          <Link href="#programmes" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            Programmes
-          </Link>
-          <Link href="#antennes" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            Antennes
-          </Link>
-          <Link href="#ressources" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            Ressources
-          </Link>
-          <Link href="#actualites" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            Actualités
-          </Link>
-          <Link href="#contact" className="text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2">
-            Contact
-          </Link>
+        <nav className="hidden lg:flex items-center gap-5 text-[14px] font-medium text-[#0D2B4D]">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={
+                  active
+                    ? "relative text-[#0D2B4D] font-semibold py-2"
+                    : "text-[#5B6776] hover:text-[#0D2B4D] transition-colors py-2"
+                }
+              >
+                {item.label}
+                {active && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#1EA362] rounded-full"></span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* CTA Se connecter */}
@@ -84,55 +97,21 @@ export function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-b border-[#E6E9EF] px-6 py-4 space-y-3">
           <nav className="flex flex-col gap-2 font-medium text-[14px]">
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#1EA362] font-semibold py-1.5"
-            >
-              Accueil
-            </Link>
-            <Link
-              href="#apropos"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              À propos
-            </Link>
-            <Link
-              href="#programmes"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              Programmes
-            </Link>
-            <Link
-              href="#antennes"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              Antennes
-            </Link>
-            <Link
-              href="#ressources"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              Ressources
-            </Link>
-            <Link
-              href="#actualites"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              Actualités
-            </Link>
-            <Link
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
-            >
-              Contact
-            </Link>
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={
+                  isActive(item.href)
+                    ? "text-[#1EA362] font-semibold py-1.5"
+                    : "text-[#5B6776] hover:text-[#0D2B4D] py-1.5"
+                }
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="pt-3 border-t border-[#EDF1F6]">

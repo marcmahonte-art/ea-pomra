@@ -11,7 +11,7 @@ export function ActorsSection() {
       cta: "Accéder à mon espace",
       href: "/etudiant/dashboard",
       color: "#1EA362",
-      bgColor: "#EBF7F0",
+      bgColor: "#E8F6EF",
       imageSrc: "/assets/actor-students.png",
       alt: "Étudiants africains avec sacs à dos",
     },
@@ -20,7 +20,7 @@ export function ActorsSection() {
       desc: "Suivez l'évolution du parcours de votre enfant en temps réel et recevez des rapports réguliers.",
       cta: "Accéder à l'espace parent",
       href: "/etudiant/dashboard",
-      color: "#1D64A6",
+      color: "#174A7C",
       bgColor: "#EEF5FC",
       imageSrc: "/assets/actor-parents.png",
       alt: "Parents d'étudiants",
@@ -30,7 +30,7 @@ export function ActorsSection() {
       desc: "Gérez les dossiers, validez les étapes et suivez les statistiques de votre pays.",
       cta: "Accéder à l'espace professionnel",
       href: "#antennes",
-      color: "#D97706",
+      color: "#F59E0B",
       bgColor: "#FAF6EB",
       imageSrc: "/assets/actor-antennes.png",
       alt: "Bâtiment institutionnel antenne avec drapeau",
@@ -38,7 +38,7 @@ export function ActorsSection() {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section id="acteurs" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         {/* Titre avec petit trait vert */}
         <div className="text-center max-w-xl mx-auto mb-14">

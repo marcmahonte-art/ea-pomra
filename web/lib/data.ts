@@ -276,3 +276,26 @@ export const PILLARS = [
     highlight: "96.4% de réussite au diplôme",
   },
 ];
+
+/* ------------------------------------------------------------------ *
+ * Dérivés — source unique de vérité pour l'espace Étudiant.
+ * Les pages ne doivent jamais recoder ces valeurs en dur.
+ * ------------------------------------------------------------------ */
+
+export const STUDENT_FULL_NAME = `${MOCK_ACTIVE_STUDENT.firstName} ${MOCK_ACTIVE_STUDENT.lastName}`;
+
+export const STUDENT_INITIALS = `${MOCK_ACTIVE_STUDENT.firstName.charAt(
+  0
+)}${MOCK_ACTIVE_STUDENT.lastName.charAt(0)}`;
+
+/** Antenne du pays d'accueil (là où l'étudiant effectue sa mobilité). */
+export const STUDENT_HOST_ANTENNE =
+  ANTENNES_EA_POMRA.find(
+    (antenne) => antenne.country === MOCK_ACTIVE_STUDENT.targetCountry
+  ) ?? ANTENNES_EA_POMRA[0];
+
+/** Antenne du pays d'origine (celle qui a reçu le dossier). */
+export const STUDENT_HOME_ANTENNE =
+  ANTENNES_EA_POMRA.find(
+    (antenne) => antenne.country === MOCK_ACTIVE_STUDENT.originCountry
+  ) ?? ANTENNES_EA_POMRA[0];

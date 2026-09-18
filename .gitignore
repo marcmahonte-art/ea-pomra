@@ -23,6 +23,16 @@ yarn-error.log*
 Thumbs.db
 *.tmp
 
+# Sauvegardes locales d'assets (originaux non optimises, hors application)
+assets-originaux/
+
+# Metadonnees locales de l'assistant (notes de travail, non publiees)
+.workbuddy-ai/
+
+# Liaison au projet Vercel — contient des identifiants de projet, ne se partage pas
+.vercel/
+web/.vercel/
+
 # Editor
 .vscode/
 .idea/

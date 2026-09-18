@@ -17,10 +17,44 @@ import {
   HelpCircle,
   Send,
 } from "lucide-react";
+import {
+  MOCK_ACTIVE_STUDENT,
+  MOCK_TIMELINE_EVENTS,
+  MOCK_NOTIFICATIONS,
+  STUDENT_HOST_ANTENNE,
+} from "@/lib/data";
+
+const PARCOURS = [
+  { label: "Dossier soumis", date: "02/07/2026", state: "done" },
+  { label: "Avis OCO", date: "18/07/2026", state: "done" },
+  { label: "STSS sécurisé", date: "14/08/2026", state: "done" },
+  { label: "Accueil & PAP", date: "En cours", state: "current" },
+] as const;
+
+const STATUT_STYLES: Record<
+  string,
+  { badge: string; dot: string }
+> = {
+  completed: { badge: "bg-[#E8F6EF] text-[#1EA362]", dot: "bg-[#1EA362]" },
+  current: { badge: "bg-[#EBF3FA] text-[#3B82F6]", dot: "bg-[#3B82F6]" },
+  upcoming: { badge: "bg-[#F7F9FB] text-[#8E9BAA]", dot: "bg-[#E6E9EF]" },
+};
 
 export default function StudentDashboardPage() {
+  const student = MOCK_ACTIVE_STUDENT;
+  const etapesTerminees = MOCK_TIMELINE_EVENTS.filter(
+    (e) => e.status === "completed"
+  ).length;
+
   return (
     <div className="space-y-8">
+      {/* Titre de la page. C'est le seul <h1> : la salutation de la coquille
+          est un <p>, pour que le titre annoncé décrive la page et non le nom
+          de l'utilisateur. */}
+      <h1 className="text-2xl font-black text-[#0D2B4D] tracking-tight">
+        Tableau de bord
+      </h1>
+
       {/* Ligne 1 : Carte d'Identifiant & Avancement */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Carte Identifiant (7 cols) */}
@@ -32,7 +66,7 @@ export default function StudentDashboardPage() {
                 VOTRE IDENTIFIANT
               </span>
               <div className="text-xl font-black font-mono tracking-tight text-white">
-                CI-2024-00125
+                {student.idPombra}
               </div>
               <span className="text-[11px] text-[#1EA362] font-semibold block">
                 Code ID-POMRA
@@ -65,17 +99,17 @@ export default function StudentDashboardPage() {
               <span className="text-[11px] text-[#8E9BAA] font-semibold block">
                 Statut du dossier
               </span>
-              <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#EBF7F0] text-[#1EA362] text-xs font-bold mt-1">
-                En cours
+              <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#E8F6EF] text-[#1EA362] text-xs font-bold mt-1">
+                Scolarité sécurisée
               </span>
             </div>
 
             <div>
               <span className="text-[11px] text-[#8E9BAA] font-semibold block">
-                Antenne
+                Antenne d&apos;accueil
               </span>
               <span className="text-xs font-bold text-[#0D2B4D] mt-1 block">
-                Côte d&apos;Ivoire
+                {STUDENT_HOST_ANTENNE.country}
               </span>
             </div>
 
@@ -84,7 +118,7 @@ export default function StudentDashboardPage() {
                 Date d&apos;inscription
               </span>
               <span className="text-xs font-bold text-[#0D2B4D] mt-1 block">
-                12 Mars 2024
+                2 Juillet 2026
               </span>
             </div>
 
@@ -93,7 +127,7 @@ export default function StudentDashboardPage() {
                 Programme visé
               </span>
               <span className="text-xs font-bold text-[#0D2B4D] mt-1 block">
-                Licence en Informatique
+                {student.degreeLevel} — Ingénierie des Systèmes Numériques &amp; IA
               </span>
             </div>
           </div>
@@ -107,7 +141,7 @@ export default function StudentDashboardPage() {
             </h3>
             <Link
               href="/etudiant/dossier"
-              className="text-xs font-semibold text-[#2563EB] hover:underline cursor-pointer"
+              className="text-xs font-semibold text-[#3B82F6] hover:underline cursor-pointer"
             >
               Voir tout →
             </Link>
@@ -115,49 +149,35 @@ export default function StudentDashboardPage() {
 
           {/* Stepper horizontal avec 4 étapes */}
           <div className="grid grid-cols-4 gap-2 pt-3 text-center">
-            {/* Étape 1 */}
-            <div className="space-y-1.5">
-              <div className="w-8 h-8 rounded-full bg-[#1EA362] text-white font-bold text-xs flex items-center justify-center mx-auto">
-                1
-              </div>
-              <div className="text-[11px] font-bold text-[#0D2B4D] leading-tight">
-                Dossier soumis
-              </div>
-              <div className="text-[10px] text-[#8E9BAA]">12/03/2024</div>
-            </div>
-
-            {/* Étape 2 */}
-            <div className="space-y-1.5">
-              <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white font-bold text-xs flex items-center justify-center mx-auto ring-4 ring-[#EFF6FF]">
-                2
-              </div>
-              <div className="text-[11px] font-bold text-[#0D2B4D] leading-tight">
-                Étude OCO
-              </div>
-              <div className="text-[10px] text-[#2563EB] font-semibold">En cours</div>
-            </div>
-
-            {/* Étape 3 */}
-            <div className="space-y-1.5 opacity-60">
-              <div className="w-8 h-8 rounded-full bg-[#E6E9EF] text-[#8E9BAA] font-bold text-xs flex items-center justify-center mx-auto">
-                3
-              </div>
-              <div className="text-[11px] font-bold text-[#0D2B4D] leading-tight">
-                Orientation
-              </div>
-              <div className="text-[10px] text-[#8E9BAA]">À venir</div>
-            </div>
-
-            {/* Étape 4 */}
-            <div className="space-y-1.5 opacity-60">
-              <div className="w-8 h-8 rounded-full bg-[#E6E9EF] text-[#8E9BAA] font-bold text-xs flex items-center justify-center mx-auto">
-                4
-              </div>
-              <div className="text-[11px] font-bold text-[#0D2B4D] leading-tight">
-                Décision finale
-              </div>
-              <div className="text-[10px] text-[#8E9BAA]">À venir</div>
-            </div>
+            {PARCOURS.map((etape, idx) => {
+              const done = etape.state === "done";
+              const current = etape.state === "current";
+              return (
+                <div key={etape.label} className={`space-y-1.5 ${current ? "" : done ? "" : "opacity-60"}`}>
+                  <div
+                    className={`w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center mx-auto ${
+                      done
+                        ? "bg-[#1EA362] text-white"
+                        : current
+                        ? "bg-[#3B82F6] text-white ring-4 ring-[#EBF3FA]"
+                        : "bg-[#E6E9EF] text-[#8E9BAA]"
+                    }`}
+                  >
+                    {done ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
+                  </div>
+                  <div className="text-[11px] font-bold text-[#0D2B4D] leading-tight">
+                    {etape.label}
+                  </div>
+                  <div
+                    className={`text-[10px] ${
+                      current ? "text-[#3B82F6] font-semibold" : "text-[#8E9BAA]"
+                    }`}
+                  >
+                    {etape.date}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -170,7 +190,7 @@ export default function StudentDashboardPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {/* Stat 1 */}
             <Link href="/etudiant/documents" className="bg-white p-4 rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#174A7C]/30 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#EBF3FA] text-[#3B82F6] flex items-center justify-center">
                 <Folder className="w-5 h-5" />
               </div>
               <div>
@@ -181,18 +201,18 @@ export default function StudentDashboardPage() {
 
             {/* Stat 2 */}
             <Link href="/etudiant/dossier" className="bg-white p-4 rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#1EA362]/30 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-[#EBF7F0] text-[#1EA362] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#E8F6EF] text-[#1EA362] flex items-center justify-center">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xl font-black text-[#0D2B4D]">2</div>
+                <div className="text-xl font-black text-[#0D2B4D]">{etapesTerminees}</div>
                 <div className="text-[10px] text-[#5B6776]">Étapes terminées</div>
               </div>
             </Link>
 
             {/* Stat 3 */}
-            <Link href="/etudiant/orientation" className="bg-white p-4 rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#D97706]/30 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center">
+            <Link href="/etudiant/orientation" className="bg-white p-4 rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#F59E0B]/30 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-[#FEF7EC] text-[#F59E0B] flex items-center justify-center">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
@@ -220,89 +240,52 @@ export default function StudentDashboardPage() {
             </div>
 
             <div className="space-y-4">
-              {/* Item 1 */}
-              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#EDF1F6]">
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#1EA362] text-white flex items-center justify-center mt-0.5 shrink-0">
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-[#0D2B4D]">
-                      Dossier de candidature soumis
-                    </div>
-                    <div className="text-[11px] text-[#8E9BAA]">12 Mars 2024 à 14:30</div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EBF7F0] text-[#1EA362]">
-                  Terminé
-                </span>
-              </div>
+              {MOCK_TIMELINE_EVENTS.map((event, idx) => {
+                const styles = STATUT_STYLES[event.status];
+                const isCompleted = event.status === "completed";
+                const isCurrent = event.status === "current";
+                const isLast = idx === MOCK_TIMELINE_EVENTS.length - 1;
 
-              {/* Item 2 */}
-              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#EDF1F6]">
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#2563EB] text-white font-bold text-xs flex items-center justify-center mt-0.5 shrink-0">
-                    2
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-[#0D2B4D]">
-                      Étude par l&apos;Expert OCO
+                return (
+                  <div
+                    key={event.title}
+                    className={`flex items-start justify-between gap-3 ${
+                      isLast ? "" : "pb-3 border-b border-[#EDF1F6]"
+                    } ${isCompleted ? "" : isCurrent ? "" : "opacity-60"}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={`w-7 h-7 rounded-full text-white font-bold text-xs flex items-center justify-center mt-0.5 shrink-0 ${
+                          isCompleted
+                            ? "bg-[#1EA362]"
+                            : isCurrent
+                            ? "bg-[#3B82F6]"
+                            : "bg-[#E6E9EF] text-[#8E9BAA]"
+                        }`}
+                      >
+                        {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-[#0D2B4D]">{event.title}</div>
+                        <div className="text-[11px] text-[#5B6776] leading-snug">
+                          {event.date} — {event.actor}
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-[11px] text-[#5B6776]">
-                      Votre dossier est en cours d&apos;analyse par l&apos;expert OCO.
-                    </div>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${styles.badge}`}
+                    >
+                      {event.badgeText ?? event.status}
+                    </span>
                   </div>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#EFF6FF] text-[#2563EB]">
-                  En cours
-                </span>
-              </div>
-
-              {/* Item 3 */}
-              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#EDF1F6] opacity-60">
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#E6E9EF] text-[#8E9BAA] font-bold text-xs flex items-center justify-center mt-0.5 shrink-0">
-                    3
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-[#0D2B4D]">
-                      Orientation proposée
-                    </div>
-                    <div className="text-[11px] text-[#8E9BAA]">
-                      Orientation académique et établissement recommandé.
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F7F9FB] text-[#8E9BAA]">
-                  À venir
-                </span>
-              </div>
-
-              {/* Item 4 */}
-              <div className="flex items-start justify-between gap-3 opacity-60">
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#E6E9EF] text-[#8E9BAA] font-bold text-xs flex items-center justify-center mt-0.5 shrink-0">
-                    4
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-[#0D2B4D]">
-                      Décision finale BEC
-                    </div>
-                    <div className="text-[11px] text-[#8E9BAA]">
-                      Validation finale et communication de la décision.
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F7F9FB] text-[#8E9BAA]">
-                  À venir
-                </span>
-              </div>
+                );
+              })}
             </div>
 
             <div className="pt-2">
               <Link
                 href="/etudiant/dossier"
-                className="text-xs font-bold text-[#2563EB] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#3B82F6] hover:underline inline-flex items-center gap-1 cursor-pointer"
               >
                 <span>Voir le détail de mon dossier</span>
                 <span>→</span>
@@ -320,7 +303,7 @@ export default function StudentDashboardPage() {
               {/* Action 1 */}
               <Link
                 href="/etudiant/documents"
-                className="p-4 rounded-2xl bg-[#EBF7F0]/60 border border-[#C5EBDA] text-left hover:bg-[#EBF7F0] transition-colors cursor-pointer group"
+                className="p-4 rounded-2xl bg-[#E8F6EF]/60 border border-[#C5EBDA] text-left hover:bg-[#E8F6EF] transition-colors cursor-pointer group"
               >
                 <div className="w-9 h-9 rounded-xl bg-white text-[#1EA362] flex items-center justify-center mb-2 shadow-xs">
                   <Upload className="w-4 h-4" />
@@ -332,9 +315,9 @@ export default function StudentDashboardPage() {
               {/* Action 2 */}
               <Link
                 href="/etudiant/messages"
-                className="p-4 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE] text-left hover:bg-[#EFF6FF] transition-colors cursor-pointer group"
+                className="p-4 rounded-2xl bg-[#EBF3FA]/60 border border-[#D5E5F5] text-left hover:bg-[#EBF3FA] transition-colors cursor-pointer group"
               >
-                <div className="w-9 h-9 rounded-xl bg-white text-[#2563EB] flex items-center justify-center mb-2 shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-white text-[#3B82F6] flex items-center justify-center mb-2 shadow-xs">
                   <MessageSquare className="w-4 h-4" />
                 </div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Contacter mon antenne</div>
@@ -344,9 +327,9 @@ export default function StudentDashboardPage() {
               {/* Action 3 */}
               <Link
                 href="/etudiant/pap"
-                className="p-4 rounded-2xl bg-[#FEF3C7]/60 border border-[#FDE68A] text-left hover:bg-[#FEF3C7] transition-colors cursor-pointer group"
+                className="p-4 rounded-2xl bg-[#FEF7EC]/60 border border-[#FDE68A] text-left hover:bg-[#FEF7EC] transition-colors cursor-pointer group"
               >
-                <div className="w-9 h-9 rounded-xl bg-white text-[#D97706] flex items-center justify-center mb-2 shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-white text-[#F59E0B] flex items-center justify-center mb-2 shadow-xs">
                   <HeartHandshake className="w-4 h-4" />
                 </div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Demander un accompagnement PAP</div>
@@ -356,13 +339,13 @@ export default function StudentDashboardPage() {
               {/* Action 4 */}
               <Link
                 href="/etudiant/stss"
-                className="p-4 rounded-2xl bg-[#F3E8FF]/60 border border-[#DDD6FE] text-left hover:bg-[#F3E8FF] transition-colors cursor-pointer group"
+                className="p-4 rounded-2xl bg-[#FBF6EA]/60 border border-[#F4E4BC] text-left hover:bg-[#FBF6EA] transition-colors cursor-pointer group"
               >
-                <div className="w-9 h-9 rounded-xl bg-white text-[#7C3AED] flex items-center justify-center mb-2 shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-white text-[#C89C2E] flex items-center justify-center mb-2 shadow-xs">
                   <ArrowLeftRight className="w-4 h-4" />
                 </div>
-                <div className="text-xs font-bold text-[#0D2B4D]">Demander un transfert STSS</div>
-                <div className="text-[11px] text-[#5B6776]">Effectuer une demande</div>
+                <div className="text-xs font-bold text-[#0D2B4D]">Suivre mon transfert STSS</div>
+                <div className="text-[11px] text-[#5B6776]">Consulter la quittance</div>
               </Link>
             </div>
           </div>
@@ -373,42 +356,32 @@ export default function StudentDashboardPage() {
               <h4 className="text-sm font-bold text-[#0D2B4D]">Notifications récentes</h4>
               <Link
                 href="/etudiant/notifications"
-                className="text-xs font-semibold text-[#2563EB] hover:underline cursor-pointer"
+                className="text-xs font-semibold text-[#3B82F6] hover:underline cursor-pointer"
               >
                 Voir tout →
               </Link>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#2563EB] mt-1.5 shrink-0"></span>
-                <div>
-                  <p className="text-xs text-[#0D2B4D] font-medium leading-snug">
-                    Votre dossier est en cours d&apos;étude par l&apos;expert OCO.
-                  </p>
-                  <span className="text-[10px] text-[#8E9BAA]">Il y a 2 heures</span>
+              {MOCK_NOTIFICATIONS.map((notif) => (
+                <div key={notif.id} className="flex items-start gap-3">
+                  <span
+                    className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                      notif.type === "success"
+                        ? "bg-[#1EA362]"
+                        : notif.type === "warning"
+                        ? "bg-[#F59E0B]"
+                        : "bg-[#3B82F6]"
+                    }`}
+                  ></span>
+                  <div>
+                    <p className="text-xs text-[#0D2B4D] font-medium leading-snug">
+                      {notif.title}
+                    </p>
+                    <span className="text-[10px] text-[#8E9BAA]">{notif.date}</span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#1EA362] mt-1.5 shrink-0"></span>
-                <div>
-                  <p className="text-xs text-[#0D2B4D] font-medium leading-snug">
-                    Document &quot;Relevé de notes&quot; approuvé.
-                  </p>
-                  <span className="text-[10px] text-[#8E9BAA]">Il y a 1 jour</span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#D97706] mt-1.5 shrink-0"></span>
-                <div>
-                  <p className="text-xs text-[#0D2B4D] font-medium leading-snug">
-                    Nouveau message de votre antenne.
-                  </p>
-                  <span className="text-[10px] text-[#8E9BAA]">Il y a 2 jours</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -420,45 +393,45 @@ export default function StudentDashboardPage() {
         <div className="lg:col-span-7 space-y-3">
           <h3 className="text-sm font-bold text-[#0D2B4D]">Ressources utiles</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0">
+            <Link href="/ressources" className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#174A7C]/30 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-[#EBF3FA] text-[#3B82F6] flex items-center justify-center shrink-0">
                 <Download className="w-4 h-4" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Guide étudiant</div>
-                <div className="text-[10px] text-[#5B6776]">Télécharger le guide</div>
+                <div className="text-[10px] text-[#5B6776]">Consulter le guide</div>
               </div>
-            </div>
+            </Link>
 
-            <div className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center shrink-0">
+            <Link href="/a-propos" className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#174A7C]/30 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-[#FEF7EC] text-[#F59E0B] flex items-center justify-center shrink-0">
                 <ExternalLink className="w-4 h-4" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Présentation EA-POMRA</div>
                 <div className="text-[10px] text-[#5B6776]">Découvrir la plateforme</div>
               </div>
-            </div>
+            </Link>
 
-            <div className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#EBF7F0] text-[#1EA362] flex items-center justify-center shrink-0">
+            <Link href="/ressources#faq" className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#174A7C]/30 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-[#E8F6EF] text-[#1EA362] flex items-center justify-center shrink-0">
                 <HelpCircle className="w-4 h-4" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Questions fréquentes</div>
                 <div className="text-[10px] text-[#5B6776]">Trouver des réponses</div>
               </div>
-            </div>
+            </Link>
 
-            <div className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#F3E8FF] text-[#7C3AED] flex items-center justify-center shrink-0">
+            <Link href="/contact" className="p-3.5 bg-white rounded-2xl border border-[#E6E9EF] shadow-xs flex items-center gap-3 hover:border-[#174A7C]/30 transition-colors">
+              <div className="w-9 h-9 rounded-xl bg-[#FBF6EA] text-[#C89C2E] flex items-center justify-center shrink-0">
                 <Send className="w-4 h-4" />
               </div>
               <div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Nous écrire</div>
                 <div className="text-[10px] text-[#5B6776]">Envoyer un message</div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 

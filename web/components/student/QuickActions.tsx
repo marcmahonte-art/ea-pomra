@@ -90,7 +90,7 @@ export function QuickActions() {
             {/* Action 4 : Partage Parent */}
             <button
               onClick={handleShareWithParent}
-              className="flex items-center gap-3 p-3.5 rounded-xl bg-[#F0F3F7] border border-[#E2E8F0] text-left hover:bg-[#E5EAEF] transition-colors cursor-pointer group"
+              className="flex items-center gap-3 p-3.5 rounded-xl bg-[#F0F3F7] border border-[#E6E9EF] text-left hover:bg-[#E5EAEF] transition-colors cursor-pointer group"
             >
               <div className="w-10 h-10 rounded-lg bg-[#0D2B4D] text-white flex items-center justify-center shrink-0">
                 {parentShared ? <Check className="w-5 h-5 text-[#1EA362]" /> : <Share2 className="w-5 h-5" />}

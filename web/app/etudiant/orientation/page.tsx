@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Compass, CheckCircle2, Clock, Calendar, MessageSquare, Award, Building2, BookOpen } from "lucide-react";
+import { Compass, CheckCircle2, Calendar, Award, Building2, BookOpen } from "lucide-react";
+import { MOCK_ACTIVE_STUDENT } from "@/lib/data";
 
 export function OrientationPage() {
   const [rdvBooked, setRdvBooked] = useState(false);
@@ -33,38 +34,42 @@ export function OrientationPage() {
       </div>
 
       {rdvBooked && (
-        <div className="p-4 bg-[#EBF7F0] border border-[#C5EBDA] text-[#1EA362] rounded-2xl text-xs font-bold flex items-center justify-between">
+        <div className="p-4 bg-[#E8F6EF] border border-[#C5EBDA] text-[#1EA362] rounded-2xl text-xs font-bold flex items-center justify-between">
           <span>✅ Demande d&apos;entretien enregistrée ! Un conseiller OCO vous contactera par WhatsApp sous 24h.</span>
           <button onClick={() => setRdvBooked(false)} className="underline cursor-pointer">Fermer</button>
         </div>
       )}
 
-      {/* État de l'étude OCO */}
+      {/* Avis OCO */}
       <div className="bg-white rounded-3xl border border-[#E6E9EF] p-6 sm:p-8 shadow-eap-soft space-y-4">
-        <div className="flex items-center justify-between pb-4 border-b border-[#EDF1F6]">
+        <div className="flex items-center justify-between pb-4 border-b border-[#EDF1F6] gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center font-bold">
-              <Clock className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-2xl bg-[#E8F6EF] text-[#1EA362] flex items-center justify-center font-bold">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#0D2B4D]">Étude OCO en cours d&apos;instruction</h2>
-              <p className="text-xs text-[#5B6776]">Attribuée au comité académique Antenne Côte d&apos;Ivoire & Sénégal</p>
+              <h2 className="text-base font-bold text-[#0D2B4D]">
+                Avis d&apos;orientation rendu — {MOCK_ACTIVE_STUDENT.ocoFeedback?.verdict}
+              </h2>
+              <p className="text-xs text-[#5B6776]">
+                Rendu par {MOCK_ACTIVE_STUDENT.ocoFeedback?.expertName}
+              </p>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full bg-[#EFF6FF] text-[#2563EB] text-xs font-bold">
-            Délai estimé : 48h
+          <span className="px-3 py-1 rounded-full bg-[#E8F6EF] text-[#1EA362] text-xs font-bold">
+            {MOCK_ACTIVE_STUDENT.ocoFeedback?.date}
           </span>
         </div>
 
         <p className="text-xs text-[#5B6776] leading-relaxed">
-          Nos experts analysent vos relevés de notes du secondaire et votre projet professionnel pour valider la faisabilité de votre inscription en <strong>Licence Informatique</strong> et vous proposer les meilleures filières d&apos;excellence associées.
+          {MOCK_ACTIVE_STUDENT.ocoFeedback?.comment}
         </p>
       </div>
 
       {/* Filières et Débouchés Recommandés */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="bg-white p-6 rounded-3xl border border-[#E6E9EF] shadow-eap-soft space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EBF7F0] text-[#1EA362] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-[#E8F6EF] text-[#1EA362] flex items-center justify-center">
             <BookOpen className="w-5 h-5" />
           </div>
           <h3 className="text-sm font-bold text-[#0D2B4D]">Génie Logiciel & Développement Web</h3>
@@ -73,21 +78,21 @@ export function OrientationPage() {
         </div>
 
         <div className="bg-white p-6 rounded-3xl border border-[#E6E9EF] shadow-eap-soft space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-[#EBF3FA] text-[#3B82F6] flex items-center justify-center">
             <Award className="w-5 h-5" />
           </div>
           <h3 className="text-sm font-bold text-[#0D2B4D]">Intelligence Artificielle & Data Science</h3>
           <p className="text-xs text-[#5B6776]">Spécialisation d&apos;avenir en collaboration avec les centres de recherche de Côte d&apos;Ivoire et du Sénégal.</p>
-          <div className="pt-2 text-[11px] font-bold text-[#2563EB]">Recommandation : Priorité 2</div>
+          <div className="pt-2 text-[11px] font-bold text-[#3B82F6]">Recommandation : Priorité 2</div>
         </div>
 
         <div className="bg-white p-6 rounded-3xl border border-[#E6E9EF] shadow-eap-soft space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-[#FEF7EC] text-[#F59E0B] flex items-center justify-center">
             <Building2 className="w-5 h-5" />
           </div>
           <h3 className="text-sm font-bold text-[#0D2B4D]">Cybersécurité & Réseaux Télécoms</h3>
           <p className="text-xs text-[#5B6776]">Forte demande bancaire et des opérateurs télécoms (Airtel, Moov, Orange).</p>
-          <div className="pt-2 text-[11px] font-bold text-[#D97706]">Recommandation : Optionnelle</div>
+          <div className="pt-2 text-[11px] font-bold text-[#F59E0B]">Recommandation : Optionnelle</div>
         </div>
       </div>
     </div>

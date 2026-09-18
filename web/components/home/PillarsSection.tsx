@@ -14,7 +14,7 @@ export function PillarsSection() {
       title: "Mobilité académique",
       desc: "Étudiez dans les meilleures universités en Afrique.",
       icon: Globe,
-      color: "#1D64A6",
+      color: "#174A7C",
       bgColor: "#EBF3FA",
     },
     {
@@ -28,13 +28,13 @@ export function PillarsSection() {
       title: "Sécurité & Confiance",
       desc: "Vos données sont protégées. Traçabilité et transparence garanties.",
       icon: ShieldCheck,
-      color: "#7C3AED",
-      bgColor: "#F3E8FF",
+      color: "#C89C2E",
+      bgColor: "#FBF6EA",
     },
   ];
 
   return (
-    <section className="py-6 bg-white">
+    <section id="piliers" className="py-6 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {cards.map((c, idx) => {
@@ -42,7 +42,7 @@ export function PillarsSection() {
             return (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-2xl border border-[#E6E9EF] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-eap-card hover:border-[#CBD5E1] transition-all duration-200 flex flex-col items-start"
+                className="bg-white p-6 rounded-2xl border border-[#E6E9EF] shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-eap-card hover:border-[#A2AAB3] transition-all duration-200 flex flex-col items-start"
               >
                 <div
                   className="w-12 h-12 rounded-full flex items-center justify-center mb-4 shrink-0"

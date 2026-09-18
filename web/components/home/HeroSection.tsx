@@ -11,7 +11,7 @@ export function HeroSection() {
           {/* Col Gauche : Pitch & CTA */}
           <div className="lg:col-span-6 space-y-6">
             {/* Badge pilule vert clair */}
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#EBF7F0] border border-[#C5EBDA] text-[#1EA362] text-[12px] font-semibold">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#E8F6EF] border border-[#C5EBDA] text-[#1EA362] text-[12px] font-semibold">
               Plateforme d&apos;Orientation, de Mobilité et de Réussite Académique
             </div>
 
@@ -38,7 +38,7 @@ export function HeroSection() {
 
               <Link
                 href="#comment-ca-marche"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-[#F7F9FB] text-[#0D2B4D] border border-[#E2E8F0] text-[15px] font-semibold transition-all shadow-sm cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white hover:bg-[#F7F9FB] text-[#0D2B4D] border border-[#E6E9EF] text-[15px] font-semibold transition-all shadow-sm cursor-pointer"
               >
                 <div className="w-5 h-5 rounded-full border border-[#0D2B4D] flex items-center justify-center">
                   <Play className="w-2.5 h-2.5 text-[#0D2B4D] fill-current ml-0.5" />

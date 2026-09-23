@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Bell, CheckCircle2, AlertCircle, Info, AlertTriangle } from "lucide-react";
-import { EmptyState } from "./EmptyState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { NotificationItem } from "@/lib/types";
 
 /**

@@ -1,5 +1,5 @@
 import { FileText, Download, Upload, AlertCircle } from "lucide-react";
-import { EmptyState } from "./EmptyState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { DocumentItem, DocumentStatus } from "@/lib/parent-types";
 
 const STATUS_STYLES: Record<

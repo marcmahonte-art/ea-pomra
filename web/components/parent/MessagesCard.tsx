@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MessageSquare, ArrowRight } from "lucide-react";
-import { EmptyState } from "./EmptyState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { MessagePreview } from "@/lib/parent-types";
 
 /**

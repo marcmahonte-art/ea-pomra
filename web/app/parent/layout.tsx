@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ParentShell from "@/components/parent/ParentShell";
 import { requireParentSession } from "@/lib/parent-session";
 import { buildParentDashboardData } from "@/lib/parent-data";
+import { SITE_NAME } from "@/lib/site";
 
 /**
  * Métadonnées de l'espace parent.
@@ -12,9 +13,19 @@ import { buildParentDashboardData } from "@/lib/parent-data";
  * jamais être indexées, ni suivies, ni mises en cache par un intermédiaire.
  * C'est la protection principale ; la directive `Disallow: /parent` du
  * robots.txt ne fait que la compléter.
+ *
+ * Le gabarit de titre est **redéclaré ici**, et non hérité du layout racine.
+ * Vérifié en production : un layout intermédiaire qui déclare son `title` sous
+ * forme de chaîne simple interrompt la propagation du gabarit racine vers ses
+ * petits-enfants — `/parent` recevait bien « | EA-POMRA », mais
+ * `/parent/parcours` et consorts non. Redéclarer `template` ici garantit que
+ * toute page du portail, à n'importe quelle profondeur, porte le suffixe.
  */
 export const metadata: Metadata = {
-  title: "Espace parent",
+  title: {
+    default: "Espace parent",
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
     "Suivi du parcours de mobilité étudiante : étapes du dossier, scolarité, transferts STSS sécurisés et accompagnement psychosocial.",
   robots: {

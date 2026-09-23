@@ -1,4 +1,32 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* --- Balayage des sources : explicite, et non automatique ------------------
+   Le balayage automatique de Tailwind part de la racine du dépôt git, qui est
+   ici le dossier PARENT de `web/` : il y parcourt donc `site/` (spécifications
+   en Markdown, remplies de crochets comme `[Période]` ou `[Générer]`),
+   `assets-originaux/` et les images de la racine. Ces fichiers ne contiennent
+   aucune classe, mais leurs crochets produisent des candidats que Tailwind
+   transforme en CSS invalide — et le build échoue sur un
+   « Missed semicolon » dans un fichier qui n'a rien à voir avec le style.
+
+   Déclarer les sources une par une rend le balayage déterministe, identique
+   entre le poste de développement et l'intégration continue, et accélère le
+   build. Toute classe vit dans `app/`, `components/` ou `lib/` : si un jour ce
+   n'est plus le cas, il faudra ajouter la ligne correspondante ici. */
+@source "../app";
+@source "../components";
+@source "../lib";
+
+/* --- Typographie (spec §4.2) ----------------------------------------------
+   Plus Jakarta Sans est chargée par une feuille de style distante déclarée
+   dans `app/layout.tsx`, et non par `next/font` : ce dernier télécharge la
+   police **au moment du build**, ce qui fait échouer la compilation quand le
+   réseau est indisponible. Déclarer ici la famille suffit à ce que l'utilitaire
+   `font-jakarta` existe réellement. */
+@theme {
+  --font-jakarta: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
 @layer base {
   :root {

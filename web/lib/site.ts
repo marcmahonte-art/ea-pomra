@@ -47,8 +47,18 @@ export const PUBLIC_ROUTES = [
  * Préfixes des routes privées, exclues de l'indexation. Toutes les zones
  * nominatives de la plateforme doivent y figurer : un espace oublié ici
  * exposerait un dossier étudiant aux moteurs de recherche.
+ *
+ * Les quatre zones le sont : l'espace étudiant, le portail parent et les deux
+ * back-offices (antenne et BEC). Ces derniers affichent des noms d'étudiants et
+ * des états de traitement ; les laisser indexables serait la même faute que pour
+ * un dossier nominatif.
  */
-export const PRIVATE_ROUTE_PREFIXES = ["/etudiant", "/parent"] as const;
+export const PRIVATE_ROUTE_PREFIXES = [
+  "/etudiant",
+  "/parent",
+  "/antenne",
+  "/bec",
+] as const;
 
 /**
  * Construit les métadonnées d'une page publique à partir de son titre court et

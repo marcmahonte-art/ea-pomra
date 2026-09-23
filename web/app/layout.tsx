@@ -64,6 +64,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className="h-full scroll-smooth">
+      <head>
+        {/* Plus Jakarta Sans (spec §4.2). Chargée par une feuille de style
+            distante plutôt que par `next/font` : ce dernier télécharge la
+            police au moment du build, ce qui fait échouer la compilation quand
+            le réseau est indisponible. Ici, l'échec éventuel est purement
+            visuel et se replie sur la pile système déclarée dans `@theme`. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans text-[#0D2B4D] bg-[#F7F9FB]">
         {children}
       </body>

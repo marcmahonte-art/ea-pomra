@@ -12,7 +12,7 @@ import { DocumentsCard } from "@/components/parent/DocumentsCard";
 import { NotificationsCard } from "@/components/parent/NotificationsCard";
 import { MessagesCard } from "@/components/parent/MessagesCard";
 import { QuickActions } from "@/components/parent/QuickActions";
-import { SectionHeading } from "@/components/parent/SectionHeading";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export const metadata: Metadata = {
   title: "Tableau de bord",

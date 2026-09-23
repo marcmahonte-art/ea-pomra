@@ -33,6 +33,11 @@ export const metadata: Metadata = {
  * propriété du **rôle** et non une absence de restriction : `scopeDossiers()`
  * traite explicitement le cas BEC avant le refus par défaut. Un agent
  * d'antenne dont le pays serait mal configuré, lui, ne verrait rien.
+ *
+ * Comme côté antenne, la garde est placée dans le layout parce qu'il est hors
+ * de la frontière `<Suspense>` de `(espace)/loading.tsx` : c'est ce qui garantit
+ * un statut 404 exact, et non un soft-404, quand un agent d'antenne ouvre une
+ * URL `/bec/...`.
  */
 export default async function BecLayout({
   children,

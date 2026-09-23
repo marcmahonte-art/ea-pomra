@@ -38,6 +38,14 @@ export const metadata: Metadata = {
  * coquille. Le compteur de dossiers en attente est calculé côté serveur à
  * partir du même périmètre que les pages : le badge de la barre latérale ne peut
  * donc pas afficher un nombre que l'agent n'a pas le droit de voir.
+ *
+ * La garde est placée **ici** et non dans les pages, pour une raison de statut
+ * HTTP : ce layout est hors de la frontière `<Suspense>` créée par
+ * `(espace)/loading.tsx`. Un `notFound()` levé sous cette frontière s'affiche
+ * correctement mais avec un statut 200 (soft-404) ; levé ici, il produit un vrai
+ * 404. Un agent BEC qui ouvre une URL `/antenne/...` obtient donc un 404 exact,
+ * et non une page « introuvable » déguisée en succès. Détail complet :
+ * `app/antenne/(espace)/loading.tsx`.
  */
 export default async function AntenneLayout({
   children,

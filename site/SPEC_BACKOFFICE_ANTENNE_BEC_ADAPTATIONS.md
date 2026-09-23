@@ -214,12 +214,57 @@ performance »*. Trois décisions en découlent : ordre **alphabétique** (jamai
 ni médaille, mêmes quatre nombres pour chaque pays sans code couleur comparatif. Une note visible
 rappelle la règle à l'écran.
 
+### 2.14 Le squelette de zone est dans un groupe de routes — pour que le 404 reste un 404
+
+C'est l'écart le moins visible et le plus coûteux à découvrir. Il mérite d'être expliqué en entier.
+
+**Le symptôme.** `/antenne/dossiers/CI-0` (dossier ivoirien, hors périmètre d'un agent sénégalais) et
+`/antenne/dossiers/XX-999` (identifiant inexistant) affichaient bien la page « introuvable » — mais
+avec un statut **200**. Le corps de la réponse était identique dans les deux cas, la logique de
+périmètre faisait donc son travail ; c'est le **statut** qui était faux. Un soft-404.
+
+**La cause.** Un `loading.tsx` ne se contente pas d'afficher un squelette : il crée une frontière
+`<Suspense>` autour de **tous** les descendants de son segment. Or Next.js remplit cette frontière et
+envoie la réponse **avant** que la page n'ait fini de se rendre. À cet instant le statut HTTP est figé
+à 200. Quand la page lève ensuite `notFound()`, Next.js l'attrape bien et écrit `res.statusCode = 404`
+— mais l'en-tête est déjà parti. La page « introuvable » s'affiche dans le flux, le statut reste 200.
+
+Vérifié en isolant les variables : retirer `app/antenne/loading.tsx` suffit à faire passer les deux
+identifiants à 404, et `notFound()` déplacé dans `generateMetadata` ne change rien (la résolution des
+métadonnées se produit elle aussi sous la frontière).
+
+**La correction.** Le `loading.tsx` de chaque zone est descendu dans un groupe de routes `(espace)`,
+ce qui place la frontière **sous** le chemin menant à `dossiers/[id]` — seul segment qui doit
+conserver un 404 exact :
+
+```text
+app/antenne/layout.tsx              <- hors frontière : garde de zone
+app/antenne/(espace)/loading.tsx    <- frontière (squelette)
+app/antenne/(espace)/**             -> squelette appliqué (10 routes)
+app/antenne/dossiers/[id]/page.tsx  -> hors frontière : 404 correct
+```
+
+Le groupe n'ajoute aucun segment d'URL : les 20 routes gardent exactement les mêmes chemins. §31
+(squelettes) et §40 (ne pas révéler l'existence d'un dossier) sont donc satisfaits **ensemble**, au
+lieu d'en sacrifier un.
+
+**Second effet, sur le refus de rôle.** `requireBackofficeScope()` lève `notFound()` sur **toutes** les
+routes d'une zone quand le rôle ne correspond pas — un agent BEC qui ouvre `/antenne/orientation`, par
+exemple. Ces routes-là gardent leur squelette, donc le même soft-404 s'y appliquait. Les layouts de
+zone sont, eux, **hors** de la frontière : la garde y est déjà appelée, et un `notFound()` levé à cet
+endroit produit un vrai 404. Le refus de rôle est donc exact partout, sans rien déplacer de plus.
+
+**Ce qu'il ne faut pas faire.** Remonter l'un des deux `loading.tsx` à la racine de sa zone. Le
+fichier porte un avertissement en tête pour cette raison, et les layouts renvoient vers lui. Le
+comportement n'est pas visible dans l'interface : seul un relevé de statuts le détecte.
+
 ---
 
 ## 3. Ce qui a été livré
 
 **20 routes** — `app/antenne/*` (11) et `app/bec/*` (9), plus un `layout.tsx`, un `loading.tsx` et un
-`error.tsx` par zone.
+`error.tsx` par zone. Le `loading.tsx` de chaque zone vit dans un groupe de routes `(espace)` — voir
+§2.14 — ce qui n'ajoute aucun segment d'URL.
 
 | Antenne (§6) | BEC (§7) |
 |---|---|
@@ -278,6 +323,11 @@ explicitement le cas BEC avant le refus par défaut).
 | `robots.txt` | `Disallow: /etudiant`, `/parent`, `/antenne`, `/bec` |
 | `noindex` sur les pages | déclaré dans les deux layouts de zone |
 | Fuite du contenu PAP | **0 occurrence** (voir §5) |
+| **Statut d'un dossier hors périmètre** | **404** — `CI-0`, `CM-0`, `XX-999` |
+| **Statut d'un dossier dans le périmètre** | **200** — `SN-0` |
+| **Refus pour incompatibilité de rôle** | **404** — cookie BEC sur `/antenne/*` et inverse |
+| Étanchéité du périmètre (antenne SN) | **0** dossier des 7 autres pays dans le HTML servi |
+| Vue consolidée BEC | **8 pays** présents au tableau de bord |
 
 > Les mesures HTTP sont consignées dans `AUDIT_EA-POMRA_2026-09-18.md`.
 
@@ -299,3 +349,8 @@ explicitement le cas BEC avant le refus par défaut).
 8. **Palette** — les composants utilisent des valeurs hexadécimales directes, comme le reste du
    projet. La migration vers `var(--eap-*)` reste à faire, globalement.
 9. **`app/(site)/*`** — 23 erreurs de lint préexistantes, hors périmètre de ce chantier.
+10. **Page 404 dans la coquille** — un agent qui suit un lien périmé quitte le back-office et atterrit
+    sur la page 404 **publique** (logo du site, liens vers `/programmes`, `/antennes`, `/contact`).
+    Une `not-found.tsx` par zone la garderait dans sa coquille, mais elle serait rendue sous le
+    layout de zone : or c'est ce même layout qui lève `notFound()` en cas d'incompatibilité de rôle,
+    ce qui peut boucler. À traiter avec un rendu de secours qui n'exige pas de périmètre valide.

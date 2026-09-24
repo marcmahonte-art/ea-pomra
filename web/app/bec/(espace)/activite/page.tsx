@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { getActivityForScope } from "@/lib/backoffice-data";
+import { getActivityForScope, getDossiersForScope } from "@/lib/server/backoffice-service";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { ActivityLog } from "@/components/backoffice/ActivityLog";
 
@@ -23,8 +23,9 @@ const MAX_EVENTS = 50;
  */
 export default async function BecActivitePage() {
   const scope = await requireBackofficeScope("BEC", "activity.read");
-  const events = getActivityForScope(scope);
+  const dossiers = await getDossiersForScope(scope);
 
+  const events = await getActivityForScope(scope, dossiers);
   return (
     <div className="space-y-6">
       <PageHeader

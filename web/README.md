@@ -34,3 +34,48 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Back-office Antenne et BEC
+
+Le back-office utilise PostgreSQL et des sessions opaques stockées en base. Copier `.env.example` vers `.env.local`, puis définir au minimum :
+
+```text
+DATABASE_URL=postgresql://...
+NEXT_PUBLIC_SITE_URL=https://votre-domaine.org
+BACKOFFICE_SESSION_SECRET=une-valeur-longue-et-aleatoire
+BACKOFFICE_DOCUMENT_ENCRYPTION_KEY=une-autre-valeur-longue-et-aleatoire
+BACKOFFICE_TRUSTED_PROXY_HEADERS=x-forwarded-for
+BACKOFFICE_ALLOW_DEMO=false
+```
+
+`BACKOFFICE_ALLOW_DEMO=true` est accepté uniquement avec `NODE_ENV=development`. En production, la base est obligatoire et la démonstration ainsi que les migrations exécutées depuis l’application sont refusées.
+
+Appliquer les migrations SQL versionnées avant le déploiement avec l’utilisateur de migration PostgreSQL :
+
+```bash
+psql "$DATABASE_URL" -f db/migrations/001_backoffice_production.sql
+psql "$DATABASE_URL" -f db/migrations/002_backoffice_hardening.sql
+```
+
+La page `/backoffice/login` ne propose pas d’inscription publique. Les mutations passent par des Server Actions contrôlées par rôle, permission, périmètre, état et version optimiste. Le test unitaire ne nécessite pas PostgreSQL :
+
+Créer un compte initial sans exposer son mot de passe dans la ligne de commande :
+
+```bash
+export BACKOFFICE_BOOTSTRAP_PASSWORD='un-mot-de-passe-long-et-unique'
+npm run user:create -- --email responsable@example.org --name 'Nom Complet' --title 'Fonction' --role BEC
+```
+
+Pour une antenne, ajouter obligatoirement `--country-code SN --country-name Sénégal --country-flag 🇸🇳 --antenna-id SN-DKR --antenna-city Dakar`. Le compte est créé uniquement après application des migrations.
+
+```bash
+npm run test:unit
+```
+
+Les documents sont chiffrés en AES-256-GCM avant stockage PostgreSQL. La taille maximale, les limites de débit, les timeouts et la taille du pool sont configurables dans `.env.local`. En production, `BACKOFFICE_TRUSTED_PROXY_HEADERS` doit identifier les en-têtes définis par le proxy de confiance ; une IP client absente ou invalide ferme l'accès plutôt que de contourner la limitation. Le téléversement refuse les requêtes sans `Content-Length` ou `Transfer-Encoding: chunked` et impose une origine présente dans la liste séparée par des virgules de `NEXT_PUBLIC_SITE_URL` ; le reverse proxy doit donc conserver `Content-Length` et ne jamais convertir les téléversements en chunked. Les nouveaux blobs utilisent un AAD AES-GCM contenant l’identifiant et la version du document ; les blobs historiques sans marqueur AAD restent lisibles pour compatibilité, mais ne bénéficient pas encore de cette liaison.
+
+Purger les sessions expirées et les seaux de limitation expirés par lots bornés :
+
+```bash
+npm run maintenance:purge-sessions -- 10000
+```

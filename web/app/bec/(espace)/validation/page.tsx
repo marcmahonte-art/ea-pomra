@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeValidationQueue } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { DataTable, type Column } from "@/components/backoffice/DataTable";
@@ -23,7 +24,8 @@ export const metadata: Metadata = {
  */
 export default async function BecValidationPage() {
   const scope = await requireBackofficeScope("BEC", "dossiers.validate");
-  const rows = computeValidationQueue(scope);
+  const dossiers = await getDossiersForScope(scope);
+  const rows = computeValidationQueue(scope, undefined, dossiers);
 
   const columns: Column<ValidationQueueRow>[] = [
     {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BackofficeShell from "@/components/backoffice/BackofficeShell";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { computeValidationQueue } from "@/lib/backoffice-data";
+import { getPendingCountForScope } from "@/lib/server/backoffice-service";
 import { SITE_NAME } from "@/lib/site";
 
 /**
@@ -45,7 +45,7 @@ export default async function BecLayout({
   children: React.ReactNode;
 }) {
   const scope = await requireBackofficeScope("BEC", "dossiers.read");
-  const pendingCount = computeValidationQueue(scope).length;
+  const pendingCount = await getPendingCountForScope(scope);
 
   return (
     <BackofficeShell

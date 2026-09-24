@@ -45,9 +45,9 @@ export function OrientationQueue({
   dossiers: Dossier[];
   role: BackofficeRole;
 }) {
-  const transmitted = dossiers.filter((d) => d.orientation.transmittedAt !== null);
-  const withVerdict = dossiers.filter((d) => d.orientation.verdict !== null);
-  const awaiting = transmitted.filter((d) => d.orientation.verdict === null);
+  const transmitted = dossiers.filter((d) => d.orientation?.transmittedAt != null);
+  const withVerdict = dossiers.filter((d) => d.orientation?.verdict != null);
+  const awaiting = transmitted.filter((d) => d.orientation?.verdict == null);
   const toComplete = dossiers.filter((d) => d.state === "INCOMPLET");
 
   const columns: Column<Dossier>[] = [
@@ -82,7 +82,7 @@ export function OrientationQueue({
       header: "Date de transmission",
       render: (dossier) => (
         <span className="text-[11px] text-[#5B6776] whitespace-nowrap tabular-nums">
-          {dossier.orientation.transmittedAt ?? "Non transmis"}
+          {dossier.orientation?.transmittedAt ?? "Non transmis"}
         </span>
       ),
     },
@@ -90,7 +90,7 @@ export function OrientationQueue({
       key: "verdict",
       header: "Avis disponible ?",
       render: (dossier) =>
-        dossier.orientation.verdict ? (
+        dossier.orientation?.verdict ? (
           <span className="text-[11px] font-bold text-[#1EA362]">
             Oui — {dossier.orientation.verdict.replace(/_/g, " ").toLowerCase()}
           </span>
@@ -186,7 +186,11 @@ export function OrientationPanel({
   dossier: Dossier;
   role: BackofficeRole;
 }) {
-  const { transmittedAt, verdict, expertName } = dossier.orientation;
+  const { transmittedAt, verdict, expertName } = dossier.orientation ?? {
+    transmittedAt: null,
+    verdict: null,
+    expertName: null
+  };
 
   return (
     <div className="rounded-2xl border border-[#E6E9EF] bg-white shadow-eap-soft p-5">

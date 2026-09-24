@@ -24,6 +24,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { BackofficeRole } from "@/lib/backoffice-types";
+import { logout } from "@/app/backoffice/actions";
 
 /**
  * Coquille des back-offices Antenne et BEC.
@@ -187,17 +188,15 @@ export default function BackofficeShell({
             Aucun lien vers une page inexistante : un back-office dont la moitié
             des entrées mène à un 404 est pire qu'un back-office plus court. */}
 
-        {/* Déconnexion désactivée : il n'existe aucune session à fermer. Un
-            bouton actif qui ne fait rien serait pire qu'un bouton désactivé. */}
-        <button
-          type="button"
-          disabled
-          title="Authentification non encore branchée"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-[#98A2B3] cursor-not-allowed opacity-60"
-        >
-          <LogOut className="w-4 h-4" />
-          Déconnexion
-        </button>
+        <form action={logout}>
+          <button
+            type="submit"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-[#667085] hover:bg-[#F7F9FB] hover:text-[#0D2B4D]"
+          >
+            <LogOut className="w-4 h-4" />
+            Déconnexion
+          </button>
+        </form>
 
         {isDemo ? (
           <p className="mt-2 px-3 py-2 rounded-lg bg-[#FEF7EC] border border-[#FDE5C5] text-[10px] leading-tight text-[#B86E00]">

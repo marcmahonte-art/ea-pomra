@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import {
   ALL_FORMATIONS,
   ALL_PROGRAMS,
   COUNTRIES_REFERENCE,
-  CURRENT_PERIOD,
   computeCountryStats,
   computeEvolution,
   computeKpis,
   computeValidationQueue,
   parseGlobalFilters,
 } from "@/lib/backoffice-data";
+import { currentPeriod, referenceDateForScope } from "@/lib/server/temporal";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { GlobalFiltersBar } from "@/components/backoffice/GlobalFiltersBar";
 import { BECDashboard } from "@/components/backoffice/BECDashboard";
@@ -38,11 +39,13 @@ export default async function BecDashboardPage({
   const scope = await requireBackofficeScope("BEC", "dossiers.read");
   const params = await searchParams;
   const filters = parseGlobalFilters(params);
+  const dossiers = await getDossiersForScope(scope);
+  const period = currentPeriod(referenceDateForScope(scope));
 
-  const kpis = computeKpis(scope, filters);
-  const countryStats = computeCountryStats(scope, filters);
-  const validationQueue = computeValidationQueue(scope, filters);
-  const evolution = computeEvolution(scope, filters);
+  const kpis = computeKpis(scope, filters, dossiers);
+  const countryStats = computeCountryStats(scope, filters, dossiers);
+  const validationQueue = computeValidationQueue(scope, filters, dossiers);
+  const evolution = computeEvolution(scope, filters, dossiers);
 
   const activeFilters = [
     filters.country && filters.country !== "all"
@@ -59,7 +62,7 @@ export default async function BecDashboardPage({
         subtitle="Vue consolidée du périmètre global — 8 pays."
         meta={[
           { label: "Périmètre", value: "🌍 8 pays — vue consolidée" },
-          { label: "Période", value: CURRENT_PERIOD.label },
+          { label: "Période", value: period.label },
           ...(activeFilters.length > 0
             ? [{ label: "Filtres", value: activeFilters.join(" · ") }]
             : []),
@@ -74,7 +77,7 @@ export default async function BecDashboardPage({
         }))}
         programs={ALL_PROGRAMS}
         formations={ALL_FORMATIONS}
-        periodLabel={CURRENT_PERIOD.label}
+        periodLabel={period.label}
       />
 
       <BECDashboard

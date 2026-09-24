@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { parseDossierQuery, queryDossiers } from "@/lib/backoffice-data";
+import { queryDossierPageFromSearchParams } from "@/lib/server/backoffice-service";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { DossiersBrowser } from "@/components/backoffice/DossiersBrowser";
 
@@ -25,8 +25,7 @@ export default async function BecDossiersPage({
 }) {
   const scope = await requireBackofficeScope("BEC", "dossiers.read");
   const params = await searchParams;
-
-  const page = queryDossiers(scope, parseDossierQuery(params));
+  const page = await queryDossierPageFromSearchParams(scope, params);
 
   return (
     <div className="space-y-6">

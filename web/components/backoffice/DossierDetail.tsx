@@ -32,14 +32,16 @@ export function DossierDetail({
   role,
   permissions,
   history,
+  isDemo,
 }: {
   dossier: Dossier;
   role: BackofficeRole;
   permissions: Permission[];
   history: ActivityEvent[];
+  isDemo: boolean;
 }) {
   const showOrientation =
-    dossier.step === "ORIENTATION" || dossier.orientation.transmittedAt !== null;
+    dossier.step === "ORIENTATION" || dossier.orientation?.transmittedAt != null;
   const showMobilite = dossier.mobilite !== null;
   const showStss = dossier.stss !== null;
   const showSuivi = dossier.step === "SUIVI" || dossier.step === "DIPLOME";
@@ -66,9 +68,13 @@ export function DossierDetail({
       </div>
 
       <DossierDocuments
-        documents={dossier.documents}
-        dossierReference={dossier.reference}
-      />
+         documents={dossier.documents}
+         dossierId={dossier.id}
+         dossierVersion={dossier.version}
+         role={role}
+         dossierReference={dossier.reference}
+         canVerify={permissions.includes("documents.verify") && !isDemo}
+       />
 
       {showOrientation ? (
         <section className="space-y-3">

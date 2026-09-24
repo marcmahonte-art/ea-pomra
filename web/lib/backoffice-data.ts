@@ -43,6 +43,8 @@ import type {
   WorkflowStep,
 } from "./backoffice-types";
 import { STATE_LABELS } from "./backoffice-types";
+import { isDemoEnabled } from "./server/config";
+import { currentPeriod, previousPeriod, referenceDateForScope } from "./server/temporal";
 
 /* ------------------------------------------------------------------ *
  * 1. Utilitaires déterministes
@@ -387,6 +389,8 @@ function buildDocuments(seed: string, state: DossierState): DossierDocument[] {
           : status === "MANQUANT"
             ? "Pièce attendue auprès de la famille."
             : null,
+      hasFile: status !== "MANQUANT",
+      version: 1,
     };
   });
 
@@ -421,6 +425,7 @@ function buildHistory(
 
     return {
       id: `${seed}-ev-${index}`,
+      dossierId: seed,
       at: at.toISOString(),
       atLabel: frLabel(at),
       dossierRef: reference,
@@ -463,6 +468,9 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
   const targetIndex = (countryIndex + 3) % COUNTRIES.length;
   const target = COUNTRIES[targetIndex];
   const hasMobilite = state === "VALIDE" || state === "EN_MOBILITE" || state === "EN_SUIVI" || state === "DIPLOME";
+  const requiredAction = ACTION_REQUIRED_STATES.includes(state)
+    ? (ACTION_FOR_STATE[state] ?? null)
+    : null;
 
   return {
     id: `${country.code}-${index}`,
@@ -486,15 +494,14 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
     createdAtLabel: frLabel(createdAt),
     updatedAt: updatedAt.toISOString(),
     updatedAtLabel: frLabel(updatedAt),
+    version: 1,
     priority:
       state === "INCOMPLET" || state === "RECU"
         ? "HAUTE"
         : state === "A_VALIDER" || state === "AVIS_RECU"
           ? "NORMALE"
           : "BASSE",
-    requiredAction: ACTION_REQUIRED_STATES.includes(state)
-      ? (ACTION_FOR_STATE[state] ?? null)
-      : null,
+    requiredAction,
     documents,
     // Aucun contenu de fiche PAP n'est exposé : existence et statut seulement
     // (spec §24).
@@ -538,6 +545,8 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
             date: frLabel(shiftDays(between(`${seed}-sd`, 5, 40), `${seed}-sd`)),
           }
         : null,
+    overdueTaskCount:
+      requiredAction !== null && between(`${seed}-late`, 0, 3) === 0 ? 1 : 0,
   };
 }
 
@@ -559,10 +568,21 @@ const ALL_DOSSIERS: readonly Dossier[] = COUNTRIES.flatMap((country, countryInde
  * qui renverrait tout par défaut transformerait une erreur de configuration en
  * fuite de données entre pays.
  */
-export function scopeDossiers(scope: BackofficeScope, dossiers: readonly Dossier[]): Dossier[] {
-  if (scope.role === "BEC") return [...dossiers];
+export function assertMockDataAllowed(): void {
+  if (!isDemoEnabled()) {
+    throw new Error("Les données de démonstration sont désactivées");
+  }
+}
+
+export function scopeDossiers(
+  scope: BackofficeScope,
+  dossiers?: readonly Dossier[]
+): Dossier[] {
+  if (!dossiers) assertMockDataAllowed();
+  const source = dossiers ?? ALL_DOSSIERS;
+  if (scope.role === "BEC") return [...source];
   if (!scope.countryCode) return [];
-  return dossiers.filter((d) => d.countryCode === scope.countryCode);
+  return source.filter((d) => d.countryCode === scope.countryCode);
 }
 
 /**
@@ -574,15 +594,16 @@ export function scopeDossiers(scope: BackofficeScope, dossiers: readonly Dossier
  */
 export function getDossierForScope(
   scope: BackofficeScope,
-  id: string
+  id: string,
+  dossiers?: readonly Dossier[]
 ): Dossier | null {
-  const allowed = scopeDossiers(scope, ALL_DOSSIERS);
+  const allowed = scopeDossiers(scope, dossiers);
   return allowed.find((d) => d.id === id) ?? null;
 }
 
 /** Tous les dossiers du périmètre, sans filtre. Réservé aux agrégations internes. */
-export function getAllScoped(scope: BackofficeScope): Dossier[] {
-  return scopeDossiers(scope, ALL_DOSSIERS);
+export function getAllScoped(scope: BackofficeScope, dossiers?: readonly Dossier[]): Dossier[] {
+  return scopeDossiers(scope, dossiers);
 }
 
 /**
@@ -595,9 +616,10 @@ export function getAllScoped(scope: BackofficeScope): Dossier[] {
  */
 function scopedAndFiltered(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): Dossier[] {
-  const rows = scopeDossiers(scope, ALL_DOSSIERS);
+  const rows = scopeDossiers(scope, dossiers);
   if (!filters) return rows;
 
   return rows.filter((dossier) => {
@@ -614,8 +636,11 @@ function scopedAndFiltered(
   });
 }
 
-export function getActivityForScope(scope: BackofficeScope): ActivityEvent[] {
-  const allowed = scopeDossiers(scope, ALL_DOSSIERS);
+export function getActivityForScope(
+  scope: BackofficeScope,
+  dossiers?: readonly Dossier[]
+): ActivityEvent[] {
+  const allowed = scopeDossiers(scope, dossiers);
   return allowed
     .flatMap((dossier) => {
       // L'historique complet d'un dossier est reconstruit à la demande, sans
@@ -703,15 +728,20 @@ export function parseGlobalFilters(
  * le jeu de démonstration est figé, et un filtre relatif à l'horloge réelle
  * viderait la liste dès que la date du jour s'éloigne de celle des données.
  */
-function matchesDateFilter(dossier: Dossier, filter: DossierQuery["date"]): boolean {
+function matchesDateFilter(
+  dossier: Dossier,
+  filter: DossierQuery["date"],
+  referenceDate: Date
+): boolean {
   if (filter === "all") return true;
 
   if (filter === "quarter") {
-    return inQuarter(dossier.createdAt, CURRENT_PERIOD.year, CURRENT_PERIOD.quarter);
+    const period = currentPeriod(referenceDate);
+    return inQuarter(dossier.createdAt, period.year, period.quarter);
   }
 
   const days = filter === "7d" ? 7 : 30;
-  const limit = REFERENCE_DATE.getTime() - days * DAY_MS;
+  const limit = referenceDate.getTime() - days * DAY_MS;
   return new Date(dossier.createdAt).getTime() >= limit;
 }
 
@@ -721,8 +751,12 @@ function matchesDateFilter(dossier: Dossier, filter: DossierQuery["date"]): bool
  * Renvoie la page demandée et le total. Le navigateur ne reçoit jamais
  * l'ensemble des dossiers (spec §32).
  */
-export function queryDossiers(scope: BackofficeScope, query: DossierQuery): DossierPage {
-  const scoped = scopeDossiers(scope, ALL_DOSSIERS);
+export function queryDossiers(
+  scope: BackofficeScope,
+  query: DossierQuery,
+  dossiers?: readonly Dossier[]
+): DossierPage {
+  const scoped = scopeDossiers(scope, dossiers);
   const needle = normalize(query.q);
 
   const filtered = scoped.filter((dossier) => {
@@ -738,7 +772,7 @@ export function queryDossiers(scope: BackofficeScope, query: DossierQuery): Doss
     if (query.country !== "all" && dossier.countryCode !== query.country) return false;
     if (query.completeness === "complete" && dossier.completeness < 100) return false;
     if (query.completeness === "incomplete" && dossier.completeness === 100) return false;
-    if (!matchesDateFilter(dossier, query.date)) return false;
+    if (!matchesDateFilter(dossier, query.date, referenceDateForScope(scope))) return false;
     if (query.step !== "all" && dossier.step !== query.step) return false;
     return true;
   });
@@ -798,18 +832,25 @@ function variation(
   return { value: Math.abs(delta), direction: delta > 0 ? "up" : "down" };
 }
 
-export function computeKpis(scope: BackofficeScope, filters?: GlobalFilters): Kpi[] {
-  const scoped = scopedAndFiltered(scope, filters);
+export function computeKpis(
+  scope: BackofficeScope,
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
+): Kpi[] {
+  const scoped = scopedAndFiltered(scope, filters, dossiers);
   const isBec = scope.role === "BEC";
+  const referenceDate = referenceDateForScope(scope);
+  const period = currentPeriod(referenceDate);
+  const previous = previousPeriod(referenceDate);
 
-  const received = scoped.filter((d) => inQuarter(d.createdAt, CURRENT_PERIOD.year, CURRENT_PERIOD.quarter));
-  const receivedPrev = scoped.filter((d) => inQuarter(d.createdAt, PREVIOUS_PERIOD.year, PREVIOUS_PERIOD.quarter));
+  const received = scoped.filter((d) => inQuarter(d.createdAt, period.year, period.quarter));
+  const receivedPrev = scoped.filter((d) => inQuarter(d.createdAt, previous.year, previous.quarter));
 
   const processed = scoped.filter(
-    (d) => inQuarter(d.updatedAt, CURRENT_PERIOD.year, CURRENT_PERIOD.quarter) && d.state !== "RECU"
+    (d) => inQuarter(d.updatedAt, period.year, period.quarter) && d.state !== "RECU"
   );
   const processedPrev = scoped.filter(
-    (d) => inQuarter(d.updatedAt, PREVIOUS_PERIOD.year, PREVIOUS_PERIOD.quarter) && d.state !== "RECU"
+    (d) => inQuarter(d.updatedAt, previous.year, previous.quarter) && d.state !== "RECU"
   );
 
   const pending = scoped.filter((d) => PENDING_STATES.includes(d.state));
@@ -855,7 +896,7 @@ export function computeKpis(scope: BackofficeScope, filters?: GlobalFilters): Kp
       id: "received",
       label: "Dossiers reçus",
       value: received.length,
-      period: CURRENT_PERIOD.label,
+      period: period.label,
       variation: variation(received.length, receivedPrev.length),
     },
     {
@@ -876,7 +917,7 @@ export function computeKpis(scope: BackofficeScope, filters?: GlobalFilters): Kp
       id: "processed",
       label: "Traités",
       value: processed.length,
-      period: CURRENT_PERIOD.label,
+      period: period.label,
       variation: variation(processed.length, processedPrev.length),
     },
   ];
@@ -893,10 +934,11 @@ function toDistribution(
 
 export function computeStatusDistribution(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): Distribution[] {
   const counts = new Map<string, number>();
-  for (const dossier of scopedAndFiltered(scope, filters)) {
+  for (const dossier of scopedAndFiltered(scope, filters, dossiers)) {
     const label = STATE_LABELS[dossier.state];
     counts.set(label, (counts.get(label) ?? 0) + 1);
   }
@@ -905,10 +947,11 @@ export function computeStatusDistribution(
 
 export function computeProgramDistribution(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): Distribution[] {
   const counts = new Map<string, number>();
-  for (const dossier of scopedAndFiltered(scope, filters)) {
+  for (const dossier of scopedAndFiltered(scope, filters, dossiers)) {
     counts.set(dossier.program, (counts.get(dossier.program) ?? 0) + 1);
   }
   return toDistribution(counts, (label) => label);
@@ -916,10 +959,11 @@ export function computeProgramDistribution(
 
 export function computeFormationDistribution(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): Distribution[] {
   const counts = new Map<string, number>();
-  for (const dossier of scopedAndFiltered(scope, filters)) {
+  for (const dossier of scopedAndFiltered(scope, filters, dossiers)) {
     counts.set(dossier.formation, (counts.get(dossier.formation) ?? 0) + 1);
   }
   return toDistribution(counts, (label) => label);
@@ -935,7 +979,8 @@ export function computeFormationDistribution(
  */
 export function computeCountryStats(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): CountryStat[] {
   // Le périmètre est appliqué ici comme partout ailleurs : un agent d'antenne
   // ne doit pas pouvoir lire les compteurs des sept autres pays en appelant
@@ -953,7 +998,8 @@ export function computeCountryStats(
     .map((country) => {
       const rows = scopedAndFiltered(
         { ...scope, role: "BEC", countryCode: null },
-        { ...filters, country: country.code }
+        { ...filters, country: country.code },
+        dossiers
       );
       return {
         countryCode: country.code,
@@ -974,13 +1020,15 @@ export function computeCountryStats(
 /** Évolution mensuelle sur les 9 derniers mois. */
 export function computeEvolution(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): EvolutionPoint[] {
-  const scoped = scopedAndFiltered(scope, filters);
+  const scoped = scopedAndFiltered(scope, filters, dossiers);
   const points: EvolutionPoint[] = [];
+  const referenceDate = referenceDateForScope(scope);
 
   for (let offset = 8; offset >= 0; offset -= 1) {
-    const cursor = new Date(REFERENCE_DATE.getTime());
+    const cursor = new Date(referenceDate.getTime());
     cursor.setUTCDate(1);
     cursor.setUTCMonth(cursor.getUTCMonth() - offset);
     const year = cursor.getUTCFullYear();
@@ -1002,8 +1050,11 @@ export function computeEvolution(
 }
 
 /** File opérationnelle : dossiers attendant une action de l'antenne (spec §8.3). */
-export function computeOperationalQueue(scope: BackofficeScope): Dossier[] {
-  return scopeDossiers(scope, ALL_DOSSIERS)
+export function computeOperationalQueue(
+  scope: BackofficeScope,
+  dossiers?: readonly Dossier[]
+): Dossier[] {
+  return scopeDossiers(scope, dossiers)
     .filter((d) => d.requiredAction !== null)
     .sort((a, b) => {
       const rank = { HAUTE: 0, NORMALE: 1, BASSE: 2 };
@@ -1014,10 +1065,11 @@ export function computeOperationalQueue(scope: BackofficeScope): Dossier[] {
 /** File de validation BEC (spec §9.4). */
 export function computeValidationQueue(
   scope: BackofficeScope,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): ValidationQueueRow[] {
-  return scopedAndFiltered(scope, filters)
-    .filter((d) => d.state === "A_VALIDER" || d.state === "AVIS_RECU")
+  return scopedAndFiltered(scope, filters, dossiers)
+    .filter((d) => d.state === "A_VALIDER")
     .sort((a, b) => a.updatedAt.localeCompare(b.updatedAt))
     .map((d) => ({
       dossierId: d.id,
@@ -1032,17 +1084,18 @@ export function computeValidationQueue(
 }
 
 /** Alertes opérationnelles (spec §8.4). */
-export function computeAlerts(scope: BackofficeScope): OperationalAlert[] {
-  const scoped = scopeDossiers(scope, ALL_DOSSIERS);
+export function computeAlerts(
+  scope: BackofficeScope,
+  dossiers?: readonly Dossier[]
+): OperationalAlert[] {
+  const scoped = scopeDossiers(scope, dossiers);
 
   const incomplete = scoped.filter((d) => d.state === "INCOMPLET").length;
   const toVerify = scoped.filter(
     (d) => d.documents.some((doc) => doc.status === "A_VERIFIER")
   ).length;
   const waiting = scoped.filter((d) => PENDING_STATES.includes(d.state)).length;
-  const overdue = scoped.filter(
-    (d) => d.requiredAction !== null && Date.now() - new Date(d.updatedAt).getTime() > 0
-  ).length;
+  const overdue = scoped.reduce((total, dossier) => total + dossier.overdueTaskCount, 0);
 
   const alerts: OperationalAlert[] = [
     {
@@ -1091,9 +1144,10 @@ export function computeQuarterlyReport(
   scope: BackofficeScope,
   year: number,
   quarter: number,
-  filters?: GlobalFilters
+  filters?: GlobalFilters,
+  dossiers?: readonly Dossier[]
 ): QuarterlyReport {
-  const scoped = scopedAndFiltered(scope, filters).filter((d) =>
+  const scoped = scopedAndFiltered(scope, filters, dossiers).filter((d) =>
     inQuarter(d.createdAt, year, quarter)
   );
 
@@ -1116,7 +1170,7 @@ export function computeQuarterlyReport(
     year,
     quarter,
     periodLabel: `${quarter}e trimestre ${year}`,
-    generatedAtLabel: frLabel(REFERENCE_DATE),
+    generatedAtLabel: frLabel(referenceDateForScope(scope)),
     lines: [
       { label: "Dossiers reçus", value: scoped.length },
       {
@@ -1141,28 +1195,36 @@ export function computeQuarterlyReport(
 }
 
 /** Dossiers d'une étape donnée (orientation, mobilité, suivi). */
-export function computeByStep(scope: BackofficeScope, step: WorkflowStep): Dossier[] {
-  return scopeDossiers(scope, ALL_DOSSIERS)
+export function computeByStep(
+  scope: BackofficeScope,
+  step: WorkflowStep,
+  dossiers?: readonly Dossier[]
+): Dossier[] {
+  return scopeDossiers(scope, dossiers)
     .filter((d) => d.step === step)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 /** Dossiers porteurs d'un transfert STSS (spec §22). */
-export function computeStssDossiers(scope: BackofficeScope): Dossier[] {
-  return scopeDossiers(scope, ALL_DOSSIERS)
+export function computeStssDossiers(
+  scope: BackofficeScope,
+  dossiers?: readonly Dossier[]
+): Dossier[] {
+  return scopeDossiers(scope, dossiers)
     .filter((d) => d.stss !== null)
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 /** Dossiers dont au moins une pièce attend une vérification (spec §14). */
-export function computeDocumentRows(scope: BackofficeScope) {
-  return scopeDossiers(scope, ALL_DOSSIERS)
+export function computeDocumentRows(scope: BackofficeScope, dossiers?: readonly Dossier[]) {
+  return scopeDossiers(scope, dossiers)
     .flatMap((dossier) =>
       dossier.documents
         .filter((doc) => doc.status !== "VALIDE")
-        .map((doc) => ({
-          dossierId: dossier.id,
-          reference: dossier.reference,
+         .map((doc) => ({
+           dossierId: dossier.id,
+           version: dossier.version,
+           reference: dossier.reference,
           studentName: dossier.studentName,
           country: dossier.country,
           flag: dossier.flag,
@@ -1194,9 +1256,10 @@ export const COUNTRIES_REFERENCE = COUNTRIES;
  */
 export function computeNotifications(
   scope: BackofficeScope,
-  role: BackofficeRole
+  role: BackofficeRole,
+  dossiers?: readonly Dossier[]
 ): BackofficeNotification[] {
-  const scoped = scopeDossiers(scope, ALL_DOSSIERS);
+  const scoped = scopeDossiers(scope, dossiers);
   const items: BackofficeNotification[] = [];
 
   const push = (
@@ -1256,12 +1319,12 @@ export function computeNotifications(
       );
     }
 
-    if (dossier.orientation.verdict && dossier.state === "AVIS_RECU") {
+    if (dossier.orientation?.verdict && dossier.state === "AVIS_RECU") {
       push(
         dossier,
         "AVIS_RECU",
         `Avis OCO reçu — ${dossier.studentName}`,
-        `Avis ${dossier.orientation.verdict.replace(/_/g, " ").toLowerCase()} sur ${dossier.reference}.`,
+        `Avis ${dossier.orientation?.verdict?.replace(/_/g, " ").toLowerCase()} sur ${dossier.reference}.`,
         dossier.updatedAt,
         detailHref(dossier)
       );
@@ -1290,16 +1353,18 @@ export function computeNotifications(
     }
   }
 
+  const referenceDate = referenceDateForScope(scope);
+  const period = currentPeriod(referenceDate);
   items.push({
     id: "RAPPORT_DISPONIBLE",
     kind: "RAPPORT_DISPONIBLE",
-    title: `Rapport du ${CURRENT_PERIOD.label}`,
+    title: `Rapport du ${period.label}`,
     detail:
       role === "BEC"
         ? "Rapport consolidé des 8 pays disponible."
         : `Rapport de l'antenne ${scope.country ?? ""} disponible.`,
-    at: REFERENCE_DATE.toISOString(),
-    atLabel: frLabel(REFERENCE_DATE),
+    at: referenceDate.toISOString(),
+    atLabel: frLabel(referenceDate),
     href: `${base}/rapports`,
   });
 

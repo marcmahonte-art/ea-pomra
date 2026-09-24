@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import {
-  CURRENT_PERIOD,
   computeCountryStats,
   computeEvolution,
   computeFormationDistribution,
@@ -14,6 +14,7 @@ import { PageHeader } from "@/components/backoffice/PageHeader";
 import { GlobalFiltersBar } from "@/components/backoffice/GlobalFiltersBar";
 import { StatisticsPanel } from "@/components/backoffice/StatisticsPanel";
 import { ALL_FORMATIONS, ALL_PROGRAMS, COUNTRIES_REFERENCE } from "@/lib/backoffice-data";
+import { currentPeriod, referenceDateForScope } from "@/lib/server/temporal";
 
 export const metadata: Metadata = {
   title: "Statistiques",
@@ -37,6 +38,8 @@ export default async function BecStatistiquesPage({
   const scope = await requireBackofficeScope("BEC", "statistics.read");
   const params = await searchParams;
   const filters = parseGlobalFilters(params);
+  const dossiers = await getDossiersForScope(scope);
+  const period = currentPeriod(referenceDateForScope(scope));
 
   return (
     <div className="space-y-6">
@@ -45,7 +48,7 @@ export default async function BecStatistiquesPage({
         subtitle="Indicateurs consolidés du périmètre global."
         meta={[
           { label: "Périmètre", value: "🌍 8 pays — vue consolidée" },
-          { label: "Période", value: CURRENT_PERIOD.label },
+          { label: "Période", value: period.label },
         ]}
       />
 
@@ -57,16 +60,16 @@ export default async function BecStatistiquesPage({
         }))}
         programs={ALL_PROGRAMS}
         formations={ALL_FORMATIONS}
-        periodLabel={CURRENT_PERIOD.label}
+        periodLabel={period.label}
       />
 
       <StatisticsPanel
-        kpis={computeKpis(scope, filters)}
-        statusDistribution={computeStatusDistribution(scope, filters)}
-        programDistribution={computeProgramDistribution(scope, filters)}
-        formationDistribution={computeFormationDistribution(scope, filters)}
-        evolution={computeEvolution(scope, filters)}
-        countryStats={computeCountryStats(scope, filters)}
+         kpis={computeKpis(scope, filters, dossiers)}
+         statusDistribution={computeStatusDistribution(scope, filters, dossiers)}
+         programDistribution={computeProgramDistribution(scope, filters, dossiers)}
+         formationDistribution={computeFormationDistribution(scope, filters, dossiers)}
+         evolution={computeEvolution(scope, filters, dossiers)}
+         countryStats={computeCountryStats(scope, filters, dossiers)}
       />
     </div>
   );

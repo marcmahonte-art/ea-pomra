@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BackofficeShell from "@/components/backoffice/BackofficeShell";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { computeOperationalQueue } from "@/lib/backoffice-data";
+import { getPendingCountForScope } from "@/lib/server/backoffice-service";
 import { SITE_NAME } from "@/lib/site";
 
 /**
@@ -53,7 +53,7 @@ export default async function AntenneLayout({
   children: React.ReactNode;
 }) {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
-  const pendingCount = computeOperationalQueue(scope).length;
+  const pendingCount = await getPendingCountForScope(scope);
 
   return (
     <BackofficeShell

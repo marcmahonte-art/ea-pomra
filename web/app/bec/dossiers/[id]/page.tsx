@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { getActivityForScope, getDossierForScope } from "@/lib/backoffice-data";
+import { getActivityForDossier, getDossierForScope } from "@/lib/server/backoffice-service";
 import { DossierDetail } from "@/components/backoffice/DossierDetail";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -9,7 +9,7 @@ type PageProps = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const scope = await requireBackofficeScope("BEC", "dossiers.read");
-  const dossier = getDossierForScope(scope, id);
+  const dossier = await getDossierForScope(scope, id);
 
   return {
     title: dossier ? `${dossier.reference} — ${dossier.studentName}` : "Dossier",
@@ -30,13 +30,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function BecDossierDetailPage({ params }: PageProps) {
   const { id } = await params;
   const scope = await requireBackofficeScope("BEC", "dossiers.read");
-  const dossier = getDossierForScope(scope, id);
+  const dossier = await getDossierForScope(scope, id);
 
   if (!dossier) notFound();
 
-  const history = getActivityForScope(scope).filter(
-    (event) => event.dossierRef === dossier.reference
-  );
+  const history = await getActivityForDossier(scope, dossier.id);
 
   return (
     <DossierDetail
@@ -44,6 +42,7 @@ export default async function BecDossierDetailPage({ params }: PageProps) {
       role="BEC"
       permissions={scope.permissions}
       history={history}
+      isDemo={scope.isDemo}
     />
   );
 }

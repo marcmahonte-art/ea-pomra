@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getActivityForScope, getDossiersForScope } from "@/lib/server/backoffice-service";
 import {
-  CURRENT_PERIOD,
   computeAlerts,
   computeKpis,
   computeOperationalQueue,
   computeQuarterlyReport,
-  getActivityForScope,
 } from "@/lib/backoffice-data";
+import { currentPeriod, referenceDateForScope } from "@/lib/server/temporal";
 import { AntenneDashboard } from "@/components/backoffice/AntenneDashboard";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 
@@ -26,15 +26,20 @@ export const metadata: Metadata = {
  */
 export default async function AntenneDashboardPage() {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
+  const dossiers = await getDossiersForScope(scope);
+  const referenceDate = referenceDateForScope(scope);
+  const period = currentPeriod(referenceDate);
 
-  const kpis = computeKpis(scope);
-  const alerts = computeAlerts(scope);
-  const queue = computeOperationalQueue(scope);
-  const activity = getActivityForScope(scope);
+  const kpis = computeKpis(scope, undefined, dossiers);
+  const alerts = computeAlerts(scope, dossiers);
+  const queue = computeOperationalQueue(scope, dossiers);
+  const activity = await getActivityForScope(scope, dossiers);
   const report = computeQuarterlyReport(
     scope,
-    CURRENT_PERIOD.year,
-    CURRENT_PERIOD.quarter
+    period.year,
+    period.quarter,
+    undefined,
+    dossiers
   );
 
   return (
@@ -47,7 +52,7 @@ export default async function AntenneDashboardPage() {
             label: "Antenne",
             value: `${scope.flag ?? ""} ${scope.country ?? "Périmètre non défini"}`,
           },
-          { label: "Période", value: CURRENT_PERIOD.label },
+          { label: "Période", value: period.label },
         ]}
       />
 

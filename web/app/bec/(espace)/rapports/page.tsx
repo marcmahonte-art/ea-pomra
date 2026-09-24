@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import {
   ALL_FORMATIONS,
   ALL_PROGRAMS,
   COUNTRIES_REFERENCE,
-  CURRENT_PERIOD,
-  PREVIOUS_PERIOD,
   computeQuarterlyReport,
   parseGlobalFilters,
 } from "@/lib/backoffice-data";
+import { currentPeriod, previousPeriod, referenceDateForScope } from "@/lib/server/temporal";
+import { getStoredReport } from "@/lib/server/backoffice-repository";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { GlobalFiltersBar } from "@/components/backoffice/GlobalFiltersBar";
 import { ReportPeriodSelector } from "@/components/backoffice/ReportPeriodSelector";
@@ -38,21 +39,27 @@ export default async function BecRapportsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const scope = await requireBackofficeScope("BEC", "reports.read");
+  const dossiers = await getDossiersForScope(scope);
   const params = await searchParams;
 
+  const referenceDate = referenceDateForScope(scope);
+  const period = currentPeriod(referenceDate);
+  const previous = previousPeriod(referenceDate);
   const raw = (key: string): string | undefined => {
     const value = params[key];
     return Array.isArray(value) ? value[0] : value;
   };
 
-  const year = Number.parseInt(raw("year") ?? String(CURRENT_PERIOD.year), 10);
-  const quarter = Number.parseInt(raw("quarter") ?? String(CURRENT_PERIOD.quarter), 10);
+  const year = Number.parseInt(raw("year") ?? String(period.year), 10);
+  const quarter = Number.parseInt(raw("quarter") ?? String(period.quarter), 10);
 
-  const safeYear = Number.isFinite(year) ? year : CURRENT_PERIOD.year;
-  const safeQuarter = quarter >= 1 && quarter <= 4 ? quarter : CURRENT_PERIOD.quarter;
+  const safeYear = Number.isFinite(year) ? year : period.year;
+  const safeQuarter = quarter >= 1 && quarter <= 4 ? quarter : period.quarter;
 
   const filters = parseGlobalFilters(params);
-  const report = computeQuarterlyReport(scope, safeYear, safeQuarter, filters);
+  const liveReport = computeQuarterlyReport(scope, safeYear, safeQuarter, filters, dossiers);
+  const storedReport = scope.isDemo ? null : await getStoredReport(scope, safeYear, safeQuarter, filters);
+  const report = storedReport?.snapshot.report ?? liveReport;
 
   return (
     <div className="space-y-6">
@@ -61,13 +68,13 @@ export default async function BecRapportsPage({
         subtitle="Rapport consolidé du Bureau Exécutif Central."
         meta={[
           { label: "Périmètre", value: "🌍 8 pays — vue consolidée" },
-          { label: "Période de référence", value: CURRENT_PERIOD.label },
+          { label: "Période de référence", value: period.label },
         ]}
         actions={
           <ReportPeriodSelector
-            years={[PREVIOUS_PERIOD.year, CURRENT_PERIOD.year]}
-            defaultYear={CURRENT_PERIOD.year}
-            defaultQuarter={CURRENT_PERIOD.quarter}
+            years={[previous.year, period.year]}
+            defaultYear={period.year}
+            defaultQuarter={period.quarter}
           />
         }
       />
@@ -80,14 +87,22 @@ export default async function BecRapportsPage({
         }))}
         programs={ALL_PROGRAMS}
         formations={ALL_FORMATIONS}
-        periodLabel={CURRENT_PERIOD.label}
+        periodLabel={period.label}
       />
 
       <QuarterlyReportPanel
         report={report}
         role="BEC"
-        canGenerate={scope.permissions.includes("reports.generate")}
-        canExport={scope.permissions.includes("exports.run")}
+        canGenerate={scope.permissions.includes("reports.generate") && !scope.isDemo}
+        canExport={scope.permissions.includes("exports.run") && !scope.isDemo}
+        year={safeYear}
+        quarter={safeQuarter}
+        latestReportId={storedReport?.id ?? null}
+        filters={{
+          country: filters.country ?? "all",
+          program: filters.program ?? "all",
+          formation: filters.formation ?? "all"
+        }}
       />
     </div>
   );

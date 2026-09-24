@@ -66,10 +66,18 @@ interface DocumentRow {
  */
 export function DossierDocuments({
   documents,
+  dossierId,
+  dossierVersion,
+  role,
   dossierReference,
+  canVerify,
 }: {
   documents: DossierDocument[];
+  dossierId: string;
+  dossierVersion: number;
+  role: "ANTENNE" | "BEC";
   dossierReference: string;
+  canVerify: boolean;
 }) {
   const rows: DocumentRow[] = documents.map((document) => ({
     document,
@@ -128,9 +136,16 @@ export function DossierDocuments({
     {
       key: "action",
       header: "Action",
-      render: ({ document, dossierReference: reference }) => (
-        <DocumentVerificationDialog document={document} dossierReference={reference} />
-      ),
+       render: ({ document, dossierReference: reference }) => (
+         <DocumentVerificationDialog
+           document={document}
+           dossierId={dossierId}
+           dossierVersion={dossierVersion}
+            role={role}
+            dossierReference={reference}
+            canVerify={canVerify}
+          />
+       ),
     },
   ];
 

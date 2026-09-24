@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeStssDossiers } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { StssPanel } from "@/components/backoffice/StssPanel";
@@ -19,7 +20,8 @@ export const metadata: Metadata = {
  */
 export default async function AntenneStssPage() {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
-  const dossiers = computeStssDossiers(scope);
+  const dossiers = await getDossiersForScope(scope);
+  const filteredDossiers = computeStssDossiers(scope, dossiers);
 
   return (
     <div className="space-y-6">
@@ -31,11 +33,11 @@ export default async function AntenneStssPage() {
             label: "Antenne",
             value: `${scope.flag ?? ""} ${scope.country ?? "Périmètre non défini"}`,
           },
-          { label: "Transferts", value: String(dossiers.length) },
+          { label: "Transferts", value: String(filteredDossiers.length) },
         ]}
       />
 
-      <StssPanel dossiers={dossiers} role="ANTENNE" />
+      <StssPanel dossiers={filteredDossiers} role="ANTENNE" />
     </div>
   );
 }

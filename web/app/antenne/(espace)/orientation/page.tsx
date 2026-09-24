@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeByStep } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { OrientationQueue } from "@/components/backoffice/OrientationQueue";
@@ -19,7 +20,8 @@ export const metadata: Metadata = {
  */
 export default async function AntenneOrientationPage() {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
-  const dossiers = computeByStep(scope, "ORIENTATION");
+  const dossiers = await getDossiersForScope(scope);
+  const filteredDossiers = computeByStep(scope, "ORIENTATION", dossiers);
 
   return (
     <div className="space-y-6">
@@ -31,11 +33,11 @@ export default async function AntenneOrientationPage() {
             label: "Antenne",
             value: `${scope.flag ?? ""} ${scope.country ?? "Périmètre non défini"}`,
           },
-          { label: "Dossiers à l'étape", value: String(dossiers.length) },
+          { label: "Dossiers à l'étape", value: String(filteredDossiers.length) },
         ]}
       />
 
-      <OrientationQueue dossiers={dossiers} role="ANTENNE" />
+      <OrientationQueue dossiers={filteredDossiers} role="ANTENNE" />
     </div>
   );
 }

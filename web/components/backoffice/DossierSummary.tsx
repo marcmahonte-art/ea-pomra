@@ -91,8 +91,8 @@ export function DossierSummary({ dossier }: { dossier: Dossier }) {
         <Row label="Demande PAP">
           <span className="inline-flex items-center gap-1.5">
             <Lock className="w-3 h-3 text-[#98A2B3]" aria-hidden="true" />
-            {dossier.pap.exists ? "Oui" : "Non"}
-            {dossier.pap.exists && dossier.pap.status ? (
+            {dossier.pap ? (dossier.pap.exists ? "Oui" : "Non") : "Non renseignée"}
+            {dossier.pap?.exists && dossier.pap.status ? (
               <span className="text-[11px] font-normal text-[#5B6776]">
                 — {dossier.pap.status === "EN_COURS" ? "en cours" : "clôturée"}
               </span>

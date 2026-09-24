@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeNotifications } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { NotificationsCenter } from "@/components/backoffice/NotificationsCenter";
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
  */
 export default async function AntenneNotificationsPage() {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
-  const notifications = computeNotifications(scope, "ANTENNE");
+  const dossiers = await getDossiersForScope(scope);
+  const notifications = computeNotifications(scope, "ANTENNE", dossiers);
 
   return (
     <div className="space-y-6">

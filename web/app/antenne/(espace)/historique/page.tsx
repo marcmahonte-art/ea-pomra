@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { getActivityForScope } from "@/lib/backoffice-data";
+import { getActivityForScope, getDossiersForScope } from "@/lib/server/backoffice-service";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { ActivityLog } from "@/components/backoffice/ActivityLog";
 import { Pagination } from "@/components/backoffice/Pagination";
@@ -32,6 +32,7 @@ export default async function AntenneHistoriquePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const scope = await requireBackofficeScope("ANTENNE", "history.read");
+  const dossiers = await getDossiersForScope(scope);
   const params = await searchParams;
 
   const raw = (key: string): string | undefined => {
@@ -42,7 +43,7 @@ export default async function AntenneHistoriquePage({
   const requestedSize = Number.parseInt(raw("pageSize") ?? String(DEFAULT_SIZE), 10);
   const pageSize = ALLOWED_SIZES.includes(requestedSize) ? requestedSize : DEFAULT_SIZE;
 
-  const events = getActivityForScope(scope);
+  const events = await getActivityForScope(scope, dossiers);
   const total = events.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 

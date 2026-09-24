@@ -42,6 +42,21 @@ function StateTransition({
 }
 
 /** Résultat lisible d'une action, pour la colonne du même nom. */
+const ACTION_LABELS: Record<string, string> = {
+  "dossier.transition": "Transition du dossier",
+  "document.decision": "Décision documentaire",
+  "document.upload": "Document téléversé",
+  "document.download": "Document téléchargé",
+  "report.generate": "Rapport généré",
+  "report.download": "Rapport téléchargé",
+  "auth.login": "Connexion",
+  "auth.logout": "Déconnexion"
+};
+
+function humanizeAction(action: string): string {
+  return ACTION_LABELS[action] ?? action.replaceAll(".", " ").replaceAll("_", " ");
+}
+
 function outcome(event: ActivityEvent): string {
   if (event.toState) return STATE_LABELS[event.toState];
   return event.comment ?? "Enregistré";
@@ -76,12 +91,12 @@ export function ActivityLog({
             <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#174A7C] shrink-0" aria-hidden="true" />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold text-[#0D2B4D] leading-snug">
-                {event.action}
+                {humanizeAction(event.action)}
               </p>
               <p className="text-[11px] text-[#5B6776] mt-0.5 truncate">
                 {event.studentName} ·{" "}
                 <Link
-                  href={dossierHref(role, event.dossierRef)}
+                   href={dossierHref(role, event.dossierId)}
                   className="font-mono hover:text-[#174A7C] hover:underline"
                 >
                   {event.dossierRef}
@@ -133,7 +148,7 @@ export function ActivityLog({
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <Link
-                  href={dossierHref(role, event.dossierRef)}
+                   href={dossierHref(role, event.dossierId)}
                   className="text-[11px] font-mono font-semibold text-[#174A7C] hover:underline"
                 >
                   {event.dossierRef}
@@ -142,7 +157,7 @@ export function ActivityLog({
               <td className="px-4 py-3 text-xs font-semibold text-[#0D2B4D] whitespace-nowrap">
                 {event.studentName}
               </td>
-              <td className="px-4 py-3 text-xs text-[#1F2937]">{event.action}</td>
+              <td className="px-4 py-3 text-xs text-[#1F2937]">{humanizeAction(event.action)}</td>
               <td className="px-4 py-3 text-[11px] text-[#667085] whitespace-nowrap">
                 {event.fromState ? STATE_LABELS[event.fromState] : "—"}
               </td>

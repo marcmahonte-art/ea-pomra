@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeDocumentRows } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { DataTable, type Column } from "@/components/backoffice/DataTable";
@@ -27,7 +28,8 @@ type Row = ReturnType<typeof computeDocumentRows>[number];
  */
 export default async function AntenneDocumentsPage() {
   const scope = await requireBackofficeScope("ANTENNE", "documents.read");
-  const rows = computeDocumentRows(scope);
+  const dossiers = await getDossiersForScope(scope);
+  const rows = computeDocumentRows(scope, dossiers);
 
   const columns: Column<Row>[] = [
     {
@@ -91,9 +93,13 @@ export default async function AntenneDocumentsPage() {
       header: "Action",
       render: (row) => (
         <DocumentVerificationDialog
-          document={row.document}
-          dossierReference={row.reference}
-        />
+           document={row.document}
+           dossierId={row.dossierId}
+           dossierVersion={row.version}
+            role="ANTENNE"
+            dossierReference={row.reference}
+            canVerify={scope.permissions.includes("documents.verify") && !scope.isDemo}
+         />
       ),
     },
   ];

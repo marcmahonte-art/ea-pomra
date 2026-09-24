@@ -63,6 +63,8 @@ export interface DossierDocument {
   verifiedBy: string | null;
   updatedAt: string;
   comment: string | null;
+  hasFile: boolean;
+  version: number;
 }
 
 /**
@@ -73,6 +75,7 @@ export interface DossierDocument {
  */
 export interface ActivityEvent {
   id: string;
+  dossierId: string;
   /** Horodatage ISO, pour le tri. */
   at: string;
   /** Libellé affiché, au format `19/09/2026 10:42`. */
@@ -148,14 +151,16 @@ export interface Dossier {
   createdAtLabel: string;
   updatedAt: string;
   updatedAtLabel: string;
+  version: number;
   priority: Priority;
   /** Action attendue de l'agent, ou `null` si le dossier n'attend rien. */
   requiredAction: string | null;
   documents: DossierDocument[];
-  pap: PapReference;
-  orientation: OrientationInfo;
+  pap: PapReference | null;
+  orientation: OrientationInfo | null;
   mobilite: MobiliteInfo | null;
   stss: StssInfo | null;
+  overdueTaskCount: number;
 }
 
 /** Compteur d'une répartition (statut, programme, formation). */
@@ -239,6 +244,27 @@ export interface QuarterlyReport {
   formationDistribution: Distribution[];
 }
 
+export type ReportSnapshot = {
+  filters: GlobalFilters;
+  report: QuarterlyReport;
+  rows: {
+    reference: string;
+    studentName: string;
+    country: string;
+    program: string;
+    formation: string;
+    state: DossierState;
+    completeness: number;
+  }[];
+};
+
+export interface StoredReport {
+  id: string;
+  generatedAt: string;
+  generatedAtLabel: string;
+  snapshot: ReportSnapshot;
+}
+
 /* ------------------------------------------------------------------ *
  * Notifications (spec §38)
  * ------------------------------------------------------------------ */
@@ -294,6 +320,7 @@ export type Permission =
   | "dossiers.assign"
   | "dossiers.transmit"
   | "dossiers.validate"
+  | "dossiers.reject"
   | "documents.read"
   | "documents.verify"
   | "reports.read"
@@ -312,6 +339,8 @@ export type Permission =
  * `scopeDossiers()`.
  */
 export interface BackofficeScope {
+  userId: string | null;
+  antennaId: string | null;
   role: BackofficeRole;
   countryCode: CountryCode | null;
   country: string | null;

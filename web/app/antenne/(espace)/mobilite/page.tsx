@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
+import { getDossiersForScope } from "@/lib/server/backoffice-service";
 import { computeByStep } from "@/lib/backoffice-data";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { MobilitePanel } from "@/components/backoffice/MobilitePanel";
@@ -18,7 +19,8 @@ export const metadata: Metadata = {
  */
 export default async function AntenneMobilitePage() {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
-  const dossiers = computeByStep(scope, "MOBILITE");
+  const dossiers = await getDossiersForScope(scope);
+  const filteredDossiers = computeByStep(scope, "MOBILITE", dossiers);
 
   return (
     <div className="space-y-6">
@@ -30,11 +32,11 @@ export default async function AntenneMobilitePage() {
             label: "Antenne",
             value: `${scope.flag ?? ""} ${scope.country ?? "Périmètre non défini"}`,
           },
-          { label: "Dossiers à l'étape", value: String(dossiers.length) },
+          { label: "Dossiers à l'étape", value: String(filteredDossiers.length) },
         ]}
       />
 
-      <MobilitePanel dossiers={dossiers} role="ANTENNE" />
+      <MobilitePanel dossiers={filteredDossiers} role="ANTENNE" />
     </div>
   );
 }

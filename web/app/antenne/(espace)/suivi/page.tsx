@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireBackofficeScope } from "@/lib/backoffice-session";
-import { parseDossierQuery, queryDossiers } from "@/lib/backoffice-data";
+import { queryDossierPageFromSearchParams } from "@/lib/server/backoffice-service";
 import { PageHeader } from "@/components/backoffice/PageHeader";
 import { DossiersBrowser } from "@/components/backoffice/DossiersBrowser";
 
@@ -27,9 +27,8 @@ export default async function AntenneSuiviPage({
 }) {
   const scope = await requireBackofficeScope("ANTENNE", "dossiers.read");
   const params = await searchParams;
-
-  const query = { ...parseDossierQuery(params), step: "SUIVI" as const };
-  const page = queryDossiers(scope, query);
+  const paramsWithStep = { ...params, step: "SUIVI" };
+  const page = await queryDossierPageFromSearchParams(scope, paramsWithStep);
 
   return (
     <div className="space-y-6">

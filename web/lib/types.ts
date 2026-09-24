@@ -58,14 +58,6 @@ export interface StudentProfile {
     transferProofUrl: string;
     referenceCode: string;
   };
-  papReferent?: {
-    name: string;
-    title: string;
-    phone: string;
-    whatsapp: string;
-    lastContactDate: string;
-    wellnessStatus: "Serein" | "Besoin d'échange" | "Accompagnement renforcé";
-  };
   parentContact: {
     name: string;
     relation: string;

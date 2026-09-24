@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { User, Building, ShieldCheck, Users, Edit3, Check } from "lucide-react";
+import { User, Building, ShieldCheck, Edit3, Check } from "lucide-react";
 import {
   MOCK_ACTIVE_STUDENT,
   STUDENT_FULL_NAME,
@@ -214,20 +214,6 @@ export default function MonProfilPage() {
             </div>
           )}
 
-          <div className="p-4 bg-[#F7F9FB] rounded-2xl border border-[#E6E9EF] flex items-start gap-3">
-            <Users className="w-4 h-4 text-[#174A7C] shrink-0 mt-0.5" />
-            <div className="space-y-0.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E9BAA]">
-                Référente PAP
-              </span>
-              <p className="text-xs font-semibold text-[#0D2B4D]">
-                {student.papReferent?.name}
-              </p>
-              <p className="text-[11px] text-[#5B6776]">
-                {student.papReferent?.title}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

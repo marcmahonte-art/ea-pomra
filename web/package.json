@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "user:create": "node scripts/create-backoffice-user.mjs",
     "oco:assign": "node scripts/oco-assign.mjs",
+    "pap:assign": "node scripts/pap-assign.mjs",
     "maintenance:purge-sessions": "node scripts/purge-sessions.mjs"
   },
   "dependencies": {

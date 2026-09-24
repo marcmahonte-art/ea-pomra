@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, CheckCircle2, Clock, AlertCircle, ShieldCheck, HeartHandshake, Check } from "lucide-react";
+import { Bell, CheckCircle2, Clock, AlertCircle, ShieldCheck, Check } from "lucide-react";
 
 export default function NotificationsPage() {
   const [filter, setFilter] = useState<"all" | "unread">("all");
@@ -30,14 +30,6 @@ export default function NotificationsPage() {
       time: "Il y a 2 jours",
       read: true,
       type: "success",
-    },
-    {
-      id: 4,
-      title: "Message de votre référente PAP",
-      desc: "Mme Élodie N'Guessan vous a adressé un message concernant l'organisation de votre accueil à Abidjan.",
-      time: "Il y a 3 jours",
-      read: true,
-      type: "info",
     },
     {
       id: 5,

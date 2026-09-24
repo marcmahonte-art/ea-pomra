@@ -19,6 +19,7 @@ import { query, withTransaction } from "./db";
 import { assertTransition, getWorkflowStep } from "./workflow";
 import { type AllowedDocumentType, type OpaqueDocumentPayload } from "./document-storage";
 import { projectFinalizedOcoOrientation } from "./oco-workflow";
+import { PAP_RESOURCE_TYPE_FILTER_SQL } from "./audit-filters";
 
 const countryCodeSchema = z.enum(["SN", "CI", "CM", "GA", "BJ", "TG", "CG", "CD"]);
 const dossierStateSchema = z.enum(["RECU", "EN_VERIFICATION", "INCOMPLET", "TRANSMIS_OCO", "AVIS_RECU", "A_VALIDER", "VALIDE", "EN_MOBILITE", "EN_SUIVI", "DIPLOME", "REJETE"]);
@@ -196,7 +197,6 @@ function mapDossier(row: DossierRow, documents: DossierDocument[]): Dossier {
     priority: row.priority,
     requiredAction: row.required_action,
     documents,
-    pap: null,
     orientation: projectFinalizedOcoOrientation({
       status: row.oco_status,
       finalizedAt: row.oco_avis_at,
@@ -398,8 +398,8 @@ export async function getActivityForScope(scope: BackofficeScope): Promise<Activ
       a.from_state, a.to_state, a.comment, COALESCE(u.display_name, 'Système') AS user_name,
       COALESCE(a.actor_role, 'SYSTEME') AS user_role
      FROM audit_events a LEFT JOIN dossiers d ON d.id = a.dossier_id
-     LEFT JOIN users u ON u.id = a.actor_user_id
-     WHERE ${scopeFilter.sql} ORDER BY a.occurred_at DESC LIMIT 5000`,
+      LEFT JOIN users u ON u.id = a.actor_user_id
+      WHERE (${PAP_RESOURCE_TYPE_FILTER_SQL}) AND ${scopeFilter.sql} ORDER BY a.occurred_at DESC LIMIT 5000`,
     scopeFilter.values
   );
   return result.rows.map((row) => mapActivity(activityRowSchema.parse(row)));
@@ -413,8 +413,8 @@ export async function getActivityForDossier(scope: BackofficeScope, dossierId: s
       a.from_state, a.to_state, a.comment, COALESCE(u.display_name, 'Système') AS user_name,
       COALESCE(a.actor_role, 'SYSTEME') AS user_role
      FROM audit_events a JOIN dossiers d ON d.id = a.dossier_id
-     LEFT JOIN users u ON u.id = a.actor_user_id
-     WHERE a.dossier_id = $1 AND ${scopeFilter.sql} ORDER BY a.occurred_at DESC`,
+      LEFT JOIN users u ON u.id = a.actor_user_id
+      WHERE a.dossier_id = $1 AND (${PAP_RESOURCE_TYPE_FILTER_SQL}) AND ${scopeFilter.sql} ORDER BY a.occurred_at DESC`,
     [dossierId, ...scopeFilter.values]
   );
   return result.rows.map((row) => mapActivity(activityRowSchema.parse(row)));

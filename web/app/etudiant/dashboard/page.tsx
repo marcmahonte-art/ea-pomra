@@ -10,7 +10,6 @@ import {
   AlertCircle,
   Upload,
   MessageSquare,
-  HeartHandshake,
   ArrowLeftRight,
   Download,
   ExternalLink,
@@ -28,7 +27,7 @@ const PARCOURS = [
   { label: "Dossier soumis", date: "02/07/2026", state: "done" },
   { label: "Avis OCO", date: "18/07/2026", state: "done" },
   { label: "STSS sécurisé", date: "14/08/2026", state: "done" },
-  { label: "Accueil & PAP", date: "En cours", state: "current" },
+  { label: "Accueil local", date: "En cours", state: "current" },
 ] as const;
 
 const STATUT_STYLES: Record<
@@ -324,17 +323,6 @@ export default function StudentDashboardPage() {
                 <div className="text-[11px] text-[#5B6776]">Poser une question</div>
               </Link>
 
-              {/* Action 3 */}
-              <Link
-                href="/etudiant/pap"
-                className="p-4 rounded-2xl bg-[#FEF7EC]/60 border border-[#FDE68A] text-left hover:bg-[#FEF7EC] transition-colors cursor-pointer group"
-              >
-                <div className="w-9 h-9 rounded-xl bg-white text-[#F59E0B] flex items-center justify-center mb-2 shadow-xs">
-                  <HeartHandshake className="w-4 h-4" />
-                </div>
-                <div className="text-xs font-bold text-[#0D2B4D]">Demander un accompagnement PAP</div>
-                <div className="text-[11px] text-[#5B6776]">Être accompagné</div>
-              </Link>
 
               {/* Action 4 */}
               <Link

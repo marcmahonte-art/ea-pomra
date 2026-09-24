@@ -6,7 +6,7 @@ import { buildParentDashboardData } from "@/lib/parent-data";
 export const metadata: Metadata = {
   title: "Aide & FAQ",
   description:
-    "Réponses aux questions fréquentes des parents : parcours, transferts STSS, accompagnement PAP et confidentialité.",
+    "Réponses aux questions fréquentes des parents : parcours, transferts STSS et confidentialité.",
 };
 
 /**
@@ -30,12 +30,7 @@ const FAQ = [
   {
     question: "Que se passe-t-il si mon enfant a un problème sur place ?",
     answer:
-      "Une référente du pôle PAP est rattachée au dossier dès l'arrivée. Elle est joignable directement et assure un suivi régulier. Tout événement grave de santé ou de sécurité vous est signalé sans délai.",
-  },
-  {
-    question: "Pourquoi ne puis-je pas lire le contenu des entretiens ?",
-    answer:
-      "Parce que ces échanges appartiennent à votre enfant. Vous êtes informé du niveau d'accompagnement et de l'évolution de la situation, mais le détail des entretiens reste confidentiel — c'est la condition pour qu'un étudiant ose parler librement.",
+      "L'antenne d'accueil est le point de contact opérationnel. Elle coordonne les démarches et vous transmet les informations administratives autorisées.",
   },
   {
     question: "Comment ajouter une pièce manquante au dossier ?",

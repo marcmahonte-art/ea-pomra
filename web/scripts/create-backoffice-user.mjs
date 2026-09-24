@@ -30,13 +30,13 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
 if (!displayName || displayName.length > 200 || !userTitle || userTitle.length > 200) {
   throw new Error("Nom ou fonction invalide");
 }
-if (!new Set(["ANTENNE", "BEC", "EXPERT_OCO"]).has(role)) throw new Error("Rôle invalide");
+if (!new Set(["ANTENNE", "BEC", "EXPERT_OCO", "RESPONSABLE_PAP"]).has(role)) throw new Error("Rôle invalide");
 if (!password || password.length < 12 || !/[A-Za-z]/.test(password) || !/\d/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
   throw new Error("BACKOFFICE_BOOTSTRAP_PASSWORD doit contenir au moins 12 caractères, une lettre, un chiffre et un symbole");
 }
 if (!databaseUrl) throw new Error("DATABASE_URL est requis");
 
-const scope = role === "BEC" || role === "EXPERT_OCO"
+const scope = role === "BEC" || role === "EXPERT_OCO" || role === "RESPONSABLE_PAP"
   ? { countryCode: null, countryName: null, countryFlag: null, antennaId: null, antennaCity: null }
   : {
       countryCode: args.get("country-code")?.trim().toUpperCase() ?? "",

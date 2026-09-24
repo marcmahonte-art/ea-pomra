@@ -117,7 +117,7 @@ const COUNTRIES: readonly CountryRef[] = [
     city: "Abidjan",
     antenne: "Antenne Côte d'Ivoire",
     firstNames: ["Adjoua", "Kouassi", "Aya", "Yao", "Awa", "Konan"],
-    lastNames: ["Koné", "Kouamé", "Traoré", "Bamba", "Yao", "N'Guessan"],
+     lastNames: ["Koné", "Kouamé", "Traoré", "Bamba", "Yao", "Sanogo"],
   },
   {
     code: "CM",
@@ -503,12 +503,6 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
           : "BASSE",
     requiredAction,
     documents,
-    // Aucun contenu de fiche PAP n'est exposé : existence et statut seulement
-    // (spec §24).
-    pap: {
-      exists: hash(`${seed}-pap`) % 3 === 0,
-      status: hash(`${seed}-pap`) % 3 === 0 ? (hash(`${seed}-paps`) % 2 === 0 ? "EN_COURS" : "CLOTUREE") : null,
-    },
     orientation: {
       transmittedAt:
         step === "ORIENTATION" || step === "MOBILITE" || step === "SUIVI" || step === "DIPLOME"

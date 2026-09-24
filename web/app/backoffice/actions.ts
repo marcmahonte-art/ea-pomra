@@ -83,7 +83,7 @@ export async function login(
     const requestHeaders = await headers();
     await createBackofficeSession(user.userId, user.role, requestHeaders.get("user-agent") ?? undefined);
     revalidatePath("/backoffice/login");
-    redirect(user.role === "BEC" ? "/bec" : user.role === "EXPERT_OCO" ? "/oco" : "/antenne");
+    redirect(user.role === "BEC" ? "/bec" : user.role === "EXPERT_OCO" ? "/oco" : user.role === "RESPONSABLE_PAP" ? "/pap" : "/antenne");
   } catch (error) {
     unstable_rethrow(error);
     console.error("Échec de la connexion back-office", { code: errorCode(error) });

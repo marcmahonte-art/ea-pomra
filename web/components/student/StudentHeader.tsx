@@ -1,17 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Bell, ShieldCheck, HeartHandshake, PhoneCall, Check, Sparkles } from "lucide-react";
+import { Bell, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
 import { MOCK_ACTIVE_STUDENT, MOCK_NOTIFICATIONS } from "@/lib/data";
 
-interface StudentHeaderProps {
-  onOpenNotifications?: () => void;
-  onEmergencyPap?: () => void;
-}
-
-export function StudentHeader({ onOpenNotifications, onEmergencyPap }: StudentHeaderProps) {
+export function StudentHeader() {
   const [showNotifications, setShowNotifications] = useState(false);
   const unreadCount = MOCK_NOTIFICATIONS.filter((n) => !n.read).length;
 
@@ -37,17 +31,6 @@ export function StudentHeader({ onOpenNotifications, onEmergencyPap }: StudentHe
 
       {/* Actions Droite */}
       <div className="flex items-center gap-3 relative">
-        {/* Bouton Contact Urgent PAP */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onEmergencyPap}
-          className="hidden md:inline-flex gap-2 text-[#C89C2E] border-[#F4E4BC] bg-[#FBF6EA] hover:bg-[#F7EDD2]"
-        >
-          <HeartHandshake className="w-4 h-4 text-[#C89C2E]" />
-          <span>Contacter ma référente PAP</span>
-        </Button>
-
         {/* Cloche Notifications */}
         <div className="relative">
           <button

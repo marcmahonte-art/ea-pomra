@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { ShieldCheck, Compass, HeartHandshake, FileCheck2, ArrowUpRight } from "lucide-react";
+import { ShieldCheck, Compass, FileCheck2, ArrowUpRight } from "lucide-react";
 import { MOCK_ACTIVE_STUDENT } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
 
@@ -28,17 +28,6 @@ export function OverviewStats() {
       iconColor: "#174A7C",
       detail: "Spécialité : IA & Systèmes Numériques",
       action: "Consulter la fiche OCO",
-    },
-    {
-      title: "Référent Pôle PAP",
-      value: "Mme É. N'Guessan",
-      status: "Prise en charge active",
-      badgeVariant: "gold" as const,
-      icon: HeartHandshake,
-      iconBg: "#FBF6EA",
-      iconColor: "#C89C2E",
-      detail: "Arrivée planifiée : 10 Sept. 2026",
-      action: "Envoyer un message",
     },
     {
       title: "Pièces Justificatives",

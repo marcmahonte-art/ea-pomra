@@ -4,15 +4,8 @@
  * Ce fichier ne doit jamais être importé par un composant marqué "use client".
  * Deux raisons :
  *
- * 1. Il contient `RAW_PAP_RECORD`, l'enregistrement brut du suivi psychosocial,
- *    qui inclut des notes de séance. Les importer dans un composant client
- *    reviendrait à les envoyer au navigateur — c'est-à-dire à les divulguer.
- * 2. La projection `toPapSummary()` doit s'exécuter côté serveur pour que la
- *    confidentialité soit garantie par l'architecture, et non par une condition
- *    d'affichage que n'importe quel correctif pourrait retirer.
- *
- * Le jour où l'API réelle existera, seul le contenu de `buildParentDashboardData`
- * changera : les composants consomment déjà le type `ParentDashboardData`.
+ * Les données de démonstration du portail Parent sont réservées au serveur.
+ * Les espaces hors PAP ne reçoivent pas de données de fiche PAP.
  */
 import { cache } from "react";
 import type { NotificationItem } from "./types";
@@ -24,87 +17,13 @@ import type {
   KpiItem,
   MessagePreview,
   NextAction,
-  PapSummary,
   ParentDashboardData,
   ParentProfile,
   StudentSummary,
-  WellbeingLevel,
 } from "./parent-types";
 
 /* ------------------------------------------------------------------ *
- * Étape 1 — l'enregistrement brut, côté serveur uniquement.
- * ------------------------------------------------------------------ */
-
-/**
- * Forme interne du suivi PAP. Elle contient ce que le parent ne doit pas voir.
- * Non exportée : aucun autre module ne peut y accéder.
- */
-interface RawPapRecord {
-  referentName: string;
-  referentTitle: string;
-  referentPhone: string;
-  referentEmail: string;
-  lastCheckIn: string;
-  wellbeingLevel: WellbeingLevel;
-  supportPlanActive: boolean;
-  exchangesCount: number;
-  confidentialityNotice: string;
-  /** Notes de séance rédigées par la référente. Jamais transmises au parent. */
-  sessionNotes: string[];
-  /** Signalements internes à destination du pôle. Jamais transmis au parent. */
-  internalFlags: string[];
-}
-
-const RAW_PAP_RECORD: RawPapRecord = {
-  referentName: "Mme Fatou Sarr",
-  referentTitle: "Référente Pôle PAP — Antenne Dakar",
-  referentPhone: "+221 77 512 44 08",
-  referentEmail: "pap.dakar@ea-pomra.org",
-  lastCheckIn: "15 Septembre 2026 — accueil à l'aéroport Blaise Diagne",
-  wellbeingLevel: "SERENE",
-  supportPlanActive: false,
-  exchangesCount: 3,
-  confidentialityNotice:
-    "Le contenu des échanges entre votre enfant et sa référente reste strictement confidentiel. " +
-    "Vous êtes informé du niveau d'accompagnement, jamais de son contenu.",
-  // --- Champs volontairement retirés par toPapSummary() ---
-  sessionNotes: [
-    "Premier entretien : bonne capacité d'adaptation, exprime une légère appréhension sur le rythme universitaire.",
-    "Deuxième entretien : logement stabilisé, budget mensuel clarifié avec la référente.",
-  ],
-  internalFlags: ["Suivi de proximité hebdomadaire pendant le premier mois"],
-};
-
-const WELLBEING_LABELS: Record<WellbeingLevel, string> = {
-  SERENE: "Sereine et bien installée",
-  ATTENTION: "Un point d'attention suivi par le pôle",
-  RENFORCE: "Accompagnement renforcé en cours",
-};
-
-/**
- * Projette l'enregistrement brut vers la seule vue autorisée pour un parent.
- *
- * L'implémentation énumère explicitement les champs conservés — plutôt que de
- * recopier l'objet puis d'en supprimer — pour qu'un champ ajouté demain au
- * modèle interne soit **exclu par défaut** et non exposé par oubli.
- */
-function toPapSummary(record: RawPapRecord): PapSummary {
-  return {
-    referentName: record.referentName,
-    referentTitle: record.referentTitle,
-    referentPhone: record.referentPhone,
-    referentEmail: record.referentEmail,
-    lastCheckIn: record.lastCheckIn,
-    wellbeingLevel: record.wellbeingLevel,
-    wellbeingLabel: WELLBEING_LABELS[record.wellbeingLevel],
-    supportPlanActive: record.supportPlanActive,
-    exchangesCount: record.exchangesCount,
-    confidentialityNotice: record.confidentialityNotice,
-  };
-}
-
-/* ------------------------------------------------------------------ *
- * Étape 2 — données publiques du dossier.
+ * Données publiques du dossier.
  * ------------------------------------------------------------------ */
 
 const PARENT: ParentProfile = {
@@ -198,10 +117,10 @@ const JOURNEY: JourneyStep[] = [
     label: "Suivi & accompagnement",
     shortLabel: "Suivi",
     description:
-      "Accueil à l'arrivée, installation, rattachement à une référente PAP et suivi régulier de l'intégration.",
+       "Accueil à l'arrivée, installation et suivi régulier de l'intégration.",
     state: "current",
     date: "Depuis le 15 Septembre 2026",
-    actor: "Pôle PAP — Antenne Dakar",
+     actor: "Antenne Dakar",
     items: [
       { label: "Accueil à l'aéroport", value: "15 Septembre 2026", ok: true },
       { label: "Logement", value: "Résidence universitaire confirmée", ok: true },
@@ -327,11 +246,10 @@ const DOCUMENTS: DocumentItem[] = [
 const MESSAGES: MessagePreview[] = [
   {
     id: "msg-1",
-    from: "Mme Fatou Sarr",
-    fromRole: "Référente PAP — Antenne Dakar",
-    subject: "Bien arrivée et installée",
-    preview:
-      "Aïcha est bien arrivée. L'installation en résidence est terminée et la rentrée s'est déroulée sans difficulté.",
+    from: "Antenne Dakar",
+    fromRole: "Service suivi",
+    subject: "Arrivée et installation",
+    preview: "Le suivi administratif de l'arrivée est terminé.",
     date: "15 Septembre 2026",
     read: false,
   },
@@ -385,7 +303,7 @@ const KPIS: KpiItem[] = [
     id: "parcours",
     label: "Parcours",
     value: "4 / 5",
-    detail: "Étapes validées — suivi de rentrée en cours",
+    detail: "Étapes validées — parcours en cours",
     tone: "blue",
   },
   {
@@ -444,9 +362,7 @@ export const buildParentDashboardData = cache(
     kpis: KPIS,
     academic: ACADEMIC,
     finance: FINANCE,
-    // Seul point de passage vers les données PAP : la projection garantit que
-    // les notes de séance de RAW_PAP_RECORD n'atteignent jamais le client.
-    pap: toPapSummary(RAW_PAP_RECORD),
+    // Les espaces hors PAP ne reçoivent pas de données de fiche PAP.
     documents: DOCUMENTS,
     messages: MESSAGES,
     notifications: NOTIFICATIONS,

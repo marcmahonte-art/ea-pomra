@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { ROLE_PERMISSIONS } from "@/lib/backoffice-session";
 import { ocoReviewInputSchema, OCO_FINALIZATION_CONFIRMATION, uploadFieldsSchema } from "@/lib/server/validation";
@@ -9,6 +10,13 @@ const dossierId = "00000000-0000-4000-8000-000000000001";
 const base = { dossierId, version: 1, verdict: "FAVORABLE" as const, orientation: " Licence", analysis: "Analyse technique suffisamment détaillée.", observations: "Observations suffisamment détaillées.", reserves: "", confirmation: OCO_FINALIZATION_CONFIRMATION, finalize: true };
 
 describe("permissions et workflow OCO", () => {
+  it("exclut les événements PAP de l’historique OCO", () => {
+    const source = readFileSync(new URL("../lib/server/oco-repository.ts", import.meta.url), "utf8");
+    expect(source).toContain("WHERE (${PAP_RESOURCE_TYPE_FILTER_SQL})");
+    expect(source).toContain("PAP_RESOURCE_TYPE_FILTER_SQL");
+  });
+
+
   it("limite les permissions OCO aux lectures et à l'avis affecté", () => {
     expect(ROLE_PERMISSIONS.EXPERT_OCO).toEqual(["dossiers.read", "documents.read", "oco.read", "oco.reviews.read", "oco.reviews.write", "oco.reviews.finalize", "history.read"]);
     expect(ROLE_PERMISSIONS.EXPERT_OCO).not.toContain("dossiers.validate");

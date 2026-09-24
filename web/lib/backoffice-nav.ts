@@ -9,13 +9,13 @@
 import type { BackofficeRole } from "./backoffice-types";
 
 export function rootHref(role: BackofficeRole): string {
-  return role === "BEC" ? "/bec" : role === "EXPERT_OCO" ? "/oco" : "/antenne";
+  return role === "BEC" ? "/bec" : role === "EXPERT_OCO" ? "/oco" : role === "RESPONSABLE_PAP" ? "/pap" : "/antenne";
 }
 
 export function dossierHref(role: BackofficeRole, dossierId: string): string {
-  return `${rootHref(role)}/dossiers/${dossierId}`;
+  return role === "RESPONSABLE_PAP" ? `/pap/mentorat/${dossierId}` : `${rootHref(role)}/dossiers/${dossierId}`;
 }
 
 export function dossiersHref(role: BackofficeRole): string {
-  return `${rootHref(role)}/dossiers`;
+  return role === "RESPONSABLE_PAP" ? "/pap/mentorat" : `${rootHref(role)}/dossiers`;
 }

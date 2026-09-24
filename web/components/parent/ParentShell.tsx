@@ -9,7 +9,6 @@ import {
   Compass,
   GraduationCap,
   ArrowLeftRight,
-  HeartHandshake,
   FileText,
   MessageSquare,
   Bell,
@@ -55,7 +54,6 @@ const NAV_ITEMS = [
   { href: "/parent/parcours", label: "Parcours", icon: Compass },
   { href: "/parent/scolarite", label: "Scolarité", icon: GraduationCap },
   { href: "/parent/finances", label: "Finances & STSS", icon: ArrowLeftRight },
-  { href: "/parent/pap", label: "Accompagnement", icon: HeartHandshake },
   { href: "/parent/documents", label: "Documents", icon: FileText },
   { href: "/parent/messages", label: "Messages", icon: MessageSquare },
   { href: "/parent/notifications", label: "Notifications", icon: Bell },
@@ -69,7 +67,6 @@ const MOBILE_NAV_ITEMS = [
   { href: "/parent/parcours", label: "Parcours", icon: Compass },
   { href: "/parent/scolarite", label: "Scolarité", icon: GraduationCap },
   { href: "/parent/finances", label: "Finances", icon: ArrowLeftRight },
-  { href: "/parent/pap", label: "Suivi", icon: HeartHandshake },
 ] as const;
 
 /**

@@ -16,7 +16,7 @@ import StudentShell from "@/components/layout/StudentShell";
 export const metadata: Metadata = {
   title: "Espace étudiant",
   description:
-    "Espace personnel EA-POMRA : suivi de dossier, orientation OCO, transferts STSS, accompagnement PAP et documents.",
+    "Espace personnel EA-POMRA : dossier, orientation, transferts et documents.",
   robots: {
     index: false,
     follow: false,

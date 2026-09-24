@@ -8,7 +8,6 @@ import {
   LayoutDashboard, 
   FileText, 
   CreditCard, 
-  HeartHandshake, 
   FolderCheck, 
   UserCircle2, 
   HelpCircle, 
@@ -29,7 +28,6 @@ export function StudentSidebar({ onTabChange, activeTab = "dashboard" }: Student
     { id: "dashboard", label: "Tableau de Bord", icon: LayoutDashboard },
     { id: "timeline", label: "Parcours & Dossier", icon: FileText },
     { id: "finances", label: "Finances & STSS", icon: CreditCard, badge: "Sécurisé" },
-    { id: "pap", label: "Pôle PAP (Accompagnement)", icon: HeartHandshake, badge: "Actif" },
     { id: "documents", label: "Pièces Justificatives", icon: FolderCheck },
     { id: "parent", label: "Lien Espace Parent", icon: UserCircle2 },
   ];

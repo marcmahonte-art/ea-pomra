@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Check, Clock, Compass, ShieldCheck, HeartHandshake, GraduationCap } from "lucide-react";
+import { Check, Clock, Compass, ShieldCheck, GraduationCap } from "lucide-react";
 
 interface JourneyProgressProps {
   currentStepIndex?: number;
@@ -34,14 +34,6 @@ export function JourneyProgress({ currentStepIndex = 2 }: JourneyProgressProps) 
       icon: ShieldCheck,
       status: "completed",
     },
-    {
-      index: 3,
-      title: "4. Accueil & Pôle PAP",
-      subtitle: "Arrivée & Mentorat",
-      desc: "Accueil à l'aéroport le 10 sept. et accompagnement continu.",
-      icon: HeartHandshake,
-      status: "current",
-    },
   ];
 
   return (
@@ -52,9 +44,9 @@ export function JourneyProgress({ currentStepIndex = 2 }: JourneyProgressProps) 
             <h3 className="text-lg font-bold text-[#0D2B4D]">
               Progression de votre Parcours Académique
             </h3>
-            <p className="text-xs text-[#5B6776]">
-              Étape actuelle : <strong>Phase 3 achevée avec succès • Préparation de l&apos;accueil</strong>
-            </p>
+               <p className="text-xs text-[#5B6776]">
+               Étape actuelle : <strong>Phase 3 achevée avec succès • Préparation de l&apos;accueil</strong>
+             </p>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-[#1EA362] bg-[#E8F6EF] px-3 py-1 rounded-full">

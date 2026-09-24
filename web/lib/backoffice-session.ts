@@ -49,6 +49,15 @@ export const ROLE_PERMISSIONS: Record<BackofficeRole, Permission[]> = {
     "oco.reviews.write",
     "oco.reviews.finalize",
     "history.read"
+  ],
+  RESPONSABLE_PAP: [
+    "pap.read",
+    "pap.alerts.read",
+    "pap.alerts.write",
+    "pap.mentorat.read",
+    "pap.mentorat.write",
+    "history.read",
+    "dossiers.read"
   ]
 };
 
@@ -91,6 +100,19 @@ const DEMO_SCOPES: Record<BackofficeRole, BackofficeScope> = {
     userTitle: "File technique — accès par affectation",
     permissions: ROLE_PERMISSIONS.EXPERT_OCO,
     isDemo: true
+  },
+  RESPONSABLE_PAP: {
+    userId: null,
+    antennaId: null,
+    role: "RESPONSABLE_PAP",
+    countryCode: null,
+    country: null,
+    flag: null,
+    antennaCity: null,
+    userName: "Responsable PAP",
+    userTitle: "Suivi confidentiel — accès par affectation",
+    permissions: ROLE_PERMISSIONS.RESPONSABLE_PAP,
+    isDemo: true
   }
 };
 
@@ -98,7 +120,7 @@ const sessionRowSchema = z.object({
   user_id: z.string().uuid(),
   display_name: z.string().min(1).max(200),
   user_title: z.string().max(200),
-  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]),
+  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO", "RESPONSABLE_PAP"]),
   country_code: z.enum(["SN", "CI", "CM", "GA", "BJ", "TG", "CG", "CD"]).nullable(),
   country_name: z.string().nullable(),
   country_flag: z.string().nullable(),
@@ -200,7 +222,7 @@ export async function authenticateBackofficeUser(
   );
   const userValue = result.rows[0];
   const user = userValue
-    ? z.object({ id: z.string().uuid(), password_hash: z.string().min(20), role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]) }).parse(userValue)
+    ? z.object({ id: z.string().uuid(), password_hash: z.string().min(20), role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO", "RESPONSABLE_PAP"]) }).parse(userValue)
     : null;
   if (!user) {
     await bcrypt.compare(password, SESSION_DUMMY_HASH);

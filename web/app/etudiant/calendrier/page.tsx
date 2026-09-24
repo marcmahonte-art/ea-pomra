@@ -30,7 +30,7 @@ export default function CalendrierPage() {
     {
       date: "10 Septembre 2026",
       title: "Accueil et arrivée à Abidjan",
-      category: "Pôle PAP",
+       category: "Suivi local",
       status: "en cours",
       desc: "Prise en charge à l'aéroport Félix Houphouët-Boigny et installation en résidence.",
     },

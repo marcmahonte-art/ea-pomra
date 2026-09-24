@@ -3,7 +3,6 @@ import {
   Compass,
   GraduationCap,
   ArrowLeftRight,
-  HeartHandshake,
   FileText,
   MessageSquare,
 } from "lucide-react";
@@ -29,13 +28,6 @@ const ACTIONS = [
     hint: "Quittances et échéances",
     icon: ArrowLeftRight,
     tone: "bg-[#FBF6EA] text-[#C89C2E] border-[#F4E4BC]",
-  },
-  {
-    href: "/parent/pap",
-    label: "Accompagnement PAP",
-    hint: "Suivi et référent local",
-    icon: HeartHandshake,
-    tone: "bg-[#FEF7EC] text-[#B86E00] border-[#FDE5C5]",
   },
   {
     href: "/parent/documents",

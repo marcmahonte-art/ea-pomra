@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Lock } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import type { Dossier } from "@/lib/backoffice-types";
 import { STATE_LABELS, STEP_LABELS } from "@/lib/backoffice-types";
 import { CompletenessBar } from "./DossierStatus";
@@ -88,24 +88,7 @@ export function DossierSummary({ dossier }: { dossier: Dossier }) {
           </span>
         </Row>
 
-        <Row label="Demande PAP">
-          <span className="inline-flex items-center gap-1.5">
-            <Lock className="w-3 h-3 text-[#98A2B3]" aria-hidden="true" />
-            {dossier.pap ? (dossier.pap.exists ? "Oui" : "Non") : "Non renseignée"}
-            {dossier.pap?.exists && dossier.pap.status ? (
-              <span className="text-[11px] font-normal text-[#5B6776]">
-                — {dossier.pap.status === "EN_COURS" ? "en cours" : "clôturée"}
-              </span>
-            ) : null}
-          </span>
-        </Row>
       </div>
-
-      <p className="px-5 pb-5 text-[10px] leading-relaxed text-[#98A2B3]">
-        Le contenu des fiches PAP est confidentiel et son accès est restreint au
-        rôle PAP. Le back-office Antenne/BEC n&apos;affiche que l&apos;existence
-        et le statut de la demande.
-      </p>
     </section>
   );
 }

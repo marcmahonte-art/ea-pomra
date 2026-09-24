@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { HelpCircle, Phone, Mail, MapPin, ChevronDown, ChevronUp, Download, MessageSquare } from "lucide-react";
+import { HelpCircle, Mail, MapPin, ChevronDown, ChevronUp, Download, MessageSquare } from "lucide-react";
 import { ANTENNES_EA_POMRA } from "@/lib/data";
 
 export default function AideFaqPage() {
@@ -13,17 +13,14 @@ export default function AideFaqPage() {
       q: "Comment puis-je obtenir mon attestation officielle de virement STSS ?",
       a: "Dès que le versement de vos droits de scolarité est confirmé par le trésorier national de votre antenne de départ, votre attestation officielle est automatiquement générée et certifiée avec QR code dans l'onglet 'Transferts STSS'. Vous pouvez la télécharger à tout moment au format PDF.",
     },
-    {
-      q: "Quel est le rôle de ma référente PAP à mon arrivée en Côte d'Ivoire ?",
-      a: "Votre référente du Pôle PAP (Mme Élodie N'Guessan) coordonne votre accueil à l'aéroport Félix Houphouët-Boigny, vous remet votre kit de bienvenue local (carte SIM, guide du campus) et vous accompagne pour votre installation en résidence universitaire.",
-    },
+
     {
       q: "Mes parents peuvent-ils suivre mes résultats académiques ?",
       a: "Vos parents disposent d'un Espace Parent dédié synchronisé. Ils reçoivent un rapport trimestriel sur votre assiduité et vos progrès académiques validés avec l'antenne, garantissant ainsi le lien de confiance familial.",
     },
     {
       q: "Que faire en cas d'urgence médicale ou de problème d'hébergement ?",
-      a: "Contactez immédiatement votre référente PAP via la ligne d'urgence téléphonique (+225 07 49 11 22 33) ou via le bouton d'appel d'urgence disponible sur votre tableau de bord. Une équipe de proximité est disponible 24/7.",
+      a: "Contactez le secrétariat de votre antenne d'accueil ou le point focal local indiqué dans votre espace. Ne transmettez pas de documents sensibles par un canal non sécurisé.",
     },
   ];
 
@@ -45,18 +42,9 @@ export default function AideFaqPage() {
       {/* Cartes d'urgence et support */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-[#0D2B4D] text-white p-6 rounded-3xl space-y-3">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#1EA362]">Ligne d&apos;urgence Pôle PAP</span>
-          <h2 className="text-xl font-bold">Assistance directe 24h/24</h2>
-          <p className="text-xs text-slate-300">En cas d&apos;urgence lors de votre mobilité, contactez le point focal d&apos;intervention locale.</p>
-          <div className="pt-2 flex items-center gap-3">
-            <a
-              href="tel:+2250749112233"
-              className="px-4 py-2 rounded-xl bg-[#1EA362] text-white font-bold text-xs inline-flex items-center gap-2 hover:bg-[#17824E]"
-            >
-              <Phone className="w-4 h-4" />
-              <span>+225 07 49 11 22 33</span>
-            </a>
-          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#1EA362]">Assistance antenne</span>
+          <h2 className="text-xl font-bold">Contact local</h2>
+          <p className="text-xs text-slate-300">En cas d&apos;urgence lors de votre mobilité, contactez le point focal de l&apos;antenne d&apos;accueil.</p>
         </div>
 
         <div className="bg-white p-6 rounded-3xl border border-[#E6E9EF] shadow-eap-soft space-y-3">

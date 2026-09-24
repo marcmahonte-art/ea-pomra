@@ -124,7 +124,7 @@ export const MOCK_ACTIVE_STUDENT: StudentProfile = {
   degreeLevel: "Master 1",
   academicYear: "2026 - 2027",
   status: "STSS_CONFIRMED",
-  statusLabel: "Scolarité sécurisée STSS • Prêt pour l'accueil",
+  statusLabel: "Scolarité sécurisée STSS • Parcours en cours",
   currentStepIndex: 2, // 0: Candidature, 1: OCO Validé, 2: Mobilité/STSS, 3: PAP/Arrivée
   ocoFeedback: {
     date: "18 Juillet 2026",
@@ -141,14 +141,6 @@ export const MOCK_ACTIVE_STUDENT: StudentProfile = {
     beneficiaryUniversity: "Agent comptable INP-HB (Trésor Public CI)",
     transferProofUrl: "/docs/attestation-stss-9810.pdf",
     referenceCode: "EA-STSS-INP-8492",
-  },
-  papReferent: {
-    name: "Mme Élodie N'Guessan",
-    title: "Responsable Référente Pôle PAP — Antenne Abidjan",
-    phone: "+225 07 49 11 22 33",
-    whatsapp: "+225 07 49 11 22 33",
-    lastContactDate: "28 Août 2026 (Check-in avant rentrée)",
-    wellnessStatus: "Serein",
   },
   parentContact: {
     name: "M. Ibrahima Traoré (Père)",
@@ -185,14 +177,6 @@ export const MOCK_TIMELINE_EVENTS: TimelineEvent[] = [
     badgeText: "ID-POMRA Actif",
   },
   {
-    title: "Arrivée sur site & Accueil par l'antenne locale",
-    date: "10 Septembre 2026",
-    description: "Prise en charge à l'aéroport d'Abidjan Félix Houphouët-Boigny, installation en résidence et premier briefing avec le Pôle PAP.",
-    status: "current",
-    actor: "Équipe Antenne Côte d'Ivoire & Tuteurs Pairs",
-    badgeText: "À venir",
-  },
-  {
     title: "Démarrage des cours & Suivi de rentrée",
     date: "18 Septembre 2026",
     description: "Intégration pédagogique et premier rapport de suivi trimestriel partagé avec la famille via l'Espace Parent.",
@@ -213,15 +197,6 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     link: "#finances",
   },
   {
-    id: "notif-2",
-    title: "Préparation de votre accueil à Abidjan",
-    message: "Votre référente PAP Mme N'Guessan a validé votre créneau d'accueil pour le 10 septembre.",
-    date: "Il y a 4 jours",
-    read: false,
-    type: "info",
-    link: "#pap",
-  },
-  {
     id: "notif-3",
     title: "Espace Parent synchronisé",
     message: "Votre père M. Ibrahima Traoré a consulté le statut de votre inscription.",
@@ -234,7 +209,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
 export const KEY_METRICS = [
   { label: "Pays interconnectés", value: "8 pays", detail: "Afrique de l'Ouest et Centrale" },
   { label: "Étudiants accompagnés", value: "2 100+", detail: "Depuis la création du réseau" },
-  { label: "Taux de réussite académique", value: "96.4%", detail: "Grâce au suivi psychosocial PAP" },
+  { label: "Taux de réussite académique", value: "96.4%", detail: "Selon les données déclarées" },
   { label: "Fonds scolarité sécurisés (STSS)", value: "100%", detail: "Zéro litige, traçabilité totale" },
 ];
 
@@ -258,17 +233,8 @@ export const PILLARS = [
     highlight: "Protection anti-fraude & zéro détournement",
   },
   {
-    id: "pap",
-    tag: "Pilier 3",
-    title: "Accompagnement Humain & Psychosocial",
-    subtitle: "Pôle PAP (Prévention, Accueil et Proximité)",
-    description: "Étudier loin de chez soi ne doit jamais rimer avec solitude. Dès l'arrivée, l'étudiant est pris en charge par un mentor local, avec un canal d'écoute confidentiel et bienveillant.",
-    icon: "HeartHandshake",
-    highlight: "Soutien psychologique & tuteurs pairs",
-  },
-  {
     id: "reussite",
-    tag: "Pilier 4",
+    tag: "Pilier 3",
     title: "Suivi Continu & Réussite jusqu'au Diplôme",
     subtitle: "Transparence partagée Famille - Étudiant - Institution",
     description: "Rapports trimestriels réguliers, suivi des crédits validés et lien permanent avec les parents qui peuvent suivre la progression en temps réel sans intrusion.",

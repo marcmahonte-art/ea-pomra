@@ -25,27 +25,18 @@ export default function MessagesPage() {
         { sender: "them", text: "Parfait ! La quittance officielle STSS est déjà validée dans votre espace finances.", time: "Ce matin à 09:30" },
       ],
     },
-    {
-      id: 2,
-      name: "Mme Élodie N'Guessan",
-      role: "Pôle PAP (Accueil & Bien-être)",
-      avatar: "EN",
-      unread: 2,
-      messages: [
-        { sender: "them", text: `Bonjour ${PRENOM} ! Avez-vous pu réserver votre vol d'arrivée pour Abidjan ?`, time: "Il y a 2 jours" },
-        { sender: "them", text: "Dès que vous avez la confirmation, transmettez-moi les horaires pour que l'équipe vous attende à l'aéroport.", time: "Il y a 2 jours" },
-      ],
-    },
-    {
-      id: 3,
-      name: "Bakary S. (Tuteur Pair)",
-      role: "Étudiant L3 Informatique",
-      avatar: "BS",
-      unread: 0,
-      messages: [
-        { sender: "them", text: `Salut ${PRENOM} ! Je serai ton parrain sur le campus cette année. Hâte de te faire visiter !`, time: "Il y a 3 jours" },
-      ],
-    },
+
+     {
+       id: 2,
+       name: "Service académique",
+       role: "EA-POMRA",
+       avatar: "EA",
+       unread: 0,
+       messages: [
+         { sender: "them", text: `Bonjour ${PRENOM}, votre espace académique est à jour.`, time: "Il y a 3 jours" },
+       ],
+     },
+
   ]);
 
   const currentChat = conversations.find((c) => c.id === activeConv) || conversations[0];

@@ -3,10 +3,45 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
   password: z.string().min(1).max(256),
-  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"])
+  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO", "RESPONSABLE_PAP"])
 });
 
 export const OCO_FINALIZATION_CONFIRMATION = "FINALISER_L_AVIS_OCO";
+
+export const papAlertInputSchema = z.object({
+  dossierId: z.string().uuid(),
+  dossierVersion: z.coerce.number().int().positive(),
+  level: z.enum(["INFO", "ATTENTION", "URGENT"]),
+  subject: z.string().trim().min(3).max(200)
+});
+
+export const papAlertStatusSchema = z.object({
+  alertId: z.string().uuid(),
+  version: z.coerce.number().int().positive(),
+  status: z.enum(["OPEN", "ACKNOWLEDGED", "CLOSED"])
+});
+
+export const papInterventionInputSchema = z.object({
+  dossierId: z.string().uuid(),
+  dossierVersion: z.coerce.number().int().positive(),
+  interventionDate: z.string().date(),
+  interventionType: z.string().trim().min(2).max(100),
+  objective: z.string().trim().min(3).max(2000),
+  observation: z.string().trim().min(3).max(4000),
+  nextAction: z.string().trim().max(2000).default("")
+});
+
+export const papInterventionStatusSchema = z.object({
+  interventionId: z.string().uuid(),
+  version: z.coerce.number().int().positive(),
+  status: z.enum(["DONE", "CANCELLED"])
+});
+
+export const papCaseStatusSchema = z.object({
+  caseId: z.string().uuid(),
+  version: z.coerce.number().int().positive(),
+  status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"])
+});
 
 export const ocoReviewInputSchema = z.object({
   dossierId: z.string().uuid(),

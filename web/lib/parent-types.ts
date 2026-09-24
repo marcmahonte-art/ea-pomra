@@ -131,33 +131,6 @@ export interface FinanceSummary {
   transactions: TransactionItem[];
 }
 
-export type WellbeingLevel = "SERENE" | "ATTENTION" | "RENFORCE";
-
-/**
- * Vue parentale du suivi PAP.
- *
- * Ce type ne contient délibérément **aucun** champ libre : ni compte-rendu de
- * séance, ni note du référent, ni verbatim de l'étudiant. Le parent reçoit un
- * niveau d'accompagnement agrégé et un contact — l'étudiant conserve la
- * propriété du contenu de ses échanges. Cette restriction est appliquée par la
- * projection `toPapSummary()` de `lib/parent-data.ts`, côté serveur, et non par
- * une condition d'affichage.
- */
-export interface PapSummary {
-  referentName: string;
-  referentTitle: string;
-  referentPhone: string;
-  referentEmail: string;
-  lastCheckIn: string;
-  wellbeingLevel: WellbeingLevel;
-  wellbeingLabel: string;
-  supportPlanActive: boolean;
-  /** Nombre d'échanges, jamais leur contenu. */
-  exchangesCount: number;
-  /** Rappel de la règle de confidentialité, affiché tel quel dans l'interface. */
-  confidentialityNotice: string;
-}
-
 export type DocumentCategory =
   | "IDENTITE"
   | "ACADEMIQUE"
@@ -208,7 +181,6 @@ export interface ParentDashboardData {
   kpis: KpiItem[];
   academic: AcademicSummary;
   finance: FinanceSummary;
-  pap: PapSummary;
   documents: DocumentItem[];
   messages: MessagePreview[];
   notifications: NotificationItem[];

@@ -94,18 +94,26 @@ const OCO_NAV: NavItem[] = [
   { href: "/oco/historique", label: "Historique", icon: History },
 ];
 
+const PAP_NAV: NavItem[] = [
+  { href: "/pap", label: "Tableau de bord", icon: LayoutDashboard },
+  { href: "/pap/alertes", label: "Alertes", icon: Bell, badge: true },
+  { href: "/pap/mentorat", label: "Mentorat", icon: GraduationCap },
+  { href: "/pap/historique", label: "Historique", icon: History },
+];
+
 /**
  * L'onglet racine (`/antenne`, `/bec`) est préfixe de tous les autres : une
  * comparaison par `startsWith` l'activerait sur chaque page.
  */
 function isRouteActive(href: string, pathname: string): boolean {
-  if (href === "/antenne" || href === "/bec" || href === "/oco") return pathname === href;
+  if (href === "/antenne" || href === "/bec" || href === "/oco" || href === "/pap") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function navFor(role: BackofficeRole): NavItem[] {
   if (role === "BEC") return BEC_NAV;
   if (role === "EXPERT_OCO") return OCO_NAV;
+  if (role === "RESPONSABLE_PAP") return PAP_NAV;
   return ANTENNE_NAV;
 }
 
@@ -125,7 +133,7 @@ export default function BackofficeShell({
   const navItems = navFor(role);
   const activeItem = navItems.find((item) => isRouteActive(item.href, pathname));
   const root = rootHref(role);
-  const roleLabel = role === "BEC" ? "BACK-OFFICE BEC" : role === "EXPERT_OCO" ? "EXPERT OCO" : "BACK-OFFICE ANTENNE";
+  const roleLabel = role === "BEC" ? "BACK-OFFICE BEC" : role === "EXPERT_OCO" ? "EXPERT OCO" : role === "RESPONSABLE_PAP" ? "ESPACE PAP" : "BACK-OFFICE ANTENNE";
 
   /** Contenu de la barre latérale, mutualisé entre la version fixe et le panneau mobile. */
   const sidebarContent = (
@@ -272,7 +280,7 @@ export default function BackofficeShell({
             <ol className="flex items-center gap-1.5 text-xs text-[#667085] min-w-0">
               <li className="shrink-0">
                 <Link href={root} className="hover:text-[#0D2B4D]">
-                  {role === "BEC" ? "BEC" : role === "EXPERT_OCO" ? "OCO" : "Antenne"}
+                  {role === "BEC" ? "BEC" : role === "EXPERT_OCO" ? "OCO" : role === "RESPONSABLE_PAP" ? "PAP" : "Antenne"}
                 </Link>
               </li>
               {activeItem && activeItem.href !== root ? (
@@ -292,7 +300,7 @@ export default function BackofficeShell({
           </nav>
 
           <Link
-             href={`${root}/dossiers`}
+             href={role === "RESPONSABLE_PAP" ? "/pap/mentorat" : `${root}/dossiers`}
             aria-label="Rechercher un dossier"
             className="w-9 h-9 rounded-lg border border-[#E6E9EF] flex items-center justify-center text-[#667085] hover:bg-[#F7F9FB] hover:text-[#0D2B4D] transition-colors"
           >
@@ -300,7 +308,7 @@ export default function BackofficeShell({
           </Link>
 
           <Link
-             href={role === "EXPERT_OCO" ? "/oco/avis" : `${root}/notifications`}
+             href={role === "RESPONSABLE_PAP" ? "/pap/alertes" : role === "EXPERT_OCO" ? "/oco/avis" : `${root}/notifications`}
             aria-label="Notifications"
             className="relative w-9 h-9 rounded-lg border border-[#E6E9EF] flex items-center justify-center text-[#667085] hover:bg-[#F7F9FB] hover:text-[#0D2B4D] transition-colors"
           >

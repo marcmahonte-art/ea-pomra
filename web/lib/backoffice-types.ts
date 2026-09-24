@@ -12,7 +12,7 @@
  */
 
 /** Rôle de l'utilisateur du back-office. */
-export type BackofficeRole = "ANTENNE" | "BEC" | "EXPERT_OCO";
+export type BackofficeRole = "ANTENNE" | "BEC" | "EXPERT_OCO" | "RESPONSABLE_PAP";
 
 export type CountryCode = "SN" | "CI" | "CM" | "GA" | "BJ" | "TG" | "CG" | "CD";
 
@@ -88,19 +88,6 @@ export interface ActivityEvent {
   user: string;
   userRole: string;
   comment: string | null;
-}
-
-/**
- * Demande PAP vue depuis le back-office Antenne/BEC.
- *
- * Spec §24 : le contenu de la fiche PAP est confidentiel. Ce type ne peut donc
- * transporter qu'une existence et un statut — jamais un motif, une note ou un
- * compte-rendu. C'est la confidentialité appliquée par le type, pas par
- * l'affichage.
- */
-export interface PapReference {
-  exists: boolean;
-  status: "EN_COURS" | "CLOTUREE" | null;
 }
 
 export interface OrientationInfo {
@@ -213,7 +200,6 @@ export interface Dossier {
   /** Action attendue de l'agent, ou `null` si le dossier n'attend rien. */
   requiredAction: string | null;
   documents: DossierDocument[];
-  pap: PapReference | null;
   orientation: OrientationInfo | null;
   mobilite: MobiliteInfo | null;
   stss: StssInfo | null;
@@ -389,7 +375,12 @@ export type Permission =
   | "statistics.read"
   | "history.read"
   | "activity.read"
-  | "exports.run";
+  | "exports.run"
+  | "pap.read"
+  | "pap.alerts.read"
+  | "pap.alerts.write"
+  | "pap.mentorat.read"
+  | "pap.mentorat.write";
 
 /**
  * Périmètre d'autorisation de l'utilisateur courant.

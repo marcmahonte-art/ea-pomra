@@ -7,7 +7,6 @@ import { StudentSummaryCard } from "@/components/parent/StudentSummaryCard";
 import { JourneyStepper } from "@/components/parent/JourneyTimeline";
 import { AcademicCard } from "@/components/parent/AcademicCard";
 import { FinanceCard } from "@/components/parent/FinanceCard";
-import { PapCard } from "@/components/parent/PapCard";
 import { DocumentsCard } from "@/components/parent/DocumentsCard";
 import { NotificationsCard } from "@/components/parent/NotificationsCard";
 import { MessagesCard } from "@/components/parent/MessagesCard";
@@ -23,10 +22,8 @@ export const metadata: Metadata = {
 /**
  * Tableau de bord du parent.
  *
- * Composant **serveur** : il lit `lib/parent-data.ts` directement, sans passer
- * par une route d'API. C'est ce qui permet à la projection de confidentialité
- * du Pôle PAP de s'exécuter avant que le moindre octet ne parte vers le
- * navigateur.
+ * Composant serveur : il lit les données autorisées du parent sans les données
+ * de fiche PAP.
  */
 export default async function ParentDashboardPage() {
   const data = await buildParentDashboardData();
@@ -93,7 +90,6 @@ export default async function ParentDashboardPage() {
 
       {/* Accompagnement, notifications et messages */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <PapCard pap={data.pap} />
         <div className="space-y-6">
           <NotificationsCard notifications={data.notifications.slice(0, 3)} />
           <MessagesCard messages={data.messages} max={2} />

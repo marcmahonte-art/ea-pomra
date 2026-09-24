@@ -123,8 +123,8 @@ export const MOCK_ACTIVE_STUDENT: StudentProfile = {
   program: "Master en Ingénierie des Systèmes Numériques & IA",
   degreeLevel: "Master 1",
   academicYear: "2026 - 2027",
-  status: "STSS_CONFIRMED",
-  statusLabel: "Scolarité sécurisée STSS • Parcours en cours",
+  status: "STSS_SIMULATION",
+  statusLabel: "Scolarité en simulation STSS • Parcours en cours",
   currentStepIndex: 2, // 0: Candidature, 1: OCO Validé, 2: Mobilité/STSS, 3: PAP/Arrivée
   ocoFeedback: {
     date: "18 Juillet 2026",
@@ -136,11 +136,10 @@ export const MOCK_ACTIVE_STUDENT: StudentProfile = {
     id: "TX-STSS-2026-9810",
     amount: 1850000,
     currency: "FCFA",
-    status: "Confirmé",
-    tuitionPaidDate: "14 Août 2026",
-    beneficiaryUniversity: "Agent comptable INP-HB (Trésor Public CI)",
-    transferProofUrl: "/docs/attestation-stss-9810.pdf",
-    referenceCode: "EA-STSS-INP-8492",
+     status: "SIMULATION",
+     simulationDate: "14 Août 2026",
+     representedUniversity: "INP-HB (établissement représenté dans le scénario)",
+     referenceCode: "EA-STSS-INP-8492",
   },
   parentContact: {
     name: "M. Ibrahima Traoré (Père)",
@@ -153,12 +152,12 @@ export const MOCK_ACTIVE_STUDENT: StudentProfile = {
 
 export const MOCK_TIMELINE_EVENTS: TimelineEvent[] = [
   {
-    title: "Attestation de Transfert STSS émise & Scolarité validée",
+    title: "Simulation STSS affichée dans le dossier",
     date: "14 Août 2026",
-    description: "Le versement de 1 850 000 FCFA a été viré directement et certifié auprès du compte de l'établissement d'accueil. Quittance officielle générée.",
+    description: "Un scénario de transfert de scolarité est affiché pour illustrer le parcours. Aucun paiement réel ni quittance officielle n'est fourni.",
     status: "completed",
     actor: "Trésorier National Antenne Sénégal & Côte d'Ivoire",
-    badgeText: "STSS Certifié",
+     badgeText: "STSS SIMULATION",
   },
   {
     title: "Avis d'Orientation Favorable (Comité OCO)",
@@ -189,8 +188,8 @@ export const MOCK_TIMELINE_EVENTS: TimelineEvent[] = [
 export const MOCK_NOTIFICATIONS: NotificationItem[] = [
   {
     id: "notif-1",
-    title: "Votre attestation STSS est disponible",
-    message: "Le reçu officiel certifié de votre scolarité (1 850 000 FCFA) est prêt à être téléchargé pour vos démarches de visa/résidence.",
+     title: "Votre aperçu STSS est disponible",
+     message: "Le scénario STSS de votre scolarité est affiché dans votre espace. Aucun reçu officiel n'est disponible dans cette version.",
     date: "Il y a 2 jours",
     read: false,
     type: "success",
@@ -210,7 +209,7 @@ export const KEY_METRICS = [
   { label: "Pays interconnectés", value: "8 pays", detail: "Afrique de l'Ouest et Centrale" },
   { label: "Étudiants accompagnés", value: "2 100+", detail: "Depuis la création du réseau" },
   { label: "Taux de réussite académique", value: "96.4%", detail: "Selon les données déclarées" },
-  { label: "Fonds scolarité sécurisés (STSS)", value: "100%", detail: "Zéro litige, traçabilité totale" },
+  { label: "Simulation STSS", value: "Aperçu", detail: "Scénario affiché, sans mouvement ni document officiel" },
 ];
 
 export const PILLARS = [
@@ -226,11 +225,11 @@ export const PILLARS = [
   {
     id: "stss",
     tag: "Pilier 2",
-    title: "Mobilité & Transfert Sécurisé (STSS)",
-    subtitle: "Système de Transfert Sécurisé de Scolarité",
-    description: "Les familles déposent les frais de scolarité auprès de l'antenne locale de départ. Les fonds sont virés directement à l'établissement d'accueil avec quittance légale instantanée.",
+    title: "Mobilité & aperçu STSS",
+    subtitle: "Simulation du transfert de scolarité",
+     description: "Les scénarios STSS présentent les étapes prévues du transfert de scolarité. Aucun paiement réel n'est effectué dans cette version.",
     icon: "ShieldCheck",
-    highlight: "Protection anti-fraude & zéro détournement",
+    highlight: "Aperçu des étapes prévues",
   },
   {
     id: "reussite",

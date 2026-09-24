@@ -121,7 +121,7 @@ export function StudentIdentityCard() {
 
           <div className="flex items-center gap-2 text-[#1EA362] font-semibold">
             <ShieldCheck className="w-4 h-4" />
-            <span>Scolarité 100% couverte par quittance STSS</span>
+             <span>Scolarité affichée en simulation STSS</span>
           </div>
         </div>
       </CardContent>

@@ -18,8 +18,8 @@ export type DossierStatus =
   | "DRAFT" 
   | "OCO_REVIEW" 
   | "OCO_APPROVED" 
-  | "STSS_PENDING" 
-  | "STSS_CONFIRMED" 
+  | "STSS_PENDING"
+  | "STSS_SIMULATION"
   | "ARRIVED_PAP_ACTIVE" 
   | "GRADUATED";
 
@@ -52,11 +52,10 @@ export interface StudentProfile {
     id: string;
     amount: number;
     currency: string;
-    status: "Confirmé" | "En attente de virement" | "Reçu délivré";
-    tuitionPaidDate: string;
-    beneficiaryUniversity: string;
-    transferProofUrl: string;
-    referenceCode: string;
+    status: "SIMULATION";
+    simulationDate: string;
+    representedUniversity: string;
+     referenceCode: string;
   };
   parentContact: {
     name: string;

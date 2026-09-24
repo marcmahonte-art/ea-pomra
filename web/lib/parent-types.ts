@@ -114,10 +114,8 @@ export interface TransactionItem {
   label: string;
   amount: number;
   date: string;
-  status: "Confirmé" | "En attente" | "Programmé";
+  status: "SIMULATION" | "En attente" | "Programmé";
   reference: string;
-  /** Chemin de la quittance. Absent tant que la pièce n'est pas émise. */
-  proofUrl?: string;
 }
 
 export interface FinanceSummary {

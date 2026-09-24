@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { Calculator, ArrowRight, ShieldCheck, Clock, CheckCircle2, Building2 } from "lucide-react";
+import { Calculator, ArrowRight, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
 import { ANTENNES_EA_POMRA } from "@/lib/data";
 
 export function SimulatorSection() {
@@ -13,20 +13,18 @@ export function SimulatorSection() {
   const [studyField, setStudyField] = useState("Informatique & Intelligence Artificielle");
   const [studyLevel, setStudyLevel] = useState("Master");
 
-  const [simulationCalculated, setSimulationCalculated] = useState(true);
-
   return (
     <section id="simulateur" className="py-20 bg-white border-b border-[#E6E9EF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <Badge variant="primary" size="md">
-            Simulateur Gratuit & Sans Engagement
-          </Badge>
+           <Badge variant="primary" size="md">
+             Simulateur gratuit & sans engagement
+           </Badge>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0D2B4D] tracking-tight">
             Estimez votre parcours de mobilité en 30 secondes
           </h2>
           <p className="text-base sm:text-lg text-[#5B6776]">
-            Configurez votre départ et découvrez la prise en charge offerte par les antennes EA-POMRA pour votre filière.
+             Configurez votre départ et découvrez un aperçu de l&apos;accompagnement proposé par les antennes EA-POMRA pour votre filière.
           </p>
         </div>
 
@@ -142,10 +140,10 @@ export function SimulatorSection() {
 
                 <div className="space-y-3">
                   <h4 className="text-2xl font-black text-white leading-snug">
-                    Parcours 100% éligible à l&apos;encadrement EA-POMRA
+                      Aperçu d&apos;un parcours d&apos;accompagnement EA-POMRA
                   </h4>
                   <p className="text-xs text-slate-300 leading-relaxed">
-                    Votre cursus en <strong className="text-white">{studyField}</strong> bénéficie d&apos;universités partenaires homologuées et de l&apos;accueil par l&apos;antenne {targetCountry}.
+                      Votre cursus en <strong className="text-white">{studyField}</strong> est présenté comme un scénario avec un aperçu de l&apos;accueil par l&apos;antenne {targetCountry}.
                   </p>
                 </div>
 
@@ -156,7 +154,7 @@ export function SimulatorSection() {
                   </div>
                   <div className="flex items-center gap-2.5 text-xs text-slate-200">
                     <ShieldCheck className="w-4 h-4 text-[#1EA362] shrink-0" />
-                    <span>Sécurisation STSS : <strong>Dépôt en monnaie locale</strong></span>
+                     <span>STSS : <strong>Aperçu du scénario de scolarité</strong></span>
                   </div>
                   <div className="flex items-center gap-2.5 text-xs text-slate-200">
                     <CheckCircle2 className="w-4 h-4 text-[#1EA362] shrink-0" />
@@ -169,13 +167,13 @@ export function SimulatorSection() {
                 <Button
                   variant="gold"
                   className="w-full font-bold text-sm shadow-md"
-                  onClick={() => alert(`Demande initiée pour la mobilité ${originCountry} -> ${targetCountry}. Vous allez être redirigé vers l'espace étudiant.`)}
+                   onClick={() => alert(`Aperçu local du scénario de mobilité ${originCountry} -> ${targetCountry}. Aucune demande n'est envoyée.`)}
                 >
-                  <span>Initier mon dossier de mobilité</span>
+                   <span>Voir l&apos;aperçu du dossier</span>
                   <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
                 <p className="text-[11px] text-center text-slate-400">
-                  Attribution immédiate d&apos;un code sécurisé ID-POMRA.
+                   Aperçu d&apos;un code ID-POMRA, sans transmission de données.
                 </p>
               </div>
             </CardContent>

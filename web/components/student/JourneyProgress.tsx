@@ -29,8 +29,8 @@ export function JourneyProgress({ currentStepIndex = 2 }: JourneyProgressProps) 
     {
       index: 2,
       title: "3. Mobilité & STSS",
-      subtitle: "Frais de scolarité réglés",
-      desc: "1 850 000 FCFA virés sous séquestre direct à l'établissement.",
+      subtitle: "Scénario STSS affiché",
+      desc: "1 850 000 FCFA simulés pour l'établissement, sans mouvement financier ni quittance.",
       icon: ShieldCheck,
       status: "completed",
     },
@@ -45,7 +45,7 @@ export function JourneyProgress({ currentStepIndex = 2 }: JourneyProgressProps) 
               Progression de votre Parcours Académique
             </h3>
                <p className="text-xs text-[#5B6776]">
-               Étape actuelle : <strong>Phase 3 achevée avec succès • Préparation de l&apos;accueil</strong>
+               Étape actuelle : <strong>Phase 3 • Simulation STSS sans mouvement financier</strong>
              </p>
           </div>
           <div className="flex items-center gap-2">

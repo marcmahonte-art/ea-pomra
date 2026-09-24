@@ -21,8 +21,8 @@ export default function MessagesPage() {
       messages: [
         { sender: "them", text: `Bonjour ${PRENOM}, nous avons bien réceptionné vos pièces complémentaires pour l'INP-HB.`, time: "Hier à 16:45" },
         { sender: "them", text: "Votre attestation de pré-inscription est en cours de validation finale auprès de la scolarité.", time: "Hier à 16:46" },
-        { sender: "me", text: "Merci beaucoup Dr. Brou. Pour les frais de scolarité STSS, mon père a déjà déposé la preuve auprès de l'antenne.", time: "Hier à 17:10" },
-        { sender: "them", text: "Parfait ! La quittance officielle STSS est déjà validée dans votre espace finances.", time: "Ce matin à 09:30" },
+         { sender: "me", text: "Merci beaucoup Dr. Brou. Je comprends que STSS est affiché en simulation dans mon espace.", time: "Hier à 17:10" },
+         { sender: "them", text: "Exactement, aucun paiement ni reçu officiel n'est disponible dans cette version.", time: "Ce matin à 09:30" },
       ],
     },
 

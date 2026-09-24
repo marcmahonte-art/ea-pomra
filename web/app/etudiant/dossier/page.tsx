@@ -61,7 +61,7 @@ export default function MonDossierPage() {
           <span className="text-[11px] text-[#8E9BAA] font-bold uppercase">Statut global</span>
           <div className="text-base font-black text-[#1EA362] mt-1 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#1EA362] animate-pulse"></span>
-            Scolarité sécurisée STSS
+             Scolarité STSS simulée
           </div>
         </div>
 

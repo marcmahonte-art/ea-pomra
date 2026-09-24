@@ -24,9 +24,9 @@ const ROLES = [
       "Contrôle de conformité des diplômes, relevés de notes et pièces d'identité, puis numérisation sécurisée dans le dossier.",
   },
   {
-    titre: "Encaissement local (STSS)",
+    titre: "Préparation locale (STSS)",
     texte:
-      "Dépôt des frais de scolarité en monnaie locale et émission d'une quittance légale rattachée au code ID-POMRA.",
+      "Présentation du scénario de scolarité et de son rattachement au code ID-POMRA, sans dépôt ni quittance dans cette version.",
   },
   {
     titre: "Relation universités",
@@ -53,11 +53,11 @@ export default function AntennesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mb-12 space-y-3">
             <h2 className="text-2xl sm:text-3xl font-black text-[#0D2B4D] tracking-tight">
-              Le rôle d'une antenne sur le terrain
+               Le rôle d&apos;une antenne sur le terrain
             </h2>
             <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
-              L'antenne est le point de contact physique du réseau. C'est elle qui matérialise la
-              confiance entre la famille, l'étudiant et l'établissement d'accueil.
+               L&apos;antenne est le point de contact physique du réseau. C&apos;est elle qui matérialise la
+               confiance entre la famille, l&apos;étudiant et l&apos;établissement d&apos;accueil.
             </p>
           </div>
 

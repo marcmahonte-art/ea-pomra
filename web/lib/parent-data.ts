@@ -98,17 +98,17 @@ const JOURNEY: JourneyStep[] = [
   {
     id: "MOBILITE",
     order: 3,
-    label: "Mobilité & transfert sécurisé",
+    label: "Mobilité & simulation STSS",
     shortLabel: "Mobilité",
     description:
-      "Transfert de la scolarité par le dispositif STSS directement à l'établissement d'accueil, puis préparation du départ.",
+      "Scénario de transfert de la scolarité vers l'établissement d'accueil, sans mouvement financier ni quittance.",
     state: "completed",
     date: "22 Août 2026",
     actor: "Trésorerie STSS & Antenne Dakar",
     items: [
-      { label: "1er versement STSS", value: "850 000 FCFA virés à l'UCAD", ok: true },
-      { label: "Quittance officielle", value: "Émise le 22 Août 2026", ok: true },
-      { label: "Visa & titre de séjour", value: "Dossier déposé", ok: true },
+      { label: "Scénario de scolarité STSS", value: "850 000 FCFA simulés pour l'UCAD — aucun mouvement", ok: true },
+      { label: "Document financier", value: "Aucun document disponible dans cet aperçu", ok: false },
+      { label: "Visa & titre de séjour", value: "Dossier présenté dans le scénario", ok: true },
     ],
   },
   {
@@ -164,26 +164,25 @@ const FINANCE: FinanceSummary = {
   tuitionTotal: 1_250_000,
   tuitionPaid: 850_000,
   status: "PENDING",
-  statusLabel: "1er versement sécurisé — solde à échoir",
+  statusLabel: "Simulation de scénario — solde à échoir",
   nextDueDate: "15 Novembre 2026",
-  beneficiary: "Agent comptable UCAD (Trésor Public du Sénégal)",
+  beneficiary: "UCAD — établissement représenté dans le scénario",
   transactions: [
     {
       id: "TX-STSS-2026-4471",
-      label: "1er versement de scolarité (STSS)",
+      label: "Scénario de scolarité (STSS)",
       amount: 850_000,
       date: "22 Août 2026",
-      status: "Confirmé",
-      reference: "EA-STSS-UCAD-0125",
-      proofUrl: "/docs/quittance-stss-4471.pdf",
+       status: "SIMULATION",
+       reference: "EA-STSS-UCAD-0125",
     },
     {
       id: "TX-STSS-2026-4472",
       label: "Solde de scolarité (STSS)",
       amount: 400_000,
       date: "15 Novembre 2026",
-      status: "Programmé",
-      reference: "EA-STSS-UCAD-0126",
+       status: "SIMULATION",
+       reference: "EA-STSS-UCAD-0126",
     },
   ],
 };
@@ -218,12 +217,12 @@ const DOCUMENTS: DocumentItem[] = [
   },
   {
     id: "doc-4",
-    name: "Quittance STSS — 1er versement",
+    name: "Aperçu STSS — scénario de scolarité",
     category: "FINANCIER",
-    status: "VALIDATED",
-    uploadedAt: "22 Août 2026",
-    sizeLabel: "310 Ko",
-    url: "/docs/quittance-stss-4471.pdf",
+     status: "PENDING",
+     uploadedAt: "22 Août 2026",
+     sizeLabel: null,
+
   },
   {
     id: "doc-5",
@@ -259,7 +258,7 @@ const MESSAGES: MessagePreview[] = [
     fromRole: "Trésorerie STSS",
     subject: "Échéance du solde de scolarité",
     preview:
-      "Le solde de 400 000 FCFA sera à déposer auprès de l'antenne de Ouagadougou avant le 15 novembre 2026.",
+      "Le solde de 400 000 FCFA est présenté comme une étape future dans l'aperçu, sans action financière.",
     date: "10 Septembre 2026",
     read: true,
   },
@@ -288,9 +287,9 @@ const NOTIFICATIONS: NotificationItem[] = [
   },
   {
     id: "pnotif-3",
-    title: "Quittance STSS disponible",
-    message:
-      "Le reçu officiel du premier versement de 850 000 FCFA est téléchargeable depuis l'espace documents.",
+     title: "Aperçu STSS affiché",
+     message:
+       "Le scénario de versement est affiché dans l'espace finances. Aucun reçu réel n'est disponible.",
     date: "Il y a 1 semaine",
     read: true,
     type: "info",
@@ -315,9 +314,9 @@ const KPIS: KpiItem[] = [
   },
   {
     id: "finances",
-    label: "Scolarité sécurisée",
+    label: "Scénario de scolarité",
     value: "68 %",
-    detail: "850 000 sur 1 250 000 FCFA transférés à l'UCAD",
+    detail: "850 000 sur 1 250 000 FCFA simulés — aucun mouvement",
     tone: "gold",
   },
   {
@@ -330,12 +329,12 @@ const KPIS: KpiItem[] = [
 ];
 
 const NEXT_ACTION: NextAction = {
-  title: "Solde de scolarité à échoir",
+  title: "Solde de scolarité à consulter",
   description:
-    "Le solde de 400 000 FCFA doit être déposé auprès de l'antenne de Ouagadougou. Les fonds seront virés directement à l'UCAD, avec quittance officielle.",
+     "Le solde de 400 000 FCFA est affiché comme scénario. Aucune action financière n'est demandée dans cette version.",
   dueDate: "15 Novembre 2026",
   href: "/parent/finances",
-  ctaLabel: "Voir le détail du transfert",
+  ctaLabel: "Voir le détail de la simulation",
   severity: "info",
 };
 

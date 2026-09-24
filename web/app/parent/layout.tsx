@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Suivi du parcours de mobilité étudiante : étapes du dossier, scolarité, transferts STSS sécurisés et accompagnement psychosocial.",
+    "Suivi du parcours de mobilité étudiante : étapes du dossier, scolarité, simulation STSS et accompagnement psychosocial.",
   robots: {
     index: false,
     follow: false,

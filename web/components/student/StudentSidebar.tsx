@@ -3,19 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  FileText, 
-  CreditCard, 
-  FolderCheck, 
-  UserCircle2, 
-  HelpCircle, 
+import {
+  LayoutDashboard,
+  FileText,
+  CreditCard,
+  FolderCheck,
+  UserCircle2,
   LogOut,
   ShieldCheck,
   Building
 } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
 import { MOCK_ACTIVE_STUDENT } from "@/lib/data";
 
 interface StudentSidebarProps {
@@ -27,7 +24,7 @@ export function StudentSidebar({ onTabChange, activeTab = "dashboard" }: Student
   const navItems = [
     { id: "dashboard", label: "Tableau de Bord", icon: LayoutDashboard },
     { id: "timeline", label: "Parcours & Dossier", icon: FileText },
-    { id: "finances", label: "Finances & STSS", icon: CreditCard, badge: "Sécurisé" },
+    { id: "finances", label: "Aperçu STSS", icon: CreditCard, badge: "Simulation" },
     { id: "documents", label: "Pièces Justificatives", icon: FolderCheck },
     { id: "parent", label: "Lien Espace Parent", icon: UserCircle2 },
   ];
@@ -97,7 +94,7 @@ export function StudentSidebar({ onTabChange, activeTab = "dashboard" }: Student
                 {item.badge && (
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                      item.badge === "Sécurisé"
+                       item.badge === "Simulation"
                         ? "bg-[#1EA362]/20 text-[#1EA362]"
                         : "bg-[#C89C2E]/20 text-[#F7D070]"
                     }`}
@@ -115,7 +112,7 @@ export function StudentSidebar({ onTabChange, activeTab = "dashboard" }: Student
       <div className="p-4 border-t border-white/10 space-y-3">
         <div className="flex items-center gap-2 p-2 rounded-xl bg-white/5 text-xs text-slate-300">
           <ShieldCheck className="w-4 h-4 text-[#1EA362] shrink-0" />
-          <span className="truncate">Scolarité certifiée STSS</span>
+            <span className="truncate">Scolarité STSS — aperçu</span>
         </div>
 
         <Link

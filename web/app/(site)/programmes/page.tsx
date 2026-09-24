@@ -21,7 +21,7 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata(
   "Programmes",
-  "Quatre piliers complémentaires, trois niveaux d'études et un processus d'admission en quatre étapes pour sécuriser chaque parcours de mobilité académique."
+  "Quatre piliers complémentaires, trois niveaux d'études et un aperçu du processus de mobilité."
 );
 
 const NIVEAUX = [
@@ -57,9 +57,9 @@ const DOMAINES = [
 const ETAPES = [
   {
     icon: FileText,
-    titre: "1. Dépôt du dossier",
+    titre: "1. Préparation du dossier",
     texte:
-      "Création du dossier en ligne et téléversement des pièces académiques auprès de l'antenne de départ.",
+      "Préparation d'un dossier en ligne et présentation des pièces académiques auprès de l'antenne de départ.",
   },
   {
     icon: Compass,
@@ -69,9 +69,9 @@ const ETAPES = [
   },
   {
     icon: ShieldCheck,
-    titre: "3. Sécurisation STSS",
+    titre: "3. Aperçu STSS",
     texte:
-      "Dépôt des frais de scolarité en monnaie locale et transfert certifié vers l'établissement d'accueil.",
+      "Présentation du scénario de scolarité et des étapes prévues, sans paiement ni mouvement financier.",
   },
   {
     icon: Plane,
@@ -88,7 +88,7 @@ export default function ProgrammesPage() {
         eyebrow="Programmes"
         breadcrumb="Programmes"
         title="Un accompagnement structuré, de l'orientation au diplôme"
-        description="Quatre piliers complémentaires, trois niveaux d'études et un processus d'admission en quatre étapes pour sécuriser chaque parcours de mobilité académique."
+        description="Quatre piliers complémentaires, trois niveaux d'études et un aperçu du processus de mobilité académique."
       />
 
       {/* Piliers détaillés */}
@@ -111,7 +111,7 @@ export default function ProgrammesPage() {
       <section className="py-16 sm:py-20 bg-[#F7F9FB] border-y border-[#E6E9EF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <h2 className="text-2xl sm:text-3xl font-black text-[#0D2B4D] tracking-tight mb-12">
-            Niveaux d'études accompagnés
+             Niveaux d&apos;études accompagnés
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -139,7 +139,7 @@ export default function ProgrammesPage() {
               Exemples de filières accompagnées
             </h2>
             <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
-              Liste indicative. L'avis d'orientation du pôle OCO détermine la filière réellement
+               Liste indicative. L&apos;avis d&apos;orientation du pôle OCO détermine la filière réellement
               adaptée à chaque profil et aux débouchés du marché.
             </p>
           </div>
@@ -169,7 +169,7 @@ export default function ProgrammesPage() {
       <section className="py-16 sm:py-20 bg-[#F7F9FB] border-t border-[#E6E9EF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <h2 className="text-2xl sm:text-3xl font-black text-[#0D2B4D] tracking-tight mb-12">
-            Le processus d'admission en quatre étapes
+             Le processus d&apos;admission en quatre étapes
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -191,7 +191,7 @@ export default function ProgrammesPage() {
 
       <CtaBand
         title="Prêt à construire votre projet académique ?"
-        description="Déposez votre dossier auprès de votre antenne nationale et recevez un avis d'orientation sous 72 heures."
+        description="Présentez votre dossier auprès de votre antenne nationale et consultez un aperçu de l'orientation."
       />
     </>
   );

@@ -1,113 +1,171 @@
-import { ShieldCheck, FileCheck2, FileX2, Info } from "lucide-react";
-import type { BackofficeRole, Dossier, StssInfo } from "@/lib/backoffice-types";
+import { Info, ShieldCheck } from "lucide-react";
+import type { BackofficeRole, Dossier } from "@/lib/backoffice-types";
+import {
+  STSS_STATUS_LABELS,
+  type StssStatus,
+  type StssTransferView
+} from "@/lib/stss-types";
 import { DataTable, type Column } from "./DataTable";
 import { DossierLink } from "./DossierTable";
 
-/**
- * STSS — emplacement d'intégration (spec §22).
- *
- * La spec autorise explicitement le back-office à prévoir le module « sans
- * dépendre de l'intégration Mobile Money finale » et interdit d'implémenter un
- * paiement réel tant que l'intégration STSS n'est pas validée.
- *
- * Ce panneau est donc en **lecture seule** : il affiche la référence, les
- * antennes source et destination, le statut, l'existence d'une preuve et la
- * date. Aucun bouton de transfert, de validation ou d'émission n'est proposé —
- * ce serait précisément le paiement réel que la spec refuse à ce stade.
- *
- * La colonne « Preuve » ne montre jamais un lien : aucune pièce n'est stockée.
- * Elle indique si une preuve est **attendue** ou **fournie**, ce qui suffit au
- * suivi opérationnel.
- */
-const STSS_STATUS_TONE: Record<StssInfo["status"], string> = {
-  Programmé: "bg-[#EBF3FA] text-[#174A7C] border-[#D5E5F5]",
-  Confirmé: "bg-[#E8F6EF] text-[#1EA362] border-[#C5EBDA]",
-  "En attente de preuve": "bg-[#FEF7EC] text-[#B86E00] border-[#FDE5C5]",
-  Rejeté: "bg-[#FDECEC] text-[#B42318] border-[#FAC6C6]",
+interface StssRow {
+  id: string;
+  dossierId: string | null;
+  dossierReference: string | null;
+  reference: string;
+  sourceAntenna: string;
+  destinationAntenna: string;
+  grossAmountMinor: number;
+  netAmountMinor: number;
+  commissionAmountMinor: number;
+  commissionRateBps: number;
+  currency: string;
+  status: StssStatus;
+  isSimulation: boolean;
+  date: string;
+}
+
+const STSS_STATUS_TONE: Record<StssStatus, string> = {
+  DRAFT: "bg-[#F7F9FB] text-[#667085] border-[#E6E9EF]",
+  PENDING_KYC: "bg-[#FEF7EC] text-[#B86E00] border-[#FDE5C5]",
+  PENDING_PAYMENT: "bg-[#FEF7EC] text-[#B86E00] border-[#FDE5C5]",
+  PAYMENT_CONFIRMED: "bg-[#EBF3FA] text-[#174A7C] border-[#D5E5F5]",
+  TRANSFER_PENDING: "bg-[#EBF3FA] text-[#174A7C] border-[#D5E5F5]",
+  TRANSFER_CONFIRMED: "bg-[#E8F6EF] text-[#1EA362] border-[#C5EBDA]",
+  FAILED: "bg-[#FDECEC] text-[#B42318] border-[#FAC6C6]",
+  CANCELLED: "bg-[#FDECEC] text-[#B42318] border-[#FAC6C6]",
+  SIMULATION: "bg-[#F4F3FF] text-[#5B4BB7] border-[#D9D4FF]"
 };
+
+function formatMinorAmount(amount: number, currency: string): string {
+  return `${amount.toLocaleString("fr-FR")} ${currency} (unités mineures)`;
+}
+
+function displayDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("fr-FR", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "UTC"
+  }).format(date);
+}
+
+function dossierRow(dossier: Dossier): StssRow | null {
+  const stss = dossier.stss;
+  if (!stss) return null;
+  return {
+    id: stss.id,
+    dossierId: dossier.id,
+    dossierReference: dossier.reference,
+    reference: stss.reference,
+    sourceAntenna: stss.sourceAntenna,
+    destinationAntenna: stss.targetAntenna,
+    grossAmountMinor: stss.grossAmountMinor,
+    netAmountMinor: stss.netAmountMinor,
+    commissionAmountMinor: stss.commissionAmountMinor,
+    commissionRateBps: stss.commissionRateBps,
+    currency: stss.currency,
+    status: stss.status,
+    isSimulation: stss.isSimulation,
+    date: stss.date
+  };
+}
 
 export function StssPanel({
   dossiers,
-  role,
+  transfers,
+  role
 }: {
-  dossiers: Dossier[];
+  dossiers?: Dossier[];
+  transfers?: StssTransferView[];
   role: BackofficeRole;
 }) {
-  const columns: Column<Dossier>[] = [
+  const rows: StssRow[] = transfers
+    ? transfers.map((transfer) => ({
+        id: transfer.id,
+        dossierId: transfer.dossierId,
+        dossierReference: transfer.dossierReference,
+        reference: transfer.reference,
+        sourceAntenna: transfer.sourceAntenna,
+        destinationAntenna: transfer.destinationAntenna,
+        grossAmountMinor: transfer.grossAmountMinor,
+        netAmountMinor: transfer.netAmountMinor,
+        commissionAmountMinor: transfer.commissionAmountMinor,
+        commissionRateBps: transfer.commissionRateBps,
+        currency: transfer.currency,
+        status: transfer.status,
+        isSimulation: transfer.isSimulation,
+        date: transfer.updatedAt
+      }))
+    : (dossiers ?? []).map(dossierRow).filter((row): row is StssRow => row !== null);
+
+  const columns: Column<StssRow>[] = [
     {
       key: "reference",
       header: "Référence",
-      render: (dossier) => (
-        <span className="font-mono text-[11px] font-semibold text-[#174A7C]">
-          {dossier.stss?.reference ?? "—"}
-        </span>
-      ),
+      render: (row) => (
+        <span className="font-mono text-[11px] font-semibold text-[#174A7C]">{row.reference}</span>
+      )
     },
     {
       key: "dossier",
       header: "ID-POMRA",
-      render: (dossier) => (
-        <DossierLink role={role} dossierId={dossier.id} reference={dossier.reference} />
-      ),
+      render: (row) =>
+        row.dossierId && row.dossierReference ? (
+          <DossierLink role={role} dossierId={row.dossierId} reference={row.dossierReference} />
+        ) : (
+          <span className="text-[11px] text-[#98A2B3]">Non rattaché</span>
+        )
     },
     {
-      key: "source",
-      header: "Antenne source",
-      render: (dossier) => (
-        <span className="text-[11px] text-[#5B6776]">
-          {dossier.stss?.sourceAntenna ?? "—"}
+      key: "route",
+      header: "Antennes",
+      render: (row) => (
+        <span className="text-[11px] text-[#5B6776] whitespace-nowrap">
+          {row.sourceAntenna} → {row.destinationAntenna}
         </span>
-      ),
+      )
     },
     {
-      key: "target",
-      header: "Antenne destination",
-      render: (dossier) => (
-        <span className="text-[11px] font-semibold text-[#0D2B4D]">
-          {dossier.stss?.targetAntenna ?? "—"}
+      key: "gross",
+      header: "Brut",
+      render: (row) => (
+        <span className="text-[11px] font-semibold text-[#0D2B4D] whitespace-nowrap">
+          {formatMinorAmount(row.grossAmountMinor, row.currency)}
         </span>
-      ),
+      )
+    },
+    {
+      key: "net",
+      header: "Net / commission",
+      render: (row) => (
+        <span className="text-[11px] text-[#5B6776] whitespace-nowrap">
+          {formatMinorAmount(row.netAmountMinor, row.currency)} · {formatMinorAmount(row.commissionAmountMinor, row.currency)} ({row.commissionRateBps} bps)
+        </span>
+      )
     },
     {
       key: "status",
       header: "Statut",
-      render: (dossier) =>
-        dossier.stss ? (
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap ${STSS_STATUS_TONE[dossier.stss.status]}`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
-            {dossier.stss.status}
-          </span>
-        ) : (
-          <span className="text-[11px] text-[#98A2B3]">—</span>
-        ),
-    },
-    {
-      key: "proof",
-      header: "Preuve",
-      render: (dossier) =>
-        dossier.stss?.proofUrl ? (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#1EA362] whitespace-nowrap">
-            <FileCheck2 className="w-3.5 h-3.5" aria-hidden="true" />
-            Fournie
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#B86E00] whitespace-nowrap">
-            <FileX2 className="w-3.5 h-3.5" aria-hidden="true" />
-            Attendue
-          </span>
-        ),
+      render: (row) => (
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold whitespace-nowrap ${STSS_STATUS_TONE[row.status]}`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+          {STSS_STATUS_LABELS[row.status]}
+        </span>
+      )
     },
     {
       key: "date",
-      header: "Date",
-      render: (dossier) => (
+      header: "Mise à jour",
+      render: (row) => (
         <span className="text-[11px] text-[#5B6776] whitespace-nowrap tabular-nums">
-          {dossier.stss?.date ?? "—"}
+          {displayDate(row.date)}
         </span>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -118,25 +176,22 @@ export function StssPanel({
           Transferts STSS
         </h2>
         <p className="text-xs text-[#5B6776] mt-1 leading-relaxed">
-          Emplacement d&apos;intégration du module STSS (Phase 5). Suivi en
-          lecture seule des transferts sécurisés de scolarité.
+          Lecture seule des transferts du périmètre. Les montants sont conservés en unités mineures entières.
         </p>
       </div>
 
       <DataTable
         caption="Transferts STSS du périmètre"
         columns={columns}
-        rows={dossiers}
-        rowKey={(dossier) => dossier.id}
+        rows={rows}
+        rowKey={(row) => row.id}
         emptyLabel="Aucun transfert STSS n'est rattaché au périmètre."
       />
 
-      <p className="flex items-start gap-2 border-t border-[#EDF1F6] px-5 py-3 text-[11px] leading-relaxed text-[#B86E00]">
+      <p className="flex items-start gap-2 border-t border-[#EDF1F6] px-5 py-3 text-[11px] leading-relaxed text-[#5B4BB7]">
         <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" aria-hidden="true" />
         <span>
-          Aucun paiement réel n&apos;est effectué depuis ce back-office :
-          l&apos;intégration Mobile Money n&apos;est pas encore validée. Les
-          statuts affichés proviennent du workflow serveur.
+          SIMULATION : aucune action de paiement, aucun appel Mobile Money et aucune quittance n&apos;est disponible dans cet espace.
         </span>
       </p>
     </section>

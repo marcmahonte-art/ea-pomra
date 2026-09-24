@@ -24,7 +24,7 @@ export function StudentHeader() {
           </h1>
           <Badge variant="success" size="sm" className="hidden sm:inline-flex gap-1 font-bold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            STSS Validé
+             STSS Simulation
           </Badge>
         </div>
       </div>

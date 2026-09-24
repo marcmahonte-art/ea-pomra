@@ -22,10 +22,10 @@ export default function CalendrierPage() {
     },
     {
       date: "14 Août 2026",
-      title: "Transfert de scolarité STSS certifié",
-      category: "Finances",
-      status: "passé",
-      desc: "Versement de 1 850 000 FCFA certifié auprès du compte de l'établissement d'accueil, quittance émise.",
+       title: "Scénario STSS affiché",
+       category: "Finances",
+       status: "passé",
+       desc: "Un scénario de transfert est affiché pour illustrer le parcours. Aucun paiement réel ni reçu officiel n'est fourni.",
     },
     {
       date: "10 Septembre 2026",

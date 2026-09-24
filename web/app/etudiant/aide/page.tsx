@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { HelpCircle, Mail, MapPin, ChevronDown, ChevronUp, Download, MessageSquare } from "lucide-react";
+import { HelpCircle, Mail, MapPin, ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
 import { ANTENNES_EA_POMRA } from "@/lib/data";
 
 export default function AideFaqPage() {
@@ -10,8 +10,8 @@ export default function AideFaqPage() {
 
   const faqs = [
     {
-      q: "Comment puis-je obtenir mon attestation officielle de virement STSS ?",
-      a: "Dès que le versement de vos droits de scolarité est confirmé par le trésorier national de votre antenne de départ, votre attestation officielle est automatiquement générée et certifiée avec QR code dans l'onglet 'Transferts STSS'. Vous pouvez la télécharger à tout moment au format PDF.",
+       q: "Que montre l'espace STSS ?",
+       a: "L'espace STSS affiche un scénario de transfert de scolarité. Aucun paiement n'est déclenché et aucune attestation officielle n'est disponible dans cette version.",
     },
 
     {

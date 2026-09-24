@@ -29,9 +29,9 @@ const ARTICLES = [
   {
     categorie: "STSS",
     date: "28 Août 2026",
-    titre: "Transferts de scolarité : traçabilité complète des fonds",
+    titre: "STSS : aperçu du parcours de scolarité",
     extrait:
-      "Chaque versement est désormais rattaché à une quittance légale et à un code ID-POMRA, consultable en temps réel par la famille comme par l'établissement d'accueil.",
+      "L'espace public présente un scénario rattaché au code ID-POMRA, sans mouvement financier, quittance ni consultation en temps réel.",
   },
   {
     categorie: "Partenariats",
@@ -110,7 +110,7 @@ export default function ActualitesPage() {
 
           <p className="mt-8 inline-flex items-center gap-2 text-xs text-[#8E9BAA]">
             <ArrowRight className="w-3.5 h-3.5" />
-            Les publications détaillées seront accessibles depuis l'espace étudiant.
+             Les publications détaillées seront accessibles depuis l&apos;espace étudiant.
           </p>
         </div>
       </section>

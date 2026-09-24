@@ -161,14 +161,20 @@ export interface MobiliteInfo {
   updatedAt: string;
 }
 
+import type { StssStatus } from "./stss-types";
+
 export interface StssInfo {
+  id: string;
   reference: string;
   sourceAntenna: string;
   targetAntenna: string;
-  amount: number;
+  grossAmountMinor: number;
+  netAmountMinor: number;
+  commissionAmountMinor: number;
+  commissionRateBps: number;
   currency: string;
-  status: "Programmé" | "Confirmé" | "En attente de preuve" | "Rejeté";
-  proofUrl: string | null;
+  status: StssStatus;
+  isSimulation: true;
   date: string;
 }
 

@@ -8,20 +8,20 @@ import { formatCurrency } from "@/lib/utils";
 export function OverviewStats() {
   const stats = [
     {
-      title: "Scolarité STSS Garantie",
+       title: "Scolarité STSS — simulation",
       value: formatCurrency(MOCK_ACTIVE_STUDENT.stssTransaction?.amount || 0),
-      status: "100% Acquitée",
+       status: "SIMULATION",
       badgeVariant: "success" as const,
       icon: ShieldCheck,
       iconBg: "#E8F6EF",
       iconColor: "#1EA362",
       detail: "Réf: " + MOCK_ACTIVE_STUDENT.stssTransaction?.referenceCode,
-      action: "Télécharger quittance",
+       action: "Voir la simulation",
     },
     {
       title: "Orientation Pôle OCO",
       value: "Avis Favorable",
-      status: "Commission Validée",
+       status: "Simulation affichée",
       badgeVariant: "primary" as const,
       icon: Compass,
       iconBg: "#EBF3FA",
@@ -31,8 +31,8 @@ export function OverviewStats() {
     },
     {
       title: "Pièces Justificatives",
-      value: "5 / 5 Validées",
-      status: "Dossier Complet",
+       value: "5 / 5 aperçus",
+       status: "Aperçu du dossier",
       badgeVariant: "neutral" as const,
       icon: FileCheck2,
       iconBg: "#F0F3F7",

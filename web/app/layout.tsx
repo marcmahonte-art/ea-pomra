@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Étudier en Afrique",
     "Mobilité académique Afrique",
     "Orientation universitaire Afrique",
-    "STSS transfert sécurisé",
+     "STSS simulation de scolarité",
     "Pôle PAP",
     "Universités Sénégal",
     "Universités Côte d'Ivoire",

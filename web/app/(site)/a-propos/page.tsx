@@ -9,14 +9,14 @@ import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata(
   "À propos",
-  "EA-POMRA accompagne les étudiants africains dans leur mobilité académique : orientation, sécurisation des transferts de scolarité et suivi psychosocial."
+  "EA-POMRA accompagne les étudiants africains dans leur mobilité académique : orientation, aperçu du transfert de scolarité (STSS) et suivi psychosocial."
 );
 
 const ENGAGEMENTS = [
   {
     icon: ShieldCheck,
-    title: "Sécurité des fonds",
-    text: "Les frais de scolarité sont versés à l'antenne de départ, puis virés directement à l'établissement d'accueil contre quittance légale.",
+    title: "Simulation des frais",
+    text: "Le site présente un scénario de frais, d'antenne de départ et d'établissement d'accueil, sans mouvement financier ni quittance.",
   },
   {
     icon: Eye,
@@ -42,7 +42,7 @@ export default function AProposPage() {
         eyebrow="À propos"
         breadcrumb="À propos"
         title="Une association panafricaine au service des talents du continent"
-        description="EA-POMRA — Étudier en Afrique — accompagne les étudiants africains dans leur parcours de mobilité académique : orientation, sécurisation des transferts de scolarité, suivi psychosocial et lien de confiance entre l'étudiant, sa famille et l'institution d'accueil."
+         description="EA-POMRA — Étudier en Afrique — accompagne les étudiants africains dans leur parcours de mobilité académique : orientation, aperçu du transfert de scolarité (STSS), suivi psychosocial et lien de confiance entre l'étudiant, sa famille et l'institution d'accueil."
       />
 
       {/* Mission */}
@@ -55,13 +55,13 @@ export default function AProposPage() {
               </h2>
               <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
                 Étudier loin de chez soi ne doit jamais rimer avec solitude ni avec prise de risque
-                financière. Nous sécurisons la mobilité étudiante de l'inscription jusqu'au diplôme,
-                en reliant les huit pays d'Afrique de l'Ouest et du Centre où nous sommes présents.
+                 financière. Le dispositif STSS présente un aperçu de la mobilité étudiante de l&apos;inscription jusqu&apos;au diplôme,
+                en reliant les huit pays d&apos;Afrique de l&apos;Ouest et du Centre où nous sommes présents.
               </p>
               <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
-                Notre approche repose sur quatre piliers complémentaires : l'orientation personnalisée,
-                le transfert sécurisé de scolarité, l'accompagnement psychosocial et le suivi continu
-                jusqu'à l'obtention du diplôme.
+                Notre approche repose sur quatre piliers complémentaires : l&apos;orientation personnalisée,
+                 l&apos;aperçu du transfert de scolarité (STSS), l&apos;accompagnement psychosocial et le suivi continu
+                jusqu&apos;à l&apos;obtention du diplôme.
               </p>
             </div>
 
@@ -88,11 +88,11 @@ export default function AProposPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mb-12 space-y-3">
             <h2 className="text-2xl sm:text-3xl font-black text-[#0D2B4D] tracking-tight">
-              Les quatre piliers de l'accompagnement
+               Les quatre piliers de l&apos;accompagnement
             </h2>
             <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
-              Chaque pilier répond à une inquiétude concrète des familles : bien choisir sa filière,
-              payer sans risque, ne pas rester seul, et réussir jusqu'au diplôme.
+               Chaque pilier répond à une inquiétude concrète des familles : choisir sa filière,
+                sans action financière, ne pas rester seul, et réussir jusqu&apos;au diplôme.
             </p>
           </div>
 
@@ -108,8 +108,8 @@ export default function AProposPage() {
               Huit antennes nationales interconnectées
             </h2>
             <p className="text-sm sm:text-base text-[#5B6776] leading-relaxed">
-              Chaque antenne dispose d'une équipe locale chargée de la réception des familles, de la
-              certification des pièces originales et de la relation avec les universités d'accueil.
+               Chaque antenne dispose d&apos;une équipe locale chargée de la réception des familles, de la
+               certification des pièces originales et de la relation avec les universités d&apos;accueil.
             </p>
           </div>
 

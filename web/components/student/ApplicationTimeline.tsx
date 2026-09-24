@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { CheckCircle2, Clock, FileDown, ShieldCheck, UserCheck } from "lucide-react";
+import { CheckCircle2, Clock, UserCheck } from "lucide-react";
 import { MOCK_TIMELINE_EVENTS } from "@/lib/data";
 
 export function ApplicationTimeline() {
@@ -66,22 +66,12 @@ export function ApplicationTimeline() {
                   {evt.description}
                 </p>
 
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[11px] font-medium text-[#174A7C] flex items-center gap-1">
-                    <UserCheck className="w-3.5 h-3.5 text-[#174A7C]" />
-                    Opéré par : {evt.actor}
-                  </span>
-
-                  {isCompleted && evt.badgeText?.includes("STSS") && (
-                    <button
-                      onClick={() => alert("Téléchargement de l'attestation STSS officielle EA-POMRA (PDF signé électroniquement)")}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1EA362] hover:underline cursor-pointer bg-[#E8F6EF] px-2.5 py-1 rounded-lg border border-[#C5EBDA]"
-                    >
-                      <FileDown className="w-3.5 h-3.5" />
-                      <span>Télécharger Quittance STSS</span>
-                    </button>
-                  )}
-                </div>
+                 <div className="flex items-center justify-between pt-1">
+                   <span className="text-[11px] font-medium text-[#174A7C] flex items-center gap-1">
+                     <UserCheck className="w-3.5 h-3.5 text-[#174A7C]" />
+                     Opéré par : {evt.actor}
+                   </span>
+                 </div>
               </div>
             );
           })}

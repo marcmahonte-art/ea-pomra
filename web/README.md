@@ -57,6 +57,7 @@ psql "$DATABASE_URL" -f db/migrations/001_backoffice_production.sql
 psql "$DATABASE_URL" -f db/migrations/002_backoffice_hardening.sql
 psql "$DATABASE_URL" -f db/migrations/003_oco_production.sql
 psql "$DATABASE_URL" -f db/migrations/004_pap_production.sql
+psql "$DATABASE_URL" -f db/migrations/005_stss_production.sql
 ```
 
 La page `/backoffice/login` ne propose pas d’inscription publique. Les mutations passent par des Server Actions contrôlées par rôle, permission, périmètre, état et version optimiste. Le test unitaire ne nécessite pas PostgreSQL :
@@ -92,6 +93,23 @@ npm run lint -- app/pap components/pap lib/pap-types.ts lib/server/pap-repositor
 ```
 
 Limites : l’affectation PAP est opérationnelle sans pays/antenne, car l’accès est individuel par dossier ; une contrainte pays pourra être ajoutée si le modèle métier impose ce périmètre. Les règles métier de génération automatique des alertes restent à valider avec EA-POMRA. La migration 004 et les commandes PAP ne sont pas exécutées automatiquement par l’application.
+
+## STSS Phase 5 — simulation
+
+La migration `005_stss_production.sql` prépare `stss_transfers`, `stss_payment_attempts`, `stss_provider_events`, `stss_kyc_checks`, `stss_proofs` et `stss_commission_policies`. Elle n’insère aucune donnée réelle. Les montants sont des `bigint` en unités mineures et les commissions sont comprises entre 0 et 300 bps.
+
+La page publique `/stss`, les espaces `/antenne/stss` et `/bec/stss` sont des espaces de lecture. Le mode démo utilise les données fictives existantes et n'appelle jamais PostgreSQL. Aucun provider Mobile Money, paiement, webhook, KYC réel ou document de quittance n'est branché. Le libellé `SIMULATION` est affiché dans les interfaces.
+
+Les transitions et calculs sont centralisés dans `lib/server/stss-workflow.ts`. Les tests STSS couvrent le round-half-up, l'invariant `brut = net + commission`, les transitions terminals, la confidentialité et l'absence de mutation démo :
+
+```bash
+npm run typecheck
+npm run test:unit
+npm run lint -- 'app/(site)/stss' 'app/antenne/(espace)/stss' 'app/bec/(espace)/stss' components/backoffice/StssPanel.tsx lib/stss-types.ts lib/server/stss-workflow.ts lib/server/stss-repository.ts lib/server/stss-service.ts tests/stss.test.ts
+npm run build
+```
+
+Limites opérationnelles : le pilote provider, la conformité Mobile Money, le KYC/AML, la signature des preuves et les webhooks doivent être définis et audités avant toute activation. Une migration PostgreSQL et un fournisseur réel ne sont pas remplacés par cette simulation.
 
 Créer un compte initial sans exposer son mot de passe dans la ligne de commande :
 

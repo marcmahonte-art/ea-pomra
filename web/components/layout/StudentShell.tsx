@@ -47,7 +47,7 @@ export default function StudentShell({
     { href: "/etudiant/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
     { href: "/etudiant/dossier", label: "Mon dossier", icon: Folder },
     { href: "/etudiant/orientation", label: "Orientation OCO", icon: Compass },
-    { href: "/etudiant/stss", label: "Transferts STSS", icon: ArrowLeftRight },
+    { href: "/etudiant/stss", label: "Aperçu STSS", icon: ArrowLeftRight },
     { href: "/etudiant/documents", label: "Mes documents", icon: FileText },
     { href: "/etudiant/messages", label: "Messages", icon: MessageSquare, badge: "3" },
     { href: "/etudiant/notifications", label: "Notifications", icon: Bell },

@@ -25,8 +25,8 @@ export default function NotificationsPage() {
     },
     {
       id: 3,
-      title: "Quittance STSS émise",
-      desc: "Le reçu certifié pour les frais de scolarité à l'INP-HB (1 850 000 FCFA) est disponible au téléchargement.",
+       title: "Simulation STSS affichée",
+       desc: "Le scénario de frais de scolarité est affiché pour illustration. Aucun reçu réel n'est disponible.",
       time: "Il y a 2 jours",
       read: true,
       type: "success",

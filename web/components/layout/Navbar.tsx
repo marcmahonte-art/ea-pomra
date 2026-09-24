@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "Accueil", href: "/" },
   { label: "À propos", href: "/a-propos" },
   { label: "Programmes", href: "/programmes" },
+  { label: "STSS", href: "/stss" },
   { label: "Antennes", href: "/antennes" },
   { label: "Ressources", href: "/ressources" },
   { label: "Actualités", href: "/actualites" },

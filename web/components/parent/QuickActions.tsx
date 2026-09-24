@@ -24,15 +24,15 @@ const ACTIONS = [
   },
   {
     href: "/parent/finances",
-    label: "Transferts STSS",
-    hint: "Quittances et échéances",
+     label: "Aperçu STSS",
+       hint: "Aperçus et échéances",
     icon: ArrowLeftRight,
     tone: "bg-[#FBF6EA] text-[#C89C2E] border-[#F4E4BC]",
   },
   {
     href: "/parent/documents",
     label: "Pièces du dossier",
-    hint: "Télécharger les justificatifs",
+     hint: "Aperçu des justificatifs",
     icon: FileText,
     tone: "bg-[#EBF3FA] text-[#174A7C] border-[#D5E5F5]",
   },

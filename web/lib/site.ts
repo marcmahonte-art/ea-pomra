@@ -16,7 +16,7 @@ export const SITE_NAME = "EA-POMRA";
 export const SITE_TAGLINE = "Étudier en Afrique";
 
 export const SITE_DESCRIPTION =
-  "Plateforme panafricaine reliant 8 pays d'Afrique : orientation académique (Pôle OCO), transfert sécurisé de scolarité (STSS) et accompagnement psychosocial (Pôle PAP) pour réussir ses études.";
+  "Plateforme panafricaine reliant 8 pays d'Afrique : orientation académique (Pôle OCO), aperçu du transfert de scolarité (STSS) et accompagnement psychosocial (Pôle PAP) pour réussir ses études.";
 
 /** URL absolue du site, ou `undefined` si aucune source ne la fournit. */
 export const SITE_URL =
@@ -37,6 +37,7 @@ export const PUBLIC_ROUTES = [
   { path: "/", label: "Accueil", priority: 1 },
   { path: "/a-propos", label: "À propos", priority: 0.8 },
   { path: "/programmes", label: "Programmes", priority: 0.8 },
+  { path: "/stss", label: "STSS", priority: 0.8 },
   { path: "/antennes", label: "Antennes", priority: 0.8 },
   { path: "/ressources", label: "Ressources", priority: 0.6 },
   { path: "/actualites", label: "Actualités", priority: 0.6 },

@@ -205,7 +205,7 @@ export default function MonProfilPage() {
                 </span>
               </div>
               <div className="flex items-start justify-between gap-3">
-                <span className="text-[#8E9BAA] font-semibold">Montant sécurisé</span>
+                <span className="text-[#8E9BAA] font-semibold">Montant simulé</span>
                 <span className="font-bold text-[#1EA362] text-right">
                   {student.stssTransaction.amount.toLocaleString("fr-FR")}{" "}
                   {student.stssTransaction.currency}

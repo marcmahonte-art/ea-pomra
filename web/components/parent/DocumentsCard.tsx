@@ -7,7 +7,7 @@ const STATUS_STYLES: Record<
   { label: string; className: string }
 > = {
   VALIDATED: {
-    label: "Validé",
+     label: "Aperçu disponible",
     className: "bg-[#E8F6EF] text-[#1EA362] border-[#C5EBDA]",
   },
   PENDING: {
@@ -41,7 +41,7 @@ export function DocumentsCard({ documents }: { documents: DocumentItem[] }) {
         <EmptyState
           icon={FileText}
           title="Aucune pièce au dossier"
-          description="Les pièces justificatives apparaîtront ici dès qu'elles auront été déposées auprès de votre antenne."
+          description="     Les pièces prévues dans l'aperçu du dossier apparaîtront ici."
         />
       </section>
     );
@@ -102,7 +102,7 @@ export function DocumentsCard({ documents }: { documents: DocumentItem[] }) {
                   <p className="text-xs font-bold text-[#0D2B4D]">{doc.name}</p>
                   <p className="text-[11px] text-[#5B6776] mt-0.5">
                     {CATEGORY_LABELS[doc.category]}
-                    {doc.uploadedAt ? ` · déposée le ${doc.uploadedAt}` : ""}
+                     {doc.uploadedAt ? ` · aperçu daté du ${doc.uploadedAt}` : ""}
                     {doc.sizeLabel ? ` · ${doc.sizeLabel}` : ""}
                   </p>
                 </div>
@@ -121,7 +121,7 @@ export function DocumentsCard({ documents }: { documents: DocumentItem[] }) {
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-[#174A7C] hover:underline"
                   >
                     <Download className="w-3.5 h-3.5" />
-                    Télécharger
+                     Aperçu du document
                   </a>
                 ) : (
                   <span className="text-[11px] text-[#8E9BAA]">

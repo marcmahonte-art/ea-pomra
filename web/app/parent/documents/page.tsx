@@ -5,7 +5,7 @@ import { DocumentsCard } from "@/components/parent/DocumentsCard";
 export const metadata: Metadata = {
   title: "Documents du dossier",
   description:
-    "Pièces justificatives déposées, statut de vérification et quittances téléchargeables.",
+     "Aperçu des pièces du dossier et de leur statut dans la simulation. Aucun document financier STSS n'est disponible.",
 };
 
 /** Pièces justificatives du dossier. */
@@ -19,17 +19,14 @@ export default async function ParentDocumentsPage() {
           Documents du dossier
         </h1>
         <p className="text-sm text-[#5B6776] mt-1">
-          Les pièces déposées auprès de votre antenne, et celles encore
-          attendues.
+           Les pièces prévues dans l&apos;aperçu du dossier et celles encore attendues.
         </p>
       </div>
 
       <DocumentsCard documents={documents} />
 
       <p className="text-[11px] text-[#8E9BAA] leading-relaxed">
-        Une pièce « manquante » doit être déposée auprès de votre antenne : elle
-        ne peut pas être ajoutée depuis cet espace, afin qu&apos;aucun document
-        non vérifié n&apos;entre dans un dossier officiel.
+         Une pièce « manquante » est signalée comme attendue dans l&apos;aperçu. Cet espace ne réalise aucune action sur les documents.
       </p>
     </div>
   );

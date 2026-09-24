@@ -1,4 +1,4 @@
-import { ShieldCheck, Download, Landmark, CalendarClock } from "lucide-react";
+import { ShieldCheck, Landmark, CalendarClock } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { FinanceSummary } from "@/lib/parent-types";
 
@@ -6,7 +6,7 @@ const TRANSACTION_STYLES: Record<
   FinanceSummary["transactions"][number]["status"],
   string
 > = {
-  Confirmé: "bg-[#E8F6EF] text-[#1EA362] border-[#C5EBDA]",
+  SIMULATION: "bg-[#F4F3FF] text-[#5B4BB7] border-[#D9D4FF]",
   "En attente": "bg-[#FEF7EC] text-[#B86E00] border-[#FDE5C5]",
   Programmé: "bg-[#EBF3FA] text-[#174A7C] border-[#D5E5F5]",
 };
@@ -30,7 +30,7 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
       <header className="flex items-start justify-between gap-4 pb-4 border-b border-[#EDF1F6]">
         <div>
           <h2 className="text-sm font-bold text-[#0D2B4D]">
-            Scolarité &amp; transferts sécurisés
+             Scolarité &amp; aperçu STSS
           </h2>
           <p className="text-xs text-[#5B6776] mt-0.5">{finance.statusLabel}</p>
         </div>
@@ -48,7 +48,7 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
         </div>
         <div className="rounded-2xl border border-[#C5EBDA] bg-[#E8F6EF] p-4">
           <p className="text-[11px] font-semibold text-[#1EA362]">
-            Transféré à l&apos;établissement
+             Scénario simulé
           </p>
           <p className="text-lg font-black text-[#0D2B4D] mt-1">
             {formatCurrency(finance.tuitionPaid, finance.currency)}
@@ -66,7 +66,7 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
 
       <div>
         <div className="flex items-center justify-between text-[11px] font-semibold text-[#5B6776] mb-1.5">
-          <span>Progression du transfert</span>
+           <span>Avancement du scénario</span>
           <span>{paidPercent} %</span>
         </div>
         <div
@@ -89,7 +89,7 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
           <Landmark className="w-4 h-4 text-[#8E9BAA] mt-0.5 shrink-0" />
           <div>
             <dt className="text-[11px] font-semibold text-[#8E9BAA]">
-              Bénéficiaire du transfert
+               Établissement représenté
             </dt>
             <dd className="font-bold text-[#0D2B4D] mt-0.5">
               {finance.beneficiary}
@@ -111,7 +111,7 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
 
       <div>
         <h3 className="text-xs font-bold text-[#0D2B4D] mb-3">
-          Historique des opérations
+           Scénarios affichés
         </h3>
         <ul className="space-y-2">
           {finance.transactions.map((transaction) => (
@@ -138,18 +138,9 @@ export function FinanceCard({ finance }: { finance: FinanceSummary }) {
                 >
                   {transaction.status}
                 </span>
-                {/* Le lien de téléchargement n'existe que si la quittance a été
-                    émise : un bouton inerte est pire qu'une absence de bouton. */}
-                {transaction.proofUrl ? (
-                  <a
-                    href={transaction.proofUrl}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#174A7C] hover:underline"
-                    download
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Quittance
-                  </a>
-                ) : null}
+                  {transaction.status === "SIMULATION" ? (
+                   <span className="text-[11px] font-bold text-[#5B4BB7]">Aucune quittance</span>
+                 ) : null}
               </div>
             </li>
           ))}

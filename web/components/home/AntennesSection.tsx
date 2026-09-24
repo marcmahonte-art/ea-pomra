@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { ANTENNES_EA_POMRA } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import { MapPin, Phone, Mail, User, Building, Users, ExternalLink } from "lucide-react";
+import { MapPin, Phone, Mail, User, ExternalLink } from "lucide-react";
 
 export function AntennesSection() {
   const [selectedCountryCode, setSelectedCountryCode] = useState<string>("SN");
@@ -145,7 +144,7 @@ export function AntennesSection() {
               {/* Rôle local */}
               <div className="bg-[#FEF7EC] p-4 rounded-xl border border-[#FDE5C5] text-xs text-[#9A741A] flex items-center justify-between flex-wrap gap-2">
                 <span>
-                  📌 <strong>Rôle de cette antenne :</strong> Réception physique des familles, certification des diplômes originaux, encaissement local et émission de l&apos;attestation STSS.
+                   📌 <strong>Rôle de cette antenne :</strong> Réception physique des familles, présentation du parcours et aperçu local du scénario STSS.
                 </span>
                 <a
                   href={`mailto:${selectedAntenne.email}`}

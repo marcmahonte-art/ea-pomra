@@ -82,6 +82,7 @@ const BEC_NAV: NavItem[] = [
   { href: "/bec/validation", label: "Validation", icon: CheckCircle2, badge: true },
   { href: "/bec/statistiques", label: "Statistiques", icon: BarChart3 },
   { href: "/bec/rapports", label: "Rapports", icon: FileText },
+  { href: "/bec/stss", label: "STSS", icon: ShieldCheck },
   { href: "/bec/activite", label: "Activité", icon: Activity },
   { href: "/bec/notifications", label: "Notifications", icon: Bell },
   { href: "/bec/historique", label: "Historique", icon: History },

@@ -26,7 +26,7 @@ import {
 const PARCOURS = [
   { label: "Dossier soumis", date: "02/07/2026", state: "done" },
   { label: "Avis OCO", date: "18/07/2026", state: "done" },
-  { label: "STSS sécurisé", date: "14/08/2026", state: "done" },
+  { label: "STSS simulé", date: "14/08/2026", state: "done" },
   { label: "Accueil local", date: "En cours", state: "current" },
 ] as const;
 
@@ -99,7 +99,7 @@ export default function StudentDashboardPage() {
                 Statut du dossier
               </span>
               <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#E8F6EF] text-[#1EA362] text-xs font-bold mt-1">
-                Scolarité sécurisée
+                 Scolarité STSS simulée
               </span>
             </div>
 
@@ -333,7 +333,7 @@ export default function StudentDashboardPage() {
                   <ArrowLeftRight className="w-4 h-4" />
                 </div>
                 <div className="text-xs font-bold text-[#0D2B4D]">Suivre mon transfert STSS</div>
-                <div className="text-[11px] text-[#5B6776]">Consulter la quittance</div>
+                 <div className="text-[11px] text-[#5B6776]">Consulter la simulation</div>
               </Link>
             </div>
           </div>

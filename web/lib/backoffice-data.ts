@@ -45,6 +45,7 @@ import type {
 import { STATE_LABELS } from "./backoffice-types";
 import { isDemoEnabled } from "./server/config";
 import { currentPeriod, previousPeriod, referenceDateForScope } from "./server/temporal";
+import { calculateStssAmounts } from "./server/stss-workflow";
 
 /* ------------------------------------------------------------------ *
  * 1. Utilitaires déterministes
@@ -471,6 +472,8 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
   const requiredAction = ACTION_REQUIRED_STATES.includes(state)
     ? (ACTION_FOR_STATE[state] ?? null)
     : null;
+  const stssGrossAmountMinor = between(`${seed}-sa`, 6, 24) * 100_000;
+  const stssAmounts = calculateStssAmounts(stssGrossAmountMinor, 200);
 
   return {
     id: `${country.code}-${index}`,
@@ -535,16 +538,20 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
       : null,
     stss:
       state === "EN_MOBILITE" || state === "EN_SUIVI" || state === "DIPLOME"
-        ? {
-            reference: `TX-STSS-2026-${between(`${seed}-s`, 1000, 9999)}`,
-            sourceAntenna: country.antenne,
-            targetAntenna: target.antenne,
-            amount: between(`${seed}-sa`, 6, 24) * 100_000,
-            currency: "FCFA",
-            status: pick(`${seed}-ss`, ["Confirmé", "Confirmé", "Programmé", "En attente de preuve"] as const),
-            proofUrl: hash(`${seed}-sp`) % 4 === 0 ? null : "/docs/quittance-stss.pdf",
-            date: frLabel(shiftDays(between(`${seed}-sd`, 5, 40), `${seed}-sd`)),
-          }
+         ? {
+             id: `demo-stss-${seed}`,
+             reference: `TX-STSS-2026-${between(`${seed}-s`, 1000, 9999)}`,
+             sourceAntenna: country.antenne,
+             targetAntenna: target.antenne,
+             grossAmountMinor: stssAmounts.grossAmountMinor,
+             netAmountMinor: stssAmounts.netAmountMinor,
+             commissionAmountMinor: stssAmounts.commissionAmountMinor,
+             commissionRateBps: 200,
+             currency: "FCFA",
+             status: "SIMULATION",
+             isSimulation: true,
+             date: frLabel(shiftDays(between(`${seed}-sd`, 5, 40), `${seed}-sd`)),
+           }
         : null,
     overdueTaskCount:
       requiredAction !== null && between(`${seed}-late`, 0, 3) === 0 ? 1 : 0,

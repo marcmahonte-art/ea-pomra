@@ -35,7 +35,7 @@ const RESSOURCES = [
   {
     icon: MessageSquare,
     titre: "Espace étudiant",
-    texte: "Statut du dossier, avis OCO, quittances STSS et messagerie avec votre antenne.",
+    texte: "Statut du dossier, avis OCO, aperçu STSS sans quittance et messagerie avec votre antenne.",
     href: "/etudiant/dashboard",
   },
   {
@@ -59,9 +59,9 @@ const FAQ = [
       "C'est l'identifiant unique attribué à chaque étudiant lors du dépôt de son dossier. Il remplace l'usage du nom sur les canaux partagés, afin de préserver la confidentialité des échanges et de rattacher chaque pièce à un dossier précis.",
   },
   {
-    question: "Comment fonctionne le transfert sécurisé de scolarité (STSS) ?",
+     question: "Comment fonctionne l'aperçu STSS de scolarité ?",
     reponse:
-      "La famille dépose les frais de scolarité en monnaie locale auprès de l'antenne de départ, contre quittance légale. Les fonds sont ensuite virés directement à l'établissement d'accueil. Aucun intermédiaire ne détient l'argent, et chaque mouvement est horodaté dans le dossier.",
+      "Dans cette version, le dispositif affiche seulement un scénario de frais, d'antenne de départ, d'antenne d'accueil et de statut. Aucun paiement, mouvement financier ou quittance n'est disponible.",
   },
   {
     question: "Que se passe-t-il si le comité OCO émet un avis défavorable ?",
@@ -81,7 +81,7 @@ const FAQ = [
   {
     question: "Puis-je régler les frais depuis un autre pays que celui de départ ?",
     reponse:
-      "Oui. Le dépôt se fait auprès de l'antenne la plus proche de la famille, y compris si elle se trouve dans un autre pays du réseau. La quittance reste rattachée au code ID-POMRA de l'étudiant.",
+       "Le futur dispositif prévoit une antenne de départ et une référence ID-POMRA. Cette page reste un aperçu : aucune action financière n'est demandée.",
   },
 ];
 

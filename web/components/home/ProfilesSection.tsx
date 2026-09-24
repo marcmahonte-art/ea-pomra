@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { GraduationCap, Users, Building2, CheckCircle2, ArrowRight, ShieldCheck, HeartHandshake } from "lucide-react";
+import { GraduationCap, Users, Building2, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 
 export function ProfilesSection() {
   const [activeTab, setActiveTab] = useState<"student" | "parent" | "partner">("student");
@@ -16,12 +16,12 @@ export function ProfilesSection() {
       badge: "Espace Candidat & Étudiant",
       tagline: "« Étudier loin de chez soi, sans jamais se sentir seul. »",
       title: "Construisez votre parcours en toute sérénité",
-      desc: "De la sélection de votre université d'accueil jusqu'au diplôme, bénéficiez d'un identifiant confidentiel ID-POMRA, d'un encadrement par des aînés et de la garantie que votre scolarité est acquittée dans les règles de l'art.",
+      desc: "De la sélection de votre université d'accueil jusqu'au diplôme, consultez un aperçu de votre parcours avec un identifiant confidentiel ID-POMRA et un accompagnement par des aînés.",
       points: [
         "Orientation personnalisée selon vos bulletins et vos ambitions professionnelles",
         "Prise en charge dès la descente d'avion par l'antenne locale",
         "Accès 24/7 au canal d'écoute confidentiel PAP (santé, hébergement, intégration)",
-        "Dépôt numérique des pièces et suivi du dossier en temps réel",
+        "Aperçu numérique des pièces et suivi du dossier dans la simulation",
       ],
       ctaText: "Ouvrir mon Espace Étudiant",
       ctaHref: "/etudiant/dashboard",
@@ -33,12 +33,12 @@ export function ProfilesSection() {
       badge: "Espace Parents & Tuteurs",
       tagline: "« Votre enfant étudie loin. Vous, restez proche. »",
       title: "Suivez son parcours, pas seulement ses résultats",
-      desc: "L'éloignement d'un enfant est une source légitime d'inquiétude. EA-POMRA vous permet de verser la scolarité en monnaie locale auprès de votre antenne nationale avec une garantie bancaire certifiée et de recevoir des rapports trimestriels sur son assiduité et son bien-être.",
+      desc: "L'éloignement d'un enfant est une source légitime d'inquiétude. EA-POMRA vous permet de consulter un aperçu du parcours de scolarité et de recevoir des rapports trimestriels sur son assiduité et son bien-être.",
       points: [
-        "Garantie STSS : Quittance officielle délivrée avant le départ pour éviter les arnaques",
+        "Aperçu STSS : scénario de transfert, sans mouvement financier ni document officiel",
         "Rapports de suivi trimestriels réguliers rédigés avec les tuteurs de l'antenne",
         "Point focal d'urgence joignable 7j/7 dans la ville où réside votre enfant",
-        "Paiement fractionné possible selon les accords avec l'université d'accueil",
+        "Scénarios de scolarité présentés pour préparer la prochaine étape",
       ],
       ctaText: "Découvrir le suivi Espace Parent",
       ctaHref: "/etudiant/dashboard",
@@ -48,12 +48,12 @@ export function ProfilesSection() {
     partner: {
       icon: Building2,
       badge: "Universités & Institutions Partenaires",
-      tagline: "« Des étudiants préparés, des scolarités garanties à 100%. »",
+      tagline: "« Des étudiants préparés, un parcours à découvrir. »",
       title: "Un vivier de talents africains encadrés",
-      desc: "Pour les grandes écoles et universités d'Afrique, EA-POMRA est le garant de la régularité des candidatures : vérification des diplômes préalables, paiement sécurisé des frais de scolarité via nos trésoriers nationaux et accompagnement civique des étudiants.",
+      desc: "Pour les grandes écoles et universités d'Afrique, EA-POMRA présente un aperçu des parcours et de l'accompagnement : vérification des diplômes préalables, scénario STSS et accompagnement civique des étudiants.",
       points: [
         "Vérification rigoureuse des diplômes d'origine via nos 8 antennes",
-        "Paiement direct et groupé des droits d'inscription sans retard",
+        "Présentation de scénarios de scolarité pour préparer l'accueil",
         "Réduction drastique du taux d'abandon grâce au suivi psychosocial PAP",
         "Conventionnement bilatéral favorisant le rayonnement panafricain",
       ],

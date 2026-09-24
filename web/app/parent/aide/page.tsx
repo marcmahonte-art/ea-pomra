@@ -6,7 +6,7 @@ import { buildParentDashboardData } from "@/lib/parent-data";
 export const metadata: Metadata = {
   title: "Aide & FAQ",
   description:
-    "Réponses aux questions fréquentes des parents : parcours, transferts STSS et confidentialité.",
+     "Réponses aux questions fréquentes des parents : parcours, aperçu STSS et confidentialité.",
 };
 
 /**
@@ -23,9 +23,9 @@ const FAQ = [
       "Le comité d'experts du pôle OCO analyse le dossier académique et le projet professionnel, puis émet un avis. La décision est expliquée et transmise à la famille avant tout engagement financier.",
   },
   {
-    question: "Où va l'argent que je dépose pour la scolarité ?",
-    answer:
-      "Les fonds sont déposés auprès de l'antenne du pays d'origine, puis virés directement à l'établissement d'accueil. Aucun versement n'est remis à un intermédiaire. Chaque opération produit une quittance officielle téléchargeable depuis la section Documents.",
+     question: "Que montre l'aperçu de la scolarité ?",
+     answer:
+       "Cette version affiche uniquement un scénario STSS entre l'antenne du pays d'origine et l'établissement d'accueil. Aucun paiement, mouvement financier ou document officiel n'est disponible dans la simulation.",
   },
   {
     question: "Que se passe-t-il si mon enfant a un problème sur place ?",
@@ -35,7 +35,7 @@ const FAQ = [
   {
     question: "Comment ajouter une pièce manquante au dossier ?",
     answer:
-      "Les pièces sont déposées auprès de l'antenne, qui les vérifie avant de les intégrer au dossier officiel. Aucun document ne peut être ajouté directement depuis cet espace, précisément pour garantir cette vérification.",
+      "L&apos;aperçu signale les pièces prévues et leur statut. Cet espace ne réalise aucune action sur les documents.",
   },
   {
     question: "Les notes affichées sont-elles définitives ?",

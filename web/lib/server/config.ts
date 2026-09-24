@@ -48,6 +48,7 @@ let cachedConfig: ServerConfig | null = null;
 
 export function isDemoEnabled(): boolean {
   if (process.env.VERCEL_ENV === "preview") return process.env.BACKOFFICE_ALLOW_DEMO !== "false";
+  if (process.env.VERCEL_ENV === "production") return process.env.PUBLIC_DEMO_MODE === "true" && process.env.BACKOFFICE_ALLOW_DEMO === "true";
   return process.env.NODE_ENV === "development" && process.env.BACKOFFICE_ALLOW_DEMO === "true";
 }
 
@@ -78,8 +79,8 @@ export function getServerConfig(): ServerConfig {
   }
 
   const allowDemo = parsed.data.BACKOFFICE_ALLOW_DEMO === "true";
-  if (allowDemo && process.env.NODE_ENV !== "development" && process.env.VERCEL_ENV !== "preview") {
-    throw new Error("La démonstration back-office est interdite hors développement et aperçu Vercel");
+  if (allowDemo && process.env.NODE_ENV !== "development" && process.env.VERCEL_ENV !== "preview" && !(process.env.VERCEL_ENV === "production" && process.env.PUBLIC_DEMO_MODE === "true")) {
+    throw new Error("La démonstration back-office est interdite hors développement, aperçu Vercel et mode démo public explicite");
   }
 
   cachedConfig = {

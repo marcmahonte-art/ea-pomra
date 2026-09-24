@@ -17,6 +17,7 @@ export const DOSSIER_TRANSITIONS: readonly DossierTransition[] = [
     roles: ["ANTENNE"],
     permission: "dossiers.transmit"
   },
+  { from: "TRANSMIS_OCO", to: "AVIS_RECU", roles: ["EXPERT_OCO"], permission: "oco.reviews.finalize" },
   { from: "AVIS_RECU", to: "A_VALIDER", roles: ["ANTENNE"], permission: "dossiers.transmit" },
   { from: "A_VALIDER", to: "VALIDE", roles: ["BEC"], permission: "dossiers.validate" },
   { from: "A_VALIDER", to: "REJETE", roles: ["BEC"], permission: "dossiers.reject" },

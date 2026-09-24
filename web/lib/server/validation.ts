@@ -3,7 +3,41 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
   password: z.string().min(1).max(256),
-  role: z.enum(["ANTENNE", "BEC"])
+  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"])
+});
+
+export const OCO_FINALIZATION_CONFIRMATION = "FINALISER_L_AVIS_OCO";
+
+export const ocoReviewInputSchema = z.object({
+  dossierId: z.string().uuid(),
+  version: z.coerce.number().int().positive(),
+  verdict: z.enum(["FAVORABLE", "SOUS_RESERVE", "DEFAVORABLE"]).nullable().optional().default(null),
+  orientation: z.string().trim().max(200).optional().default(""),
+  analysis: z.string().trim().max(10000).optional().default(""),
+  observations: z.string().trim().max(10000).optional().default(""),
+  reserves: z.string().trim().max(10000).optional().default(""),
+  confirmation: z.string().optional().default(""),
+  finalize: z.preprocess((value) => value === true || value === "true" || value === "1" || value === "on", z.boolean()).default(false)
+ }).superRefine((value, context) => {
+   if (!value.finalize) return;
+   if (value.confirmation !== OCO_FINALIZATION_CONFIRMATION) {
+     context.addIssue({ code: "custom", path: ["confirmation"], message: "Confirmation de finalisation requise" });
+   }
+   if (!value.verdict) {
+    context.addIssue({ code: "custom", path: ["verdict"], message: "Verdict obligatoire" });
+  }
+  if (!value.analysis || value.analysis.length < 10) {
+    context.addIssue({ code: "custom", path: ["analysis"], message: "Analyse technique trop courte" });
+  }
+  if (!value.observations || value.observations.length < 10) {
+    context.addIssue({ code: "custom", path: ["observations"], message: "Observations trop courtes" });
+  }
+  if ((value.verdict === "FAVORABLE" || value.verdict === "SOUS_RESERVE") && !value.orientation) {
+    context.addIssue({ code: "custom", path: ["orientation"], message: "Orientation obligatoire" });
+  }
+  if ((value.verdict === "SOUS_RESERVE" || value.verdict === "DEFAVORABLE") && !value.reserves) {
+    context.addIssue({ code: "custom", path: ["reserves"], message: "Réserves obligatoires" });
+  }
 });
 
 export const transitionDossierSchema = z.object({
@@ -79,6 +113,7 @@ export const reportRequestSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+export type OcoReviewInput = z.infer<typeof ocoReviewInputSchema>;
 export type TransitionDossierInput = z.infer<typeof transitionDossierSchema>;
 export type DocumentDecisionInput = z.infer<typeof documentDecisionSchema>;
 export type ReportRequest = z.infer<typeof reportRequestSchema>;

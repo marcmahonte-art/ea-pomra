@@ -9,7 +9,9 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit",
     "user:create": "node scripts/create-backoffice-user.mjs",
+    "oco:assign": "node scripts/oco-assign.mjs",
     "maintenance:purge-sessions": "node scripts/purge-sessions.mjs"
   },
   "dependencies": {

@@ -12,7 +12,7 @@
  */
 
 /** Rôle de l'utilisateur du back-office. */
-export type BackofficeRole = "ANTENNE" | "BEC";
+export type BackofficeRole = "ANTENNE" | "BEC" | "EXPERT_OCO";
 
 export type CountryCode = "SN" | "CI" | "CM" | "GA" | "BJ" | "TG" | "CG" | "CD";
 
@@ -106,7 +106,64 @@ export interface PapReference {
 export interface OrientationInfo {
   transmittedAt: string | null;
   verdict: "FAVORABLE" | "SOUS_RESERVE" | "DEFAVORABLE" | null;
+  orientation: string | null;
+  observations: string | null;
+  reserves: string | null;
+  avisDate: string | null;
   expertName: string | null;
+}
+
+export type OcoReviewStatus = "DRAFT" | "FINALIZED";
+export type OcoVerdict = "FAVORABLE" | "SOUS_RESERVE" | "DEFAVORABLE";
+
+export interface OcoReview {
+  id: string;
+  dossierId: string;
+  verdict: OcoVerdict | null;
+  orientation: string | null;
+  analysis: string;
+  observations: string;
+  reserves: string;
+  status: OcoReviewStatus;
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+  finalizedAt: string | null;
+  expertName: string | null;
+}
+
+export interface OcoAssignment {
+  id: string;
+  dossierId: string;
+  expertUserId: string;
+  assignedAt: string;
+  active: boolean;
+}
+
+export interface OcoDossier {
+  id: string;
+  reference: string;
+  studentName: string;
+  studentInitials: string;
+  countryCode: CountryCode;
+  country: string;
+  flag: string;
+  antennaCity: string;
+  program: string;
+  formation: string;
+  state: DossierState;
+  step: WorkflowStep;
+  completeness: number;
+  priority: Priority;
+  requiredAction: string | null;
+  createdAt: string;
+  createdAtLabel: string;
+  updatedAt: string;
+  updatedAtLabel: string;
+  version: number;
+  documents: DossierDocument[];
+  review: OcoReview | null;
+  assignment: OcoAssignment;
 }
 
 export interface MobiliteInfo {
@@ -316,6 +373,10 @@ export interface BackofficeNotification {
 
 export type Permission =
   | "dossiers.read"
+  | "oco.read"
+  | "oco.reviews.read"
+  | "oco.reviews.write"
+  | "oco.reviews.finalize"
   | "dossiers.update"
   | "dossiers.assign"
   | "dossiers.transmit"

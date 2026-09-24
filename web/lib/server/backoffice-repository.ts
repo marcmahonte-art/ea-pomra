@@ -18,6 +18,7 @@ import { STATE_LABELS } from "@/lib/backoffice-types";
 import { query, withTransaction } from "./db";
 import { assertTransition, getWorkflowStep } from "./workflow";
 import { type AllowedDocumentType, type OpaqueDocumentPayload } from "./document-storage";
+import { projectFinalizedOcoOrientation } from "./oco-workflow";
 
 const countryCodeSchema = z.enum(["SN", "CI", "CM", "GA", "BJ", "TG", "CG", "CD"]);
 const dossierStateSchema = z.enum(["RECU", "EN_VERIFICATION", "INCOMPLET", "TRANSMIS_OCO", "AVIS_RECU", "A_VALIDER", "VALIDE", "EN_MOBILITE", "EN_SUIVI", "DIPLOME", "REJETE"]);
@@ -47,7 +48,14 @@ const dossierRowSchema = z.object({
   created_at: dateValueSchema,
   updated_at: dateValueSchema,
   version: z.coerce.number().int().positive(),
-  overdue_task_count: z.coerce.number().int().nonnegative()
+  overdue_task_count: z.coerce.number().int().nonnegative(),
+  oco_verdict: z.enum(["FAVORABLE", "SOUS_RESERVE", "DEFAVORABLE"]).nullable(),
+  oco_status: z.enum(["DRAFT", "FINALIZED"]).nullable(),
+  oco_orientation: z.string().nullable(),
+  oco_observations: z.string().nullable(),
+  oco_reserves: z.string().nullable(),
+  oco_avis_at: dateValueSchema.nullable(),
+  oco_expert_name: z.string().nullable()
 });
 
 const documentRowSchema = z.object({
@@ -115,7 +123,11 @@ const reportRowSchema = z.object({
 const dossierSelect = `d.id, d.reference, d.student_name, d.student_initials, d.email, d.phone,
   d.country_code, d.country_name, d.country_flag, d.antenna_city, d.program, d.formation,
   d.step, d.state, d.completeness, d.priority, d.required_action, d.created_at, d.updated_at,
-  d.version, (SELECT COUNT(*)::integer FROM tasks t WHERE t.dossier_id = d.id
+   d.version, r.verdict AS oco_verdict, r.status AS oco_status, r.orientation AS oco_orientation,
+   r.observations AS oco_observations, r.reserves AS oco_reserves,
+   r.finalized_at AS oco_avis_at,
+   oco_user.display_name AS oco_expert_name,
+   (SELECT COUNT(*)::integer FROM tasks t WHERE t.dossier_id = d.id
     AND t.status IN ('OPEN', 'IN_PROGRESS') AND t.due_at < $1) AS overdue_task_count`;
 
 type DossierRow = z.infer<typeof dossierRowSchema>;
@@ -139,9 +151,9 @@ function assertRealScope(scope: BackofficeScope): void {
 }
 
 function scopeCondition(scope: BackofficeScope, alias = "d", startIndex = 1): { sql: string; values: unknown[] } {
-  return scope.role === "BEC"
-    ? { sql: "TRUE", values: [] }
-    : { sql: `${alias}.country_code = $${startIndex}`, values: [scope.countryCode] };
+  if (scope.role === "BEC") return { sql: "TRUE", values: [] };
+  if (scope.role === "EXPERT_OCO") return { sql: `EXISTS (SELECT 1 FROM oco_assignments oa WHERE oa.dossier_id = ${alias}.id AND oa.expert_user_id = $${startIndex} AND oa.active)`, values: [scope.userId] };
+  return { sql: `${alias}.country_code = $${startIndex}`, values: [scope.countryCode] };
 }
 
 function mapDocument(row: DocumentRow): DossierDocument {
@@ -185,7 +197,15 @@ function mapDossier(row: DossierRow, documents: DossierDocument[]): Dossier {
     requiredAction: row.required_action,
     documents,
     pap: null,
-    orientation: null,
+    orientation: projectFinalizedOcoOrientation({
+      status: row.oco_status,
+      finalizedAt: row.oco_avis_at,
+      verdict: row.oco_verdict,
+      orientation: row.oco_orientation,
+      observations: row.oco_observations,
+      reserves: row.oco_reserves,
+      expertName: row.oco_expert_name
+    }),
     mobilite: null,
     stss: null,
     overdueTaskCount: row.overdue_task_count
@@ -224,7 +244,16 @@ export async function listDossiersForScope(scope: BackofficeScope, limit = 5000)
   const scopeFilter = scopeCondition(scope, "d", 2);
   const values = [new Date(), ...scopeFilter.values, boundedLimit];
   const result = await query(
-    `SELECT ${dossierSelect} FROM dossiers d
+    `SELECT ${dossierSelect} FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id
      WHERE ${scopeFilter.sql}
      ORDER BY d.updated_at DESC
      LIMIT $${values.length}`,
@@ -238,7 +267,16 @@ export async function getDossierForScope(scope: BackofficeScope, dossierId: stri
   assertRealScope(scope);
   const scopeFilter = scopeCondition(scope, "d", 3);
   const result = await query(
-    `SELECT ${dossierSelect} FROM dossiers d
+    `SELECT ${dossierSelect} FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id
      WHERE d.id = $2 AND ${scopeFilter.sql}`,
     [new Date(), dossierId, ...scopeFilter.values]
   );
@@ -283,13 +321,31 @@ export async function queryDossiersForScope(
     conditions.push(`d.created_at >= $${values.length - 1} AND d.created_at < $${values.length}`);
   }
   const where = conditions.join(" AND ");
-  const countResult = await query<{ count: number }>(`SELECT COUNT(*)::integer AS count FROM dossiers d WHERE ${where}`, values);
+  const countResult = await query<{ count: number }>(`SELECT COUNT(*)::integer AS count FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id WHERE ${where}`, values);
   const total = countResult.rows[0]?.count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / queryInput.pageSize));
   const page = Math.min(queryInput.page, totalPages);
   values.push(queryInput.pageSize, (page - 1) * queryInput.pageSize);
   const result = await query(
-    `SELECT ${dossierSelect} FROM dossiers d WHERE ${where}
+    `SELECT ${dossierSelect} FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id WHERE ${where}
      ORDER BY d.updated_at DESC LIMIT $${values.length - 1} OFFSET $${values.length}`,
     values
   );
@@ -302,7 +358,16 @@ export async function getPendingCount(scope: BackofficeScope): Promise<number> {
   const scopeFilter = scopeCondition(scope, "d", 1);
   const states = scope.role === "BEC" ? ["A_VALIDER"] : ["RECU", "EN_VERIFICATION", "INCOMPLET", "AVIS_RECU"];
   const result = await query<{ count: number }>(
-    `SELECT COUNT(*)::integer AS count FROM dossiers d WHERE ${scopeFilter.sql} AND d.state = ANY($2::text[])`,
+    `SELECT COUNT(*)::integer AS count FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id WHERE ${scopeFilter.sql} AND d.state = ANY($2::text[])`,
     [...scopeFilter.values, states]
   );
   return result.rows[0]?.count ?? 0;
@@ -358,7 +423,16 @@ export async function getActivityForDossier(scope: BackofficeScope, dossierId: s
 async function findDossierForUpdate(client: PoolClient, scope: BackofficeScope, dossierId: string): Promise<DossierRow> {
   const scopeFilter = scopeCondition(scope, "d", 3);
   const result = await client.query(
-    `SELECT ${dossierSelect} FROM dossiers d WHERE d.id = $2 AND ${scopeFilter.sql} FOR UPDATE`,
+    `SELECT ${dossierSelect} FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id WHERE d.id = $2 AND ${scopeFilter.sql} FOR UPDATE OF d`,
     [new Date(), dossierId, ...scopeFilter.values]
   );
   const row = result.rows[0];
@@ -579,7 +653,16 @@ export async function generateReportSnapshot(
     }
     const result = await client.query(
       `SELECT d.reference, d.student_name, d.country_name, d.program, d.formation, d.state, d.completeness
-       FROM dossiers d WHERE ${conditions.join(" AND ")} ORDER BY d.reference`,
+       FROM dossiers d LEFT JOIN LATERAL (
+  SELECT review.verdict, review.status, review.orientation, review.observations, review.reserves,
+    review.finalized_at, review.expert_user_id
+  FROM oco_reviews review
+  WHERE review.dossier_id = d.id
+    AND review.status = 'FINALIZED'
+    AND review.finalized_at IS NOT NULL
+  ORDER BY review.finalized_at DESC, review.created_at DESC
+  LIMIT 1
+) r ON true LEFT JOIN users oco_user ON oco_user.id = r.expert_user_id WHERE ${conditions.join(" AND ")} ORDER BY d.reference`,
       values
     );
     const rows = result.rows.map((row) => z.object({

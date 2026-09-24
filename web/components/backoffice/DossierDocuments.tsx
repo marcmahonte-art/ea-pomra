@@ -5,7 +5,7 @@ import {
   FileX2,
   CircleDashed,
 } from "lucide-react";
-import type { DocumentStatus, DossierDocument } from "@/lib/backoffice-types";
+import type { BackofficeRole, DocumentStatus, DossierDocument } from "@/lib/backoffice-types";
 import { DOCUMENT_LABELS } from "@/lib/backoffice-types";
 import { DataTable, type Column } from "./DataTable";
 import { DocumentVerificationDialog } from "./DocumentVerificationDialog";
@@ -75,7 +75,7 @@ export function DossierDocuments({
   documents: DossierDocument[];
   dossierId: string;
   dossierVersion: number;
-  role: "ANTENNE" | "BEC";
+  role: BackofficeRole;
   dossierReference: string;
   canVerify: boolean;
 }) {

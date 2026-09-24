@@ -55,9 +55,21 @@ Appliquer les migrations SQL versionnées avant le déploiement avec l’utilisa
 ```bash
 psql "$DATABASE_URL" -f db/migrations/001_backoffice_production.sql
 psql "$DATABASE_URL" -f db/migrations/002_backoffice_hardening.sql
+psql "$DATABASE_URL" -f db/migrations/003_oco_production.sql
 ```
 
 La page `/backoffice/login` ne propose pas d’inscription publique. Les mutations passent par des Server Actions contrôlées par rôle, permission, périmètre, état et version optimiste. Le test unitaire ne nécessite pas PostgreSQL :
+
+La migration `003_oco_production.sql` nettoie uniquement les `country_flag` historiques des scopes BEC, conserve les sémantiques de rôle, ajoute les contraintes de finalisation OCO, l’immuabilité des avis finalisés et la protection atomique des réaffectations. Un avis brouillon n’est jamais projeté dans les back-offices Antenne/BEC : seuls `status = 'FINALIZED'` avec `finalized_at` non nul sont visibles.
+
+L’affectation OCO est une opération PostgreSQL réservée, sans interface web d’administration :
+
+```bash
+npm run oco:assign -- --dossier-id <uuid> --expert-email expert@example.org --reason "Capacité disponible"
+npm run oco:assign -- --dossier-id <uuid> --unassign --reason "Réaffectation nécessaire"
+```
+
+La commande exige `DATABASE_URL`, vérifie le dossier `TRANSMIS_OCO`, l’expert actif et son rôle PostgreSQL `EXPERT_OCO`, verrouille le dossier et l’affectation dans une transaction, conserve une seule affectation active et journalise `OCO_ASSIGNED` ou `OCO_UNASSIGNED`. Une affectation active est refusée si un avis finalisé existe. Sinon, le brouillon précédent reste attaché à son expert et n’est jamais transféré au nouvel expert.
 
 Créer un compte initial sans exposer son mot de passe dans la ligne de commande :
 
@@ -66,9 +78,10 @@ export BACKOFFICE_BOOTSTRAP_PASSWORD='un-mot-de-passe-long-et-unique'
 npm run user:create -- --email responsable@example.org --name 'Nom Complet' --title 'Fonction' --role BEC
 ```
 
-Pour une antenne, ajouter obligatoirement `--country-code SN --country-name Sénégal --country-flag 🇸🇳 --antenna-id SN-DKR --antenna-city Dakar`. Le compte est créé uniquement après application des migrations.
+Pour une antenne, ajouter obligatoirement `--country-code SN --country-name Sénégal --country-flag 🇸🇳 --antenna-id SN-DKR --antenna-city Dakar`. Pour un expert OCO, aucun pays ni antenne n'est requis : `--role EXPERT_OCO` crée un compte dont l'accès aux dossiers dépend exclusivement des affectations PostgreSQL. Le compte est créé uniquement après application des migrations.
 
 ```bash
+npm run typecheck
 npm run test:unit
 ```
 

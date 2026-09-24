@@ -2,8 +2,9 @@
 
 import { useActionState } from "react";
 import { login, type LoginState } from "@/app/backoffice/actions";
+import type { BackofficeRole } from "@/lib/backoffice-types";
 
-export function BackofficeLoginForm({ defaultRole }: { defaultRole: "ANTENNE" | "BEC" }) {
+export function BackofficeLoginForm({ defaultRole }: { defaultRole: BackofficeRole }) {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(login, { status: "idle" });
 
   return (

@@ -1,0 +1,7 @@
+import { Download, FileText } from "lucide-react";
+import type { OcoDossier } from "@/lib/backoffice-types";
+import { DOCUMENT_LABELS } from "@/lib/backoffice-types";
+
+export function OcoDocumentList({ dossier }: { dossier: OcoDossier }) {
+  return <section className="rounded-2xl border border-[#E6E9EF] bg-white p-5 shadow-eap-soft"><h2 className="text-base font-bold text-[#0D2B4D]">Documents</h2><p className="mt-1 text-xs text-[#5B6776]">Consultation seule des pièces du dossier affecté.</p><div className="mt-4 space-y-2">{dossier.documents.length === 0 ? <p className="text-xs text-[#98A2B3]">Aucune pièce disponible.</p> : dossier.documents.map((document) => <div key={document.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#EDF1F6] px-3 py-2.5"><div className="flex min-w-0 items-center gap-2"><FileText className="h-4 w-4 shrink-0 text-[#667085]" /><span className="truncate text-xs font-semibold text-[#0D2B4D]">{document.name}</span><span className="text-[10px] text-[#667085]">{DOCUMENT_LABELS[document.status]}</span></div>{document.hasFile ? <a href={`/backoffice/documents/${document.id}/download?role=EXPERT_OCO`} className="inline-flex items-center gap-1.5 rounded-lg border border-[#D8DEE9] px-2.5 py-1.5 text-[11px] font-bold text-[#174A7C] hover:bg-[#F7F9FB]"><Download className="h-3.5 w-3.5" />Télécharger</a> : null}</div>)}</div></section>;
+}

@@ -15,7 +15,7 @@ export const BACKOFFICE_SESSION_COOKIE = "eap_backoffice_session";
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 const SESSION_DUMMY_HASH = "$2b$12$c3yma.eUPDkKYBBQzrS3jOipRdCfHb.OzMLZaN/Nxbh8VVZ1.ONwu";
 
-const ROLE_PERMISSIONS: Record<BackofficeRole, Permission[]> = {
+export const ROLE_PERMISSIONS: Record<BackofficeRole, Permission[]> = {
   ANTENNE: [
     "dossiers.read",
     "dossiers.update",
@@ -40,6 +40,15 @@ const ROLE_PERMISSIONS: Record<BackofficeRole, Permission[]> = {
     "history.read",
     "activity.read",
     "exports.run"
+  ],
+  EXPERT_OCO: [
+    "dossiers.read",
+    "documents.read",
+    "oco.read",
+    "oco.reviews.read",
+    "oco.reviews.write",
+    "oco.reviews.finalize",
+    "history.read"
   ]
 };
 
@@ -69,6 +78,19 @@ const DEMO_SCOPES: Record<BackofficeRole, BackofficeScope> = {
     userTitle: "Bureau Exécutif Central — vue consolidée",
     permissions: ROLE_PERMISSIONS.BEC,
     isDemo: true
+  },
+  EXPERT_OCO: {
+    userId: null,
+    antennaId: null,
+    role: "EXPERT_OCO",
+    countryCode: null,
+    country: null,
+    flag: null,
+    antennaCity: null,
+    userName: "Expert OCO",
+    userTitle: "File technique — accès par affectation",
+    permissions: ROLE_PERMISSIONS.EXPERT_OCO,
+    isDemo: true
   }
 };
 
@@ -76,7 +98,7 @@ const sessionRowSchema = z.object({
   user_id: z.string().uuid(),
   display_name: z.string().min(1).max(200),
   user_title: z.string().max(200),
-  role: z.enum(["ANTENNE", "BEC"]),
+  role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]),
   country_code: z.enum(["SN", "CI", "CM", "GA", "BJ", "TG", "CG", "CD"]).nullable(),
   country_name: z.string().nullable(),
   country_flag: z.string().nullable(),
@@ -101,10 +123,10 @@ function sessionScope(row: SessionRow): BackofficeScope {
     userId: row.user_id,
     antennaId: row.antenna_id,
     role: row.role,
-    countryCode: row.role === "BEC" ? null : row.country_code,
-    country: row.role === "BEC" ? null : row.country_name,
-    flag: row.role === "BEC" ? null : row.country_flag,
-    antennaCity: row.role === "BEC" ? null : row.antenna_city,
+    countryCode: row.role === "ANTENNE" ? row.country_code : null,
+    country: row.role === "ANTENNE" ? row.country_name : null,
+    flag: row.role === "ANTENNE" ? row.country_flag : null,
+    antennaCity: row.role === "ANTENNE" ? row.antenna_city : null,
     userName: row.display_name,
     userTitle: row.user_title,
     permissions: ROLE_PERMISSIONS[row.role],
@@ -178,7 +200,7 @@ export async function authenticateBackofficeUser(
   );
   const userValue = result.rows[0];
   const user = userValue
-    ? z.object({ id: z.string().uuid(), password_hash: z.string().min(20), role: z.enum(["ANTENNE", "BEC"]) }).parse(userValue)
+    ? z.object({ id: z.string().uuid(), password_hash: z.string().min(20), role: z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]) }).parse(userValue)
     : null;
   if (!user) {
     await bcrypt.compare(password, SESSION_DUMMY_HASH);

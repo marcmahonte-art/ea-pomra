@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X, Eye, FileText, CheckCircle2, XCircle, FilePlus2, Download, Upload } from "lucide-react";
-import type { DossierDocument } from "@/lib/backoffice-types";
+import type { BackofficeRole, DossierDocument } from "@/lib/backoffice-types";
 import { DOCUMENT_LABELS } from "@/lib/backoffice-types";
 import { decideDocument, type MutationState } from "@/app/backoffice/actions";
 
@@ -18,7 +18,7 @@ export function DocumentVerificationDialog({
   document: DossierDocument;
   dossierId: string;
   dossierVersion: number;
-  role: "ANTENNE" | "BEC";
+  role: BackofficeRole;
   dossierReference: string;
   canVerify: boolean;
 }) {

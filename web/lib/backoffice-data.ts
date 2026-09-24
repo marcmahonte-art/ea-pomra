@@ -518,10 +518,17 @@ function buildDossier(country: CountryRef, countryIndex: number, index: number):
         state === "AVIS_RECU" || hasMobilite
           ? pick(`${seed}-ov`, ["FAVORABLE", "FAVORABLE", "SOUS_RESERVE"] as const)
           : null,
-      expertName:
-        state === "AVIS_RECU" || hasMobilite
-          ? `Dr. ${pick(`${seed}-oe`, ["Amadou Ba", "Clarisse Dossou", "Serge Ondo", "Awa Koné"])}`
-          : null,
+       orientation: null,
+       observations: null,
+       reserves: null,
+       avisDate:
+         step === "ORIENTATION" || step === "MOBILITE" || step === "SUIVI" || step === "DIPLOME"
+           ? frLabel(shiftDays(between(`${seed}-ot`, 20, 90), `${seed}-ot`))
+           : null,
+       expertName:
+         state === "AVIS_RECU" || hasMobilite
+           ? `Dr. ${pick(`${seed}-oe`, ["Amadou Ba", "Clarisse Dossou", "Serge Ondo", "Awa Koné"])}`
+           : null,
     },
     mobilite: hasMobilite
       ? {

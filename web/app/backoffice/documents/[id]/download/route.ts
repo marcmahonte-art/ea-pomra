@@ -3,17 +3,22 @@ import { getAuthenticatedScope } from "@/lib/backoffice-session";
 import { decryptDocument, documentAad, sanitizeDocumentName, validateDocumentUpload } from "@/lib/server/document-storage";
 import { getServerConfig } from "@/lib/server/config";
 import { getPrivateDocument, logDocumentDownload } from "@/lib/server/backoffice-repository";
+import { enforceMutationRateLimit } from "@/app/backoffice/actions";
 
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const role = z.enum(["ANTENNE", "BEC"]).safeParse(new URL(request.url).searchParams.get("role"));
+  const role = z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]).safeParse(new URL(request.url).searchParams.get("role"));
   if (!role.success) return new Response("Non autorisé", { status: 403 });
   const scope = await getAuthenticatedScope(role.data);
   if (scope.isDemo || !scope.permissions.includes("documents.read")) {
-    return new Response("Non autorisé", { status: 403 });
-  }
+     return new Response("Non autorisé", { status: 403 });
+   }
+   const rate = await enforceMutationRateLimit(scope, "document.download");
+   if (!rate.allowed) {
+     return new Response("Trop de téléchargements. Réessayez plus tard.", { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } });
+   }
   const { id } = await context.params;
   const documentId = z.string().uuid().safeParse(id);
   if (!documentId.success) return new Response("Introuvable", { status: 404 });

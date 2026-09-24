@@ -36,7 +36,7 @@ export type LoginState =
 
 export type MutationState = ActionState;
 
-const roleSchema = z.enum(["ANTENNE", "BEC"]);
+const roleSchema = z.enum(["ANTENNE", "BEC", "EXPERT_OCO"]);
 
 function errorCode(error: unknown): string {
   return typeof error === "object" && error !== null && "code" in error
@@ -83,7 +83,7 @@ export async function login(
     const requestHeaders = await headers();
     await createBackofficeSession(user.userId, user.role, requestHeaders.get("user-agent") ?? undefined);
     revalidatePath("/backoffice/login");
-    redirect(user.role === "BEC" ? "/bec" : "/antenne");
+    redirect(user.role === "BEC" ? "/bec" : user.role === "EXPERT_OCO" ? "/oco" : "/antenne");
   } catch (error) {
     unstable_rethrow(error);
     console.error("Échec de la connexion back-office", { code: errorCode(error) });

@@ -9,7 +9,7 @@
 import type { BackofficeRole } from "./backoffice-types";
 
 export function rootHref(role: BackofficeRole): string {
-  return role === "BEC" ? "/bec" : "/antenne";
+  return role === "BEC" ? "/bec" : role === "EXPERT_OCO" ? "/oco" : "/antenne";
 }
 
 export function dossierHref(role: BackofficeRole, dossierId: string): string {

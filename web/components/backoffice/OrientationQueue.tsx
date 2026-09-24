@@ -100,8 +100,17 @@ export function OrientationQueue({
           </span>
         ),
     },
-    {
-      key: "action",
+     {
+       key: "orientation",
+       header: "Orientation",
+       render: (dossier) => (
+         <span className="text-[11px] text-[#1F2937]">
+           {dossier.orientation?.orientation ?? "Non renseignée"}
+         </span>
+       ),
+     },
+     {
+       key: "action",
       header: "Action",
       render: (dossier) => (
         <DossierLink role={role} dossierId={dossier.id} reference="Ouvrir" />
@@ -186,11 +195,15 @@ export function OrientationPanel({
   dossier: Dossier;
   role: BackofficeRole;
 }) {
-  const { transmittedAt, verdict, expertName } = dossier.orientation ?? {
-    transmittedAt: null,
-    verdict: null,
-    expertName: null
-  };
+   const { transmittedAt, verdict, orientation, observations, reserves, avisDate, expertName } = dossier.orientation ?? {
+     transmittedAt: null,
+     verdict: null,
+     orientation: null,
+     observations: null,
+     reserves: null,
+     avisDate: null,
+     expertName: null
+   };
 
   return (
     <div className="rounded-2xl border border-[#E6E9EF] bg-white shadow-eap-soft p-5">
@@ -222,17 +235,42 @@ export function OrientationPanel({
           </dd>
         </div>
 
-        <div>
-          <dt className="text-[10px] font-bold uppercase tracking-wider text-[#98A2B3]">
-            Expert OCO
-          </dt>
+         <div>
+           <dt className="text-[10px] font-bold uppercase tracking-wider text-[#98A2B3]">
+             Orientation
+           </dt>
+           <dd className="mt-0.5 text-xs font-semibold text-[#0D2B4D]">
+             {orientation ?? "—"}
+           </dd>
+         </div>
+
+         <div>
+           <dt className="text-[10px] font-bold uppercase tracking-wider text-[#98A2B3]">
+             Date de l&apos;avis
+           </dt>
+           <dd className="mt-0.5 text-xs font-semibold text-[#0D2B4D]">
+             {avisDate ?? "—"}
+           </dd>
+         </div>
+
+         <div>
+           <dt className="text-[10px] font-bold uppercase tracking-wider text-[#98A2B3]">
+             Expert OCO
+           </dt>
           <dd className="mt-0.5 text-xs font-semibold text-[#0D2B4D]">
             {expertName ?? "—"}
           </dd>
         </div>
-      </dl>
+       </dl>
 
-      <p className="mt-4 flex items-start gap-2 border-t border-[#EDF1F6] pt-3 text-[11px] leading-relaxed text-[#5B6776]">
+       {observations || reserves ? (
+         <div className="mt-4 grid gap-4 border-t border-[#EDF1F6] pt-4 text-xs text-[#5B6776]">
+           {observations ? <p><span className="font-bold text-[#0D2B4D]">Observations : </span>{observations}</p> : null}
+           {reserves ? <p><span className="font-bold text-[#0D2B4D]">Réserves : </span>{reserves}</p> : null}
+         </div>
+       ) : null}
+
+       <p className="mt-4 flex items-start gap-2 border-t border-[#EDF1F6] pt-3 text-[11px] leading-relaxed text-[#5B6776]">
         <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-[#98A2B3]" aria-hidden="true" />
         <span>
           L&apos;avis est produit par le rôle Expert OCO. Le back-office{" "}
